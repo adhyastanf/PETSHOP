@@ -1,0 +1,1 @@
+-- Baseline migration. Domain tables will be added from the BRD/SRS.

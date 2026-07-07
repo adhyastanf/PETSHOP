@@ -1,1 +1,127 @@
 # PETSHOP
+
+Pet Marketplace monorepo based on `01_Product_Vision_Document.md`.
+
+## Folders
+
+- `PETSHOP-UI` - Next.js frontend
+- `PETSHOP-API` - Spring Boot backend
+
+## Prerequisites
+
+Frontend:
+
+- Node.js
+- npm
+
+Backend:
+
+- Java 21
+- Maven
+- PostgreSQL
+
+Check your installed tools:
+
+```powershell
+node -v
+npm -v
+java -version
+mvn -version
+```
+
+Current backend requirement status on this machine:
+
+- Java 21 is installed at `C:\Program Files\Eclipse Adoptium\jdk-21.0.11.10-hotspot`
+- Maven 3.9.16 is installed at `C:\Tools\apache-maven-3.9.16`
+- If `java` or `mvn` is still not found, close and reopen PowerShell so it reloads `JAVA_HOME` and `Path`
+
+## Install Backend Tools On Windows
+
+Install Java 21:
+
+```powershell
+winget install EclipseAdoptium.Temurin.21.JDK
+```
+
+Install Maven with PowerShell:
+
+```powershell
+$version="3.9.16"; $dir="C:\Tools"; New-Item -ItemType Directory -Force $dir; Invoke-WebRequest "https://dlcdn.apache.org/maven/maven-3/$version/binaries/apache-maven-$version-bin.zip" -OutFile "$env:TEMP\apache-maven.zip"; Expand-Archive "$env:TEMP\apache-maven.zip" -DestinationPath $dir -Force; [Environment]::SetEnvironmentVariable("MAVEN_HOME", "$dir\apache-maven-$version", "User"); [Environment]::SetEnvironmentVariable("Path", [Environment]::GetEnvironmentVariable("Path", "User") + ";$dir\apache-maven-$version\bin", "User")
+```
+
+After installing Java or Maven, close and reopen the terminal.
+
+Verify again:
+
+```powershell
+java -version
+mvn -version
+```
+
+## Run Frontend
+
+Install dependencies if needed:
+
+```powershell
+cd C:\PETSHOP\PETSHOP\PETSHOP-UI
+npm.cmd install
+```
+
+Start the Next.js development server:
+
+```powershell
+npm.cmd run dev
+```
+
+Open:
+
+```text
+http://localhost:3000
+```
+
+Available starter pages:
+
+- `http://localhost:3000/customer/home`
+- `http://localhost:3000/mitra/home`
+- `http://localhost:3000/admin/home`
+
+## Run Backend API
+
+Make sure PostgreSQL is running and create the default database/user:
+
+```sql
+CREATE DATABASE petshop;
+CREATE USER petshop WITH PASSWORD 'petshop';
+GRANT ALL PRIVILEGES ON DATABASE petshop TO petshop;
+```
+
+Then start the Spring Boot API:
+
+```powershell
+cd C:\PETSHOP\PETSHOP\PETSHOP-API
+mvn spring-boot:run
+```
+
+Open the health check:
+
+```text
+http://localhost:8080/api/v1/health
+```
+
+Expected response:
+
+```json
+{
+  "status": "UP",
+  "service": "PETSHOP-API",
+  "timestamp": "..."
+}
+```
+
+Database environment variables can be changed if needed:
+
+```powershell
+$env:DATABASE_URL="jdbc:postgresql://localhost:5432/petshop"
+$env:DATABASE_USERNAME="petshop"
+$env:DATABASE_PASSWORD="petshop"
+```
