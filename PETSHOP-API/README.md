@@ -20,6 +20,12 @@ mvn spring-boot:run
 
 The API starts on [http://localhost:8080](http://localhost:8080).
 
+For local smoke-test mode without PostgreSQL:
+
+```bash
+mvn spring-boot:run "-Dspring-boot.run.profiles=local"
+```
+
 Health check:
 
 ```bash

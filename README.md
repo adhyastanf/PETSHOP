@@ -102,6 +102,32 @@ cd C:\PETSHOP\PETSHOP\PETSHOP-API
 mvn spring-boot:run
 ```
 
+If PostgreSQL is not installed/running yet, use local smoke-test mode:
+
+```powershell
+cd C:\PETSHOP\PETSHOP\PETSHOP-API
+mvn spring-boot:run "-Dspring-boot.run.profiles=local"
+```
+
+This starts the API without database, JPA, or Flyway so you can test the health endpoint first.
+
+If PowerShell says `mvn` is not recognized, either close and reopen PowerShell, or run this once in the current terminal:
+
+```powershell
+$env:JAVA_HOME="C:\Program Files\Eclipse Adoptium\jdk-21.0.11.10-hotspot"
+$env:Path="$env:JAVA_HOME\bin;C:\Tools\apache-maven-3.9.16\bin;$env:Path"
+mvn -version
+mvn spring-boot:run
+```
+
+For local smoke-test mode with the same PATH fix:
+
+```powershell
+$env:JAVA_HOME="C:\Program Files\Eclipse Adoptium\jdk-21.0.11.10-hotspot"
+$env:Path="$env:JAVA_HOME\bin;C:\Tools\apache-maven-3.9.16\bin;$env:Path"
+mvn spring-boot:run "-Dspring-boot.run.profiles=local"
+```
+
 Open the health check:
 
 ```text
