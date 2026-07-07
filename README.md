@@ -67,6 +67,18 @@ cd C:\PETSHOP\PETSHOP\PETSHOP-UI
 npm.cmd install
 ```
 
+Set up environment variables (first time only):
+
+```powershell
+Copy-Item .env.example .env.local
+```
+
+The default `.env.local` contains:
+
+```
+NEXT_PUBLIC_API_URL=http://localhost:8080/api/v1
+```
+
 Start the Next.js development server:
 
 ```powershell
@@ -151,3 +163,19 @@ $env:DATABASE_URL="jdbc:postgresql://localhost:5432/petshop"
 $env:DATABASE_USERNAME="petshop"
 $env:DATABASE_PASSWORD="petshop"
 ```
+
+## CORS
+
+The API allows requests from `http://localhost:3000` by default (the Next.js dev server).
+
+To allow additional origins, set the environment variable before starting:
+
+```powershell
+$env:CORS_ALLOWED_ORIGINS="http://localhost:3000,https://yourdomain.com"
+```
+
+## Tech Stack (current)
+
+**Frontend:** Next.js 16, React 19, TypeScript, Tailwind CSS 4, Zustand, TanStack Query
+
+**Backend:** Java 21, Spring Boot 3.5, Spring Security, Spring Data JPA, Flyway, PostgreSQL
