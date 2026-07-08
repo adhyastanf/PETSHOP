@@ -1,20 +1,19 @@
 package com.petshop.api.controllers;
 
-import java.time.Instant;
-
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.petshop.api.utils.ApiResponse;
+import com.petshop.api.utils.ResponseUtil;
 
 @RestController
 @RequestMapping("/api/v1/health")
 public class HealthController {
 
     @GetMapping
-    public HealthResponse health() {
-        return new HealthResponse("UP", "PETSHOP-API", Instant.now());
-    }
-
-    public record HealthResponse(String status, String service, Instant timestamp) {
+    public ResponseEntity<ApiResponse<String>> health() {
+        return ResponseUtil.ok("PETSHOP-API");
     }
 }
