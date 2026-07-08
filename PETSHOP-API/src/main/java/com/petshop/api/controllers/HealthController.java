@@ -1,4 +1,4 @@
-package com.petshop.api.health;
+package com.petshop.api.controllers;
 
 import java.time.Instant;
 
