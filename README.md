@@ -97,17 +97,79 @@ Available starter pages:
 - `http://localhost:3000/mitra/home`
 - `http://localhost:3000/admin/home`
 
-## Run Backend API
+## Setup Database (first time only)
 
-Make sure PostgreSQL is running and create the default database/user:
+### Step 1: Install PostgreSQL
+
+```powershell
+winget install PostgreSQL.PostgreSQL.16
+```
+
+Or use Docker:
+
+```powershell
+docker run -d --name petshop-db -e POSTGRES_USER=petshop -e POSTGRES_PASSWORD=petshop -e POSTGRES_DB=petshop -p 5432:5432 postgres:16-alpine
+```
+
+If using Docker, skip Step 2 (database and user are created automatically).
+
+### Step 2: Create database and user
+
+Open DBeaver, connect as `postgres` user, then run this SQL:
 
 ```sql
-CREATE DATABASE petshop;
-CREATE USER petshop WITH PASSWORD 'petshop';
+DO $$
+BEGIN
+    IF NOT EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname = 'petshop') THEN
+        CREATE ROLE petshop WITH LOGIN PASSWORD 'petshop';
+    END IF;
+END
+$$;
+
+CREATE DATABASE petshop OWNER petshop;
 GRANT ALL PRIVILEGES ON DATABASE petshop TO petshop;
 ```
 
-Then start the Spring Boot API:
+Then reconnect to the `petshop` database as `postgres` and run:
+
+```sql
+GRANT ALL ON SCHEMA public TO petshop;
+```
+
+Or use the script file:
+
+```powershell
+psql -U postgres -f C:\PETSHOP\PETSHOP\scripts\create-database.sql
+```
+
+### Step 3: Start the API
+
+```powershell
+cd C:\PETSHOP\PETSHOP\PETSHOP-API
+mvn spring-boot:run
+```
+
+Flyway automatically runs all migration scripts on startup:
+
+- `V1__init.sql` — creates all tables (users, petshops, products, orders, etc.)
+- `V2__seed_data.sql` — inserts test data (users, petshops, categories, products, services)
+
+You do NOT need to run these SQL files manually. Just start the API and the database is ready.
+
+### Seed accounts for testing
+
+| Email | Password | Role |
+|-------|----------|------|
+| admin@petmarket.id | password123 | Admin |
+| budi@gmail.com | password123 | Customer |
+| sari@gmail.com | password123 | Customer |
+| andi@gmail.com | password123 | Customer |
+| happypets@gmail.com | password123 | Mitra |
+| pawcare@gmail.com | password123 | Mitra |
+
+## Run Backend API
+
+Start the Spring Boot API (PostgreSQL must be running):
 
 ```powershell
 cd C:\PETSHOP\PETSHOP\PETSHOP-API
