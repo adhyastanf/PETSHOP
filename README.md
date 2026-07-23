@@ -1,11 +1,51 @@
 # PETSHOP
 
-Pet Marketplace monorepo based on `01_Product_Vision_Document.md`.
+Multi-vendor marketplace for pet products and pet services.
+
+PETSHOP allows customers to purchase pet products and book services such as grooming and vaccination from registered petshop partners.
+
+## Applications
+
+- `PETSHOP-UI` - Next.js frontend
+- `PETSHOP-API` - Spring Boot backend
+
+## Documentation
+
+Full project documentation is available in `docs/`.
+
+Important entry points:
+
+- `AGENTS.md` - operating instructions for AI coding agents
+- `docs/README.md` - documentation map and navigation index
+- `docs/PROJECT_CONTEXT.md` - canonical project context and source-of-truth hierarchy
+- `docs/FEATURE_KNOWLEDGE.md` - complete MVP feature specification
+- `docs/DATABASE_KNOWLEDGE.md` - canonical database/table specification
+- `docs/BUSINESS_RULES.md` - business invariants that implementations must preserve
+- `docs/architecture/STATE_MACHINES.md` - valid lifecycle/status transitions
+- `docs/architecture/ARCHITECTURE.md` - overall system architecture
+- `docs/architecture/BACKEND_ARCHITECTURE.md` - Spring Boot architecture conventions
+- `docs/architecture/FRONTEND_ARCHITECTURE.md` - Next.js architecture and state-management conventions
+- `docs/api/API_CONTRACT.md` - API conventions and response/error standards
+- `docs/api/API_ENDPOINT_CATALOG.md` - planned MVP endpoint catalog
+- `docs/api/AUTHORIZATION_MATRIX.md` - roles, permissions, ownership, and scope
+- `docs/implementation/IMPLEMENTATION_ROADMAP.md` - recommended development order
+- `docs/implementation/USER_STORIES.md` - implementable MVP user stories
+- `docs/implementation/ACCEPTANCE_CRITERIA.md` - reusable acceptance requirements
+- `docs/implementation/DEFINITION_OF_DONE.md` - completion requirements
+- `docs/frontend/PAGE_CATALOG.md` - planned customer, merchant, and admin pages
+- `docs/integrations/INTEGRATION_SPEC.md` - payment, shipping, storage, OAuth, and notification integration boundaries
+- `docs/engineering/CODING_STANDARDS.md` - engineering conventions
+- `docs/engineering/TEST_CASES.md` - critical MVP test scenarios
+- `docs/engineering/SECURITY.md` - application security requirements
+
+AI coding agents must start with `AGENTS.md`. Human developers should use this README for setup and `docs/README.md` to navigate the full specification.
 
 ## Folders
 
 - `PETSHOP-UI` - Next.js frontend
 - `PETSHOP-API` - Spring Boot backend
+- `docs` - product, architecture, API, implementation, frontend, integration, engineering, and operations documentation
+- `scripts` - local development and database utility scripts
 
 ## Prerequisites
 
@@ -108,39 +148,27 @@ winget install PostgreSQL.PostgreSQL.16
 Or use Docker:
 
 ```powershell
-docker run -d --name petshop-db -e POSTGRES_USER=petshop -e POSTGRES_PASSWORD=petshop -e POSTGRES_DB=petshop -p 5432:5432 postgres:16-alpine
+docker run -d --name petshop-db -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=Petshop@2026 -e POSTGRES_DB=petshop -p 5432:5432 postgres:16-alpine
 ```
 
-If using Docker, skip Step 2 (database and user are created automatically).
+If using Docker, skip Step 2 (database is created automatically).
 
-### Step 2: Create database and user
+### Step 2: Create the database
 
-Open DBeaver, connect as `postgres` user, then run this SQL:
+Open DBeaver, connect to PostgreSQL with:
+
+- **Host:** localhost
+- **Port:** 5432
+- **Username:** postgres
+- **Password:** Petshop@2026
+
+Then open a SQL Editor and run:
 
 ```sql
-DO $$
-BEGIN
-    IF NOT EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname = 'petshop') THEN
-        CREATE ROLE petshop WITH LOGIN PASSWORD 'petshop';
-    END IF;
-END
-$$;
-
-CREATE DATABASE petshop OWNER petshop;
-GRANT ALL PRIVILEGES ON DATABASE petshop TO petshop;
+CREATE DATABASE petshop;
 ```
 
-Then reconnect to the `petshop` database as `postgres` and run:
-
-```sql
-GRANT ALL ON SCHEMA public TO petshop;
-```
-
-Or use the script file:
-
-```powershell
-psql -U postgres -f C:\PETSHOP\PETSHOP\scripts\create-database.sql
-```
+That's it. No extra users or grants needed — the app connects as `postgres`.
 
 ### Step 3: Start the API
 
@@ -151,21 +179,42 @@ mvn spring-boot:run
 
 Flyway automatically runs all migration scripts on startup:
 
-- `V1__init.sql` — creates all tables (users, petshops, products, orders, etc.)
-- `V2__seed_data.sql` — inserts test data (users, petshops, categories, products, services)
+- `V1__init.sql` — creates all 87 tables (users, merchants, products, orders, bookings, payments, etc.)
+- `V2__seed_data.sql` — inserts reference data (roles, permissions, pet types, categories, etc.)
 
 You do NOT need to run these SQL files manually. Just start the API and the database is ready.
 
-### Seed accounts for testing
+### Database credentials
 
-| Email | Password | Role |
-|-------|----------|------|
-| admin@petmarket.id | password123 | Admin |
-| budi@gmail.com | password123 | Customer |
-| sari@gmail.com | password123 | Customer |
-| andi@gmail.com | password123 | Customer |
-| happypets@gmail.com | password123 | Mitra |
-| pawcare@gmail.com | password123 | Mitra |
+| Setting | Value |
+|---------|-------|
+| Host | localhost |
+| Port | 5432 |
+| Database | petshop |
+| Username | postgres |
+| Password | Petshop@2026 |
+
+These are configured in `PETSHOP-API/src/main/resources/application.yml`. Change them there if your PostgreSQL uses different credentials.
+
+### Seed data (inserted automatically)
+
+The V2 migration inserts reference/lookup data needed for the app to function:
+
+| Table | Data |
+|-------|------|
+| `roles` | 8 roles (SUPER_ADMIN, ADMIN, CUSTOMER, PETSHOP_OWNER, PETSHOP_ADMIN, PETSHOP_STAFF, GROOMER, VETERINARIAN) |
+| `permissions` | 42 permissions across 11 modules |
+| `role_permissions` | Role-permission assignments for all 8 roles |
+| `pet_types` | Dog, Cat, Bird, Fish, Reptile, Small Animal |
+| `pet_breeds` | 10 dog breeds + 10 cat breeds |
+| `product_categories` | 6 parent categories + 17 subcategories |
+| `service_categories` | Grooming, Vaccination, Veterinary Consultation, Dental Care, Boarding |
+| `vaccine_types` | 6 dog vaccines + 5 cat vaccines |
+| `system_configurations` | Checkout expiration, slot hold duration, withdrawal minimum, commission %, review window |
+| `shipping_providers` | Biteship (aggregator) |
+| `payment_methods` | QRIS, Bank Transfer (BCA/BNI/BRI/Mandiri), GoPay, ShopeePay, DANA |
+
+No user accounts are seeded — user registration will be implemented as a feature.
 
 ## Run Backend API
 
@@ -222,8 +271,8 @@ Database environment variables can be changed if needed:
 
 ```powershell
 $env:DATABASE_URL="jdbc:postgresql://localhost:5432/petshop"
-$env:DATABASE_USERNAME="petshop"
-$env:DATABASE_PASSWORD="petshop"
+$env:DATABASE_USERNAME="postgres"
+$env:DATABASE_PASSWORD="Petshop@2026"
 ```
 
 ## CORS
