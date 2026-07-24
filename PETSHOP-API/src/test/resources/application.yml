@@ -1,0 +1,15 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: none
+    open-in-view: false
+  flyway:
+    enabled: true
+
+app:
+  jwt:
+    secret: test-secret-key-that-is-at-least-32-bytes-long!!
+    access-token-expiry: 900
+    refresh-token-expiry: 604800
+  cors:
+    allowed-origins: http://localhost:3000

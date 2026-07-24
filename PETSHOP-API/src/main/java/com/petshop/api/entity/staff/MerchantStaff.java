@@ -1,9 +1,9 @@
 package com.petshop.api.entity.staff;
 
 import com.petshop.api.entity.base.AuditableEntity;
-import com.petshop.api.entity.identity.User;
+import com.petshop.api.auth.domain.User;
 import com.petshop.api.entity.merchant.Merchant;
-import com.petshop.api.entity.rbac.Role;
+import com.petshop.api.auth.domain.Role;
 import jakarta.persistence.*;
 import lombok.*;
 

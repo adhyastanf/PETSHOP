@@ -2,7 +2,7 @@ package com.petshop.api.entity.payment;
 
 import com.petshop.api.entity.base.BaseEntity;
 import com.petshop.api.entity.booking.Booking;
-import com.petshop.api.entity.identity.User;
+import com.petshop.api.auth.domain.User;
 import com.petshop.api.entity.order.Order;
 import jakarta.persistence.*;
 import lombok.*;

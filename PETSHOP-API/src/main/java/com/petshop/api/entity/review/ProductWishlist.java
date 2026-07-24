@@ -1,6 +1,6 @@
 package com.petshop.api.entity.review;
 
-import com.petshop.api.entity.identity.User;
+import com.petshop.api.auth.domain.User;
 import com.petshop.api.entity.product.Product;
 import jakarta.persistence.*;
 import lombok.*;

@@ -1,7 +1,7 @@
 package com.petshop.api.entity.order;
 
 import com.petshop.api.entity.base.BaseEntity;
-import com.petshop.api.entity.identity.User;
+import com.petshop.api.auth.domain.User;
 import jakarta.persistence.*;
 import lombok.*;
 

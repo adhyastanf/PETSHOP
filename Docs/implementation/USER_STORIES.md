@@ -1,76 +1,205 @@
-# MVP User Stories
-Each story inherits Acceptance Criteria and Definition of Done.
+# Pet Marketplace — MVP User Stories
 
-## Identity
-- **US-AUTH-001 Register:** visitor registers securely; uniqueness enforced and customer role assigned.
+Each story inherits the applicable canonical requirements from `ACCEPTANCE_CRITERIA.md`, `DEFINITION_OF_DONE.md`, `FEATURE_KNOWLEDGE.md`, `BUSINESS_RULES.md`, `DATABASE_KNOWLEDGE.md`, `AUTHORIZATION_MATRIX.md`, and `API_CONTRACT.md`.
+
+User stories define observable behavior; detailed rules remain in their canonical documents.
+
+## Identity & Authentication
+- **US-AUTH-001 Register:** visitor registers securely; uniqueness is enforced and the customer role is assigned.
 - **US-AUTH-002 Login:** valid credentials authenticate; invalid credentials do not enumerate accounts.
-- **US-AUTH-003 Sessions:** refresh rotation/revocation works and revoked token cannot replay.
+- **US-AUTH-003 Sessions:** refresh-token rotation, revocation, expiration, and replay protection work correctly.
+- **US-AUTH-004 Logout:** authenticated user terminates the applicable session and revoked refresh credentials cannot be reused.
+- **US-AUTH-005 Current User:** authenticated user retrieves their current profile and authorization context.
 
-## Customer/Pet
-- **US-CUS-001 Profile:** customer manages permitted profile fields.
-- **US-CUS-002 Addresses:** customer manages only own addresses/default.
-- **US-PET-001 Pet:** customer creates/manages only own pets.
-- **US-PET-002 Vaccination:** customer views basic vaccination history for own pet.
+## Customer
+- **US-CUS-001 View Profile:** customer views their own permitted profile information.
+- **US-CUS-002 Update Profile:** customer updates permitted fields of their own profile.
+- **US-CUS-003 Create Address:** customer creates an address under their own account.
+- **US-CUS-004 View Addresses:** customer lists/views only their own addresses.
+- **US-CUS-005 Update Address:** customer updates only their own address.
+- **US-CUS-006 Delete Address:** customer removes only their own address according to applicable rules.
+- **US-CUS-007 Default Address:** customer selects one of their own addresses as default.
+
+## Pets
+- **US-PET-001 Register Pet:** customer registers a pet under their own account.
+- **US-PET-002 View Pets:** customer lists/views only their own pets.
+- **US-PET-003 Update Pet:** customer updates only their own pet.
+- **US-PET-004 Delete Pet:** customer removes/deactivates only their own pet according to applicable rules.
+- **US-PET-005 Vaccination History:** customer views basic vaccination history for their own pet.
 
 ## Merchant
-- **US-MER-001 Apply:** business submits merchant application/documents.
-- **US-MER-002 Verify:** authorized admin approves/rejects with history.
-- **US-MER-003 Branch:** merchant manages owned branches/hours.
-- **US-MER-004 Staff:** merchant manages scoped staff/branch assignments.
-- **US-MER-005 Vet:** admin verifies veterinarian licenses.
+- **US-MER-001 Apply:** business submits a merchant application and required documents.
+- **US-MER-002 View Application:** applicant views their merchant application status/details.
+- **US-MER-003 Verify Application:** authorized admin approves/rejects applications with history/audit.
+- **US-MER-004 Merchant Profile:** authorized merchant user manages permitted merchant profile information.
+- **US-MER-005 Create Branch:** merchant creates a branch under their merchant.
+- **US-MER-006 Manage Branch:** merchant views/updates only owned branches.
+- **US-MER-007 Branch Hours:** merchant configures operating hours and closures.
+- **US-MER-008 Manage Staff:** merchant manages staff within authorized scope.
+- **US-MER-009 Staff Assignment:** merchant assigns eligible staff to authorized branches.
+- **US-MER-010 Veterinarian Verification:** authorized admin verifies/rejects veterinarian credentials.
 
-## Catalog/Inventory
-- **US-PROD-001 Product:** merchant creates/manages product.
-- **US-PROD-002 Variant:** merchant manages options, variants, SKU and prices.
-- **US-PROD-003 Discovery:** customer browses product catalog/detail.
-- **US-INV-001 Stock:** merchant adjusts branch-variant stock with movement.
-- **US-INV-002 Reserve:** checkout atomically reserves stock.
-- **US-INV-003 Release/Finalize:** reservations release/finalize exactly once.
+## Product Catalog
+- **US-PROD-001 Create Product:** merchant creates a product under their catalog.
+- **US-PROD-002 View Merchant Products:** merchant views products within authorized scope.
+- **US-PROD-003 Update Product:** merchant updates an owned product.
+- **US-PROD-004 Product Media:** merchant manages permitted product media.
+- **US-PROD-005 Product Options:** merchant configures product options.
+- **US-PROD-006 Product Variants:** merchant manages variants, SKU, prices, and attributes.
+- **US-PROD-007 Product Discovery:** customer browses/searches available products.
+- **US-PROD-008 Product Detail:** customer views public product detail and applicable availability.
 
-## Services
-- **US-SVC-001 Service:** merchant creates service and confirmation mode.
-- **US-SVC-002 Pricing:** merchant configures pet/breed/weight pricing.
-- **US-SVC-003 Availability:** configure branches, staff and schedules.
-- **US-SVC-004 Search Slots:** customer gets backend-computed availability.
-- **US-SVC-005 Hold Slot:** checkout temporarily holds capacity safely.
+## Inventory
+- **US-INV-001 View Inventory:** merchant views branch-variant inventory within scope.
+- **US-INV-002 Adjust Stock:** merchant adjusts stock and every mutation creates movement history.
+- **US-INV-003 Reserve Stock:** checkout atomically reserves inventory without overselling.
+- **US-INV-004 Release Reservation:** cancelled/expired reservations release exactly once.
+- **US-INV-005 Finalize Reservation:** successful fulfillment finalizes reservations exactly once.
+- **US-INV-006 View Movements:** merchant views inventory movement history within scope.
 
-## Cart/Checkout
-- **US-CART-001 Product Cart:** add/update/remove product.
-- **US-CART-002 Service Cart:** add/update/remove service with pet/slot context.
-- **US-CART-003 Mixed Cart:** multiple merchants and product+service coexist.
-- **US-CHK-001 Checkout:** validate cart and create snapshots.
-- **US-CHK-002 Totals:** backend calculates all totals.
-- **US-CHK-003 Resources:** reserve stock/slots safely.
-- **US-CHK-004 Expiration:** expired checkout releases resources once.
+## Services & Scheduling
+- **US-SVC-001 Create Service:** merchant creates a service and confirmation mode.
+- **US-SVC-002 Manage Service:** merchant views/updates an owned service.
+- **US-SVC-003 Service Pricing:** merchant configures documented pet/breed/weight pricing rules.
+- **US-SVC-004 Service Branches:** merchant configures branches where a service is available.
+- **US-SVC-005 Service Staff:** merchant assigns eligible staff/veterinarians.
+- **US-SVC-006 Staff Schedule:** merchant configures schedules and exceptions.
+- **US-SVC-007 Service Discovery:** customer browses/searches available services.
+- **US-SVC-008 Service Detail:** customer views service details and booking requirements.
+- **US-SVC-009 Search Slots:** customer receives backend-computed available slots.
+- **US-SVC-010 Hold Slot:** checkout temporarily holds eligible service capacity safely.
+- **US-SVC-011 Release Slot:** cancelled/expired holds restore capacity exactly once.
 
-## Payment/Fulfillment
-- **US-PAY-001 Attempt:** create payment attempt.
-- **US-PAY-002 Webhook:** verified webhook finalizes exactly once.
-- **US-PAY-003 Retry:** unpaid checkout may create new attempt.
-- **US-ORD-001 Split Orders:** product items become merchant/branch orders.
-- **US-ORD-002 Process:** merchant progresses own order legally.
-- **US-SHP-001 Shipping:** quote/create/track shipment.
-- **US-BKG-001 Booking:** paid service becomes booking.
-- **US-BKG-002 Auto Confirm:** auto mode confirms when eligible.
-- **US-BKG-003 Merchant Confirm:** merchant-confirm mode requires acceptance.
-- **US-BKG-004 Fulfill:** staff checks in/starts/completes.
-- **US-BKG-005 Vaccination:** completed vaccination creates history once.
+## Cart
+- **US-CART-001 View Cart:** customer views their current cart and grouping.
+- **US-CART-002 Add Product:** customer adds an eligible product variant.
+- **US-CART-003 Update Product Item:** customer changes product quantity.
+- **US-CART-004 Remove Product Item:** customer removes a product item.
+- **US-CART-005 Add Service:** customer adds an eligible service with required booking context.
+- **US-CART-006 Update Service Item:** customer changes permitted service selections.
+- **US-CART-007 Remove Service Item:** customer removes a service item.
+- **US-CART-008 Mixed Cart:** documented multi-merchant and product/service combinations coexist.
 
-## Refund/Finance
-- **US-REF-001 Cancel:** backend computes cancellation/refund eligibility.
-- **US-REF-002 Refund:** provider refund processed idempotently.
-- **US-FIN-001 Commission:** applicable commission preserved.
-- **US-FIN-002 Ledger:** financial movements post immutably once.
-- **US-FIN-003 Settlement:** eligible earnings settle without duplication.
-- **US-FIN-004 Withdrawal:** merchant requests within available balance; processing is idempotent.
+## Voucher
+- **US-VOU-001 Apply Voucher:** backend validates voucher scope, period, limits, and discount.
+- **US-VOU-002 Remove Voucher:** customer removes an applied voucher before completion.
+- **US-VOU-003 Voucher Usage:** successful usage is recorded with concurrency-safe limits.
 
-## Engagement/Marketing/Admin
-- **US-REV-001 Reviews:** eligible completed transactions can be reviewed.
-- **US-FAV-001 Favorites:** manage product/service/merchant favorites.
-- **US-CHAT-001 Chat:** authorized members exchange messages/attachments.
-- **US-NOT-001 Notifications:** transactional notifications respect preferences.
-- **US-VOU-001 Voucher:** backend validates scope/time/limits and discount.
-- **US-CAM-001 Promotions:** authorized actor schedules promotions/campaigns.
-- **US-DIS-001 Dispute:** eligible user opens dispute/evidence.
-- **US-DIS-002 Resolution:** authorized admin resolves dispute.
-- **US-ADM-001 Admin:** admins operate marketplace only through explicit permissions/audit.
+## Checkout
+- **US-CHK-001 Create Checkout:** backend revalidates an eligible cart and creates checkout.
+- **US-CHK-002 Checkout Snapshots:** required historical product/service/price/merchant/branch data is preserved.
+- **US-CHK-003 Calculate Totals:** backend calculates canonical totals, discounts, shipping, and fees.
+- **US-CHK-004 Select Shipping:** customer selects eligible shipping per fulfillment group.
+- **US-CHK-005 Reserve Resources:** checkout safely reserves stock and service capacity.
+- **US-CHK-006 Confirm Checkout:** eligible checkout becomes ready for payment.
+- **US-CHK-007 Checkout Expiration:** expiration releases held resources exactly once.
+
+## Payment
+- **US-PAY-001 Payment Attempt:** customer creates a payment attempt for eligible checkout.
+- **US-PAY-002 Payment Status:** customer retrieves authoritative backend payment state.
+- **US-PAY-003 Payment Webhook:** verified webhook updates/finalizes exactly once.
+- **US-PAY-004 Retry Payment:** eligible unpaid checkout can retry without duplicate effects.
+- **US-PAY-005 Reconciliation:** provider amount, currency, identity, and checkout are validated.
+
+## Orders
+- **US-ORD-001 Split Orders:** paid product items become correct merchant/branch orders.
+- **US-ORD-002 Customer Orders:** customer views only their own orders.
+- **US-ORD-003 Merchant Orders:** merchant views only orders within authorized scope.
+- **US-ORD-004 Process Order:** merchant progresses owned orders through valid transitions.
+- **US-ORD-005 Cancel Order:** eligible actor cancels according to policy/state rules.
+
+## Shipping
+- **US-SHP-001 Shipping Quotes:** backend retrieves eligible quotes through the aggregator.
+- **US-SHP-002 Create Shipment:** eligible fulfillment creates a provider shipment.
+- **US-SHP-003 View Shipment:** authorized customer/merchant views shipment information.
+- **US-SHP-004 Track Shipment:** authorized user retrieves tracking information.
+- **US-SHP-005 Shipping Webhook:** verified provider events update state idempotently.
+
+## Bookings
+- **US-BKG-001 Create Booking:** paid service checkout creates booking exactly once.
+- **US-BKG-002 Customer Bookings:** customer views only their bookings.
+- **US-BKG-003 Merchant Bookings:** merchant/staff views bookings within scope.
+- **US-BKG-004 Auto Confirm:** eligible auto-confirm services confirm automatically.
+- **US-BKG-005 Merchant Confirm:** merchant-confirm services require authorized acceptance.
+- **US-BKG-006 Reject Booking:** authorized merchant rejects an eligible booking.
+- **US-BKG-007 Check In:** authorized staff checks in an eligible booking.
+- **US-BKG-008 Start Service:** authorized staff starts an eligible booking.
+- **US-BKG-009 Complete Service:** authorized staff completes an eligible booking.
+- **US-BKG-010 No Show:** authorized actor marks eligible booking no-show.
+- **US-BKG-011 Cancel Booking:** eligible actor cancels according to policy.
+- **US-BKG-012 Vaccination Completion:** completed vaccination creates history exactly once with eligible verified veterinarian context.
+
+## Refunds
+- **US-REF-001 Determine Refund:** backend computes cancellation/refund eligibility and amount.
+- **US-REF-002 Request Refund:** eligible customer requests refund.
+- **US-REF-003 Review Refund:** authorized admin approves/rejects according to policy.
+- **US-REF-004 Process Refund:** approved provider refund is idempotent.
+- **US-REF-005 Refund Status:** eligible actor views authoritative refund state/history.
+
+## Finance
+- **US-FIN-001 Commission:** applicable commission is determined and preserved.
+- **US-FIN-002 Ledger:** financial movements post immutably and exactly once.
+- **US-FIN-003 Merchant Balance:** merchant views balance from canonical financial records.
+- **US-FIN-004 Settlement:** eligible earnings settle without duplication.
+- **US-FIN-005 View Settlements:** authorized actor views settlement details/items.
+- **US-FIN-006 Bank Account:** merchant securely manages permitted payout account data.
+- **US-FIN-007 Request Withdrawal:** merchant requests within available balance/limits.
+- **US-FIN-008 Process Withdrawal:** authorized payout processing is idempotent.
+- **US-FIN-009 Withdrawal History:** merchant views withdrawals within their scope.
+
+## Reviews
+- **US-REV-001 Product Review:** eligible customer reviews a product from a qualifying transaction.
+- **US-REV-002 Service Review:** eligible customer reviews a service from a qualifying booking.
+- **US-REV-003 View Reviews:** users view applicable public reviews.
+- **US-REV-004 Review Moderation:** authorized admin moderates reviews.
+
+## Favorites
+- **US-FAV-001 Favorite Product:** customer adds/removes product favorites.
+- **US-FAV-002 Favorite Service:** customer adds/removes service favorites.
+- **US-FAV-003 Favorite Merchant:** customer adds/removes merchant favorites.
+- **US-FAV-004 View Favorites:** customer views only their favorites.
+
+## Chat
+- **US-CHAT-001 Start Conversation:** eligible participant starts/obtains an authorized conversation.
+- **US-CHAT-002 View Conversations:** participant views only authorized conversations.
+- **US-CHAT-003 Send Message:** authorized participant sends a message.
+- **US-CHAT-004 Attach File:** authorized participant sends permitted private attachments.
+- **US-CHAT-005 Read Status:** participant manages message read state according to rules.
+
+## Notifications
+- **US-NOT-001 Receive Notification:** relevant events create notifications for eligible recipients.
+- **US-NOT-002 View Notifications:** user views only their notifications.
+- **US-NOT-003 Mark Read:** user marks their notifications as read.
+- **US-NOT-004 Preferences:** user manages supported notification preferences.
+
+## Promotions & Campaigns
+- **US-CAM-001 Create Promotion:** authorized merchant/admin creates an eligible promotion.
+- **US-CAM-002 Manage Promotion:** authorized owner schedules/updates/deactivates promotion.
+- **US-CAM-003 Campaign Management:** authorized admin manages marketplace campaigns.
+- **US-CAM-004 Banner Management:** authorized admin manages scheduled banners.
+- **US-CAM-005 Promotion Discovery:** customer sees only active/eligible marketing content.
+
+## Disputes
+- **US-DIS-001 Open Dispute:** eligible participant opens a dispute.
+- **US-DIS-002 Submit Evidence:** authorized participant submits permitted evidence securely.
+- **US-DIS-003 View Dispute:** authorized participant/admin views dispute information.
+- **US-DIS-004 Resolve Dispute:** authorized admin resolves with decision/audit information.
+
+## Administration
+- **US-ADM-001 User Administration:** authorized admin performs permitted user operations with audit.
+- **US-ADM-002 Merchant Administration:** authorized admin manages merchant verification/moderation.
+- **US-ADM-003 Catalog Administration:** authorized admin manages reference catalog/moderation.
+- **US-ADM-004 Transaction Administration:** authorized admin operates transactions only through explicit permissions and valid operations.
+- **US-ADM-005 Marketplace Configuration:** authorized admin manages supported system configuration.
+- **US-ADM-006 Audit Logs:** authorized admin views audit history according to permissions.
+
+## Story Execution Rule
+
+A user-story ID identifies product behavior, not an individual class or file.
+
+When asked to implement a story, the agent resolves detailed requirements from
+canonical documentation, inspects what already exists, and implements the
+smallest complete vertical slice required by that story.
+
+The agent must not invent missing business rules or duplicate canonical
+requirements into temporary planning documents.

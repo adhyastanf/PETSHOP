@@ -1,0 +1,14 @@
+.kiro
+.agents/
+PETSHOP-API/.jqwik-database
+
+# IDE
+.vscode/
+.idea/
+*.iml
+
+# OS
+.DS_Store
+
+# Logs
+*.log

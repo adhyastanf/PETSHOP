@@ -1,6 +1,9 @@
 'use client';
 
-import { DropdownMenuGroupTypes, DropdownMenuItemTypes, DropdownMenuSeparatorTypes } from '@/types/dropdown-types';
+import Link from 'next/link';
+import { LogOut, User, ShoppingBag, Heart, Settings } from 'lucide-react';
+import { useAuthStore } from '@/store/auth-store';
+import { useLogout } from '@/hooks/use-auth';
 import { Button } from '../ui/button';
 import {
   DropdownMenu,
@@ -8,81 +11,80 @@ import {
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuPortal,
   DropdownMenuSeparator,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from '../ui/dropdown-menu';
 
 export default function UserNav() {
+  const { isAuthenticated, user } = useAuthStore();
+  const logoutMutation = useLogout();
+
+  if (!isAuthenticated) {
+    return (
+      <div className='flex gap-2'>
+        <Link href='/login'>
+          <Button variant='outline' size='sm'>
+            Masuk
+          </Button>
+        </Link>
+        <Link href='/register'>
+          <Button size='sm'>
+            Daftar
+          </Button>
+        </Link>
+      </div>
+    );
+  }
+
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger render={<Button>Profile</Button>} />
-      <DropdownMenuContent>
-        {DROPDOWN_MENUS.map((menu, index) => {
-          return <RenderMenu menu={menu} key={index} />;
-        })}
+      <DropdownMenuTrigger
+        render={
+          <button className='inline-flex items-center gap-1.5 rounded-lg border border-border bg-background px-2.5 py-1.5 text-sm font-medium hover:bg-muted cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-ring'>
+            <User className='size-4' />
+            <span className='max-w-32 truncate'>
+              {user?.fullName ?? 'Akun'}
+            </span>
+          </button>
+        }
+      />
+      <DropdownMenuContent align='end' className='w-52'>
+        <DropdownMenuGroup>
+          <DropdownMenuLabel>
+            <div>
+              <p className='text-sm font-medium truncate'>{user?.fullName}</p>
+              <p className='text-xs text-muted-foreground truncate'>{user?.email}</p>
+            </div>
+          </DropdownMenuLabel>
+        </DropdownMenuGroup>
+        <DropdownMenuSeparator />
+        <DropdownMenuGroup>
+          <DropdownMenuItem>
+            <User className='mr-2 size-4' />
+            Profil Saya
+          </DropdownMenuItem>
+          <DropdownMenuItem>
+            <ShoppingBag className='mr-2 size-4' />
+            Pesanan Saya
+          </DropdownMenuItem>
+          <DropdownMenuItem>
+            <Heart className='mr-2 size-4' />
+            Wishlist
+          </DropdownMenuItem>
+          <DropdownMenuItem>
+            <Settings className='mr-2 size-4' />
+            Pengaturan
+          </DropdownMenuItem>
+        </DropdownMenuGroup>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem
+          onClick={() => logoutMutation.mutate()}
+          disabled={logoutMutation.isPending}
+        >
+          <LogOut className='mr-2 size-4' />
+          Keluar
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
 }
-
-function RenderMenu({ menu }: { menu: DropdownMenu }) {
-  if (menu.separator) {
-    return <DropdownMenuSeparator />;
-  }
-
-  return (
-    <DropdownMenuGroup>
-      <DropdownMenuLabel>{menu.label}</DropdownMenuLabel>
-
-      {menu.items.map((item, idx) => (
-        <RenderMenuItem item={item} key={idx} />
-      ))}
-    </DropdownMenuGroup>
-  );
-}
-
-function RenderMenuItem({ item }: { item: DropdownMenuItemTypes }) {
-  if (item.children) {
-    return (
-      <DropdownMenuSub>
-        <DropdownMenuSubTrigger>{item.label}</DropdownMenuSubTrigger>
-        <DropdownMenuPortal>
-          <DropdownMenuSubContent>
-            {item.children.map((item, idx) => (
-              <RenderMenuItem item={item} key={idx} />
-            ))}
-          </DropdownMenuSubContent>
-        </DropdownMenuPortal>
-      </DropdownMenuSub>
-    );
-  }
-
-  return <DropdownMenuItem>{item.label}</DropdownMenuItem>;
-}
-
-const DROPDOWN_MENUS: DropdownMenu[] = [
-  {
-    label: 'Profile',
-    items: [
-      {
-        label: 'My Account',
-        value: 'account',
-        children: [
-          {
-            label: 'Edit',
-            value: 'edit',
-          },
-        ],
-      },
-    ],
-  },
-  {
-    separator: true,
-  },
-];
-
-type DropdownMenu = DropdownMenuGroupTypes | DropdownMenuSeparatorTypes;
