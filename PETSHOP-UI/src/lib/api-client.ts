@@ -14,10 +14,10 @@ export class ApiError extends Error {
   public traceId?: string;
 
   constructor(status: number, body: ApiErrorResponse) {
-    super(body.message);
+    super(body.message ?? `Request failed with status ${status}`);
     this.name = 'ApiError';
     this.status = status;
-    this.code = body.code;
+    this.code = body.code ?? `HTTP_${status}`;
     this.details = body.details ?? [];
     this.traceId = body.traceId;
   }

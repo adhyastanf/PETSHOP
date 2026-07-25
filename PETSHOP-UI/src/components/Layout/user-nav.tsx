@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { LogOut, User, ShoppingBag, Heart, Settings } from 'lucide-react';
+import { LogOut, User, ShoppingBag, Heart, PawPrint, Settings } from 'lucide-react';
 import { useAuthStore } from '@/store/auth-store';
 import { useLogout } from '@/hooks/use-auth';
 import { Button } from '../ui/button';
@@ -59,22 +59,36 @@ export default function UserNav() {
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem>
-            <User className='mr-2 size-4' />
-            Profil Saya
-          </DropdownMenuItem>
-          <DropdownMenuItem>
-            <ShoppingBag className='mr-2 size-4' />
-            Pesanan Saya
-          </DropdownMenuItem>
-          <DropdownMenuItem>
-            <Heart className='mr-2 size-4' />
-            Wishlist
-          </DropdownMenuItem>
-          <DropdownMenuItem>
-            <Settings className='mr-2 size-4' />
-            Pengaturan
-          </DropdownMenuItem>
+          <Link href='/customer/profile'>
+            <DropdownMenuItem>
+              <User className='mr-2 size-4' />
+              Profil Saya
+            </DropdownMenuItem>
+          </Link>
+          <Link href='/customer/pets'>
+            <DropdownMenuItem>
+              <PawPrint className='mr-2 size-4' />
+              Hewan Saya
+            </DropdownMenuItem>
+          </Link>
+          <Link href='/customer/orders'>
+            <DropdownMenuItem>
+              <ShoppingBag className='mr-2 size-4' />
+              Pesanan Saya
+            </DropdownMenuItem>
+          </Link>
+          <Link href='/customer/wishlist'>
+            <DropdownMenuItem>
+              <Heart className='mr-2 size-4' />
+              Wishlist
+            </DropdownMenuItem>
+          </Link>
+          <Link href='/customer/settings'>
+            <DropdownMenuItem>
+              <Settings className='mr-2 size-4' />
+              Pengaturan
+            </DropdownMenuItem>
+          </Link>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuItem

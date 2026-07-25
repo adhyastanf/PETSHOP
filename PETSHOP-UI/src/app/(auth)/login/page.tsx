@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 import { Eye, EyeOff } from 'lucide-react';
 import { toast } from 'sonner';
@@ -24,7 +24,11 @@ function signalCredentialSave(email: string, password: string) {
   // Try PasswordCredential API (Chrome, Edge)
   if ('PasswordCredential' in window) {
     try {
-      const cred = new (window as any).PasswordCredential({
+      const CredentialCtor = (window as Window & {
+        PasswordCredential?: new (data: { id: string; password: string }) => Credential;
+      }).PasswordCredential;
+      if (!CredentialCtor) return;
+      const cred = new CredentialCtor({
         id: email,
         password: password,
       });
@@ -80,8 +84,6 @@ export default function LoginPage() {
   const [formData, setFormData] = useState<LoginFormData>({ email: '', password: '' });
   const [errors, setErrors] = useState<Partial<Record<keyof LoginFormData, string>>>({});
   const [showPassword, setShowPassword] = useState(false);
-  const passwordRef = useRef(formData.password);
-  passwordRef.current = formData.password;
 
   const loginMutation = useLogin();
 
@@ -112,7 +114,7 @@ export default function LoginPage() {
     loginMutation.mutate(result.data, {
       onSuccess: () => {
         // Signal browser to save credentials after successful login
-        signalCredentialSave(formData.email, passwordRef.current);
+        signalCredentialSave(result.data.email, result.data.password);
       },
       onError: (error) => {
         if (error instanceof ApiError) {
