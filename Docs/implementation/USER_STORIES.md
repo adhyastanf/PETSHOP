@@ -10,6 +10,8 @@ User stories define observable behavior; detailed rules remain in their canonica
 - **US-AUTH-003 Sessions:** refresh-token rotation, revocation, expiration, and replay protection work correctly.
 - **US-AUTH-004 Logout:** authenticated user terminates the applicable session and revoked refresh credentials cannot be reused.
 - **US-AUTH-005 Current User:** authenticated user retrieves their current profile and authorization context.
+- **US-AUTH-006 Remember Me:** login with "remember me" extends refresh token duration; without it, session expires at browser close or short duration.
+- **US-AUTH-007 Delete Account:** authenticated user can request permanent account deletion; system soft-deletes or schedules hard-delete with grace period; active orders/bookings must be resolved first.
 
 ## Customer
 - **US-CUS-001 View Profile:** customer views their own permitted profile information.
@@ -129,6 +131,17 @@ User stories define observable behavior; detailed rules remain in their canonica
 - **US-BKG-011 Cancel Booking:** eligible actor cancels according to policy.
 - **US-BKG-012 Vaccination Completion:** completed vaccination creates history exactly once with eligible verified veterinarian context.
 
+## Pet Hotel (Boarding)
+- **US-HTL-001 Search Rooms:** customer searches available room types at a branch for given dates and pet type/size.
+- **US-HTL-002 Book Stay:** customer books a multi-night stay with selected room type and add-on services.
+- **US-HTL-003 Check In:** authorized staff checks in pet for boarding stay.
+- **US-HTL-004 Daily Updates:** staff posts daily activity log, photos, or notes visible to the pet owner.
+- **US-HTL-005 Check Out:** authorized staff checks out pet; owner confirms pickup.
+- **US-HTL-006 Extend Stay:** eligible booking can be extended if room remains available.
+- **US-HTL-007 Early Checkout:** customer requests early checkout with applicable refund policy.
+- **US-HTL-008 Room Management:** merchant manages room types, capacity, and pricing per branch.
+- **US-HTL-009 Boarding Cancellation:** cancellation follows boarding-specific policy with applicable refund calculation.
+
 ## Refunds
 - **US-REF-001 Determine Refund:** backend computes cancellation/refund eligibility and amount.
 - **US-REF-002 Request Refund:** eligible customer requests refund.
@@ -192,6 +205,15 @@ User stories define observable behavior; detailed rules remain in their canonica
 - **US-ADM-004 Transaction Administration:** authorized admin operates transactions only through explicit permissions and valid operations.
 - **US-ADM-005 Marketplace Configuration:** authorized admin manages supported system configuration.
 - **US-ADM-006 Audit Logs:** authorized admin views audit history according to permissions.
+
+## Legal & Store Compliance
+- **US-LEGAL-001 Terms of Service:** terms of service page is publicly accessible, versioned, and linked from registration and app footer/settings.
+- **US-LEGAL-002 Privacy Policy:** privacy policy page is publicly accessible, versioned, and discloses data collection, usage, sharing, retention, and deletion practices.
+- **US-LEGAL-003 Consent & Agreement:** user must explicitly accept ToS and Privacy Policy during registration; consent is recorded with timestamp and policy version.
+- **US-LEGAL-004 Cookie/Tracking Disclosure:** applicable cookie or tracking disclosure is presented to users where required by law.
+- **US-LEGAL-005 Data Export:** authenticated user can request a downloadable export of their personal data (profile, pets, orders, bookings, addresses, messages).
+- **US-LEGAL-006 Content Guidelines:** community/content guidelines page exists and is accessible from app settings and store listing.
+- **US-LEGAL-007 App Store Metadata:** app store listing metadata (title, description, screenshots, category, age rating, developer contact, privacy policy URL) is prepared for Google Play and Apple App Store submission.
 
 ## Story Execution Rule
 

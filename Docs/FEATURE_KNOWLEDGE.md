@@ -53,6 +53,8 @@ pet/vaccination data.
 -   Email registration
 -   Phone registration
 -   Password login/logout
+-   Remember me (extended session duration)
+-   Delete account (self-service account deletion)
 -   Google OAuth
 -   Apple OAuth
 -   Email verification
@@ -322,12 +324,38 @@ rejected.
 -   Global or service-specific cancellation policy
 -   Time-window-based refund percentage
 
-## 27. Multi-Merchant Cart
+## 27. Pet Hotel (Boarding)
+
+Pet hotel/boarding allows customers to leave their pets at a merchant's
+facility for one or more nights.
+
+-   Multi-night stay booking (check-in date, check-out date)
+-   Room/cage type selection (standard, deluxe, suite)
+-   Capacity per room type per branch
+-   Per-night pricing (may vary by pet type, size, room type)
+-   Additional services during stay (feeding, grooming, playtime, medication)
+-   Daily activity log / updates from staff to owner
+-   Photo/video updates during stay
+-   Pet requirements (vaccination up-to-date, health declaration)
+-   Check-in / check-out process
+-   Early checkout / extension
+-   Emergency contact
+-   Special dietary/medical instructions
+-   Cancellation policy (boarding-specific)
+-   Branch-specific room availability
+-   Staff assignment per boarding guest
+-   Boarding lifecycle: RESERVED → CHECKED_IN → IN_STAY → CHECKED_OUT → COMPLETED → CANCELLED
+
+Pet hotel is a specialized service category. It reuses the service/booking
+infrastructure but extends it with multi-day duration, room inventory, and
+daily activity tracking.
+
+## 28. Multi-Merchant Cart
 
 One active cart can contain product items from multiple merchants and
 branches.
 
-## 28. Mixed Product + Service Cart
+## 29. Mixed Product + Service Cart
 
 Physical products and bookable services can coexist in one cart. This is
 a fundamental requirement and must not be split into separate checkout
@@ -636,6 +664,27 @@ Branch/location - Price - Rating - Nearby merchants using branch
 coordinates
 
 Elasticsearch/OpenSearch is not required for MVP.
+
+## 71. Legal & Store Compliance
+
+Required for Google Play Store and Apple App Store publishing:
+
+-   Terms of Service (versioned, publicly accessible)
+-   Privacy Policy (versioned, covers data collection/usage/sharing/retention/deletion)
+-   User consent recording (ToS + Privacy Policy acceptance at registration with timestamp)
+-   Cookie/tracking disclosure (where applicable by law)
+-   User data export / right to access (downloadable personal data)
+-   Account deletion disclosure in privacy policy
+-   Community/content guidelines
+-   Refund and cancellation policy summary page
+-   Age rating declaration
+-   App store metadata (title, description, screenshots, category, developer contact)
+-   Legal links in app footer/settings screen
+-   Policy versioning (date and version number on each legal page)
+
+These pages are static/CMS content but must be linked from registration flow,
+app settings, and app store listings. Consent tracking requires backend support
+(user accepted which policy version at what timestamp).
 
 # Customer Application
 
