@@ -1,290 +1,208 @@
 # Oyen
 
-Multi-vendor marketplace for pet products and pet services.
+A modern multi-vendor pet marketplace where customers can buy pet products, book pet services, manage their pets, and find nearby pet shops and veterinarians.
 
-Oyen allows customers to purchase pet products and book services such as grooming and vaccination from registered petshop partners.
+The project follows an AI-first development workflow with comprehensive canonical documentation, a Spring Boot backend, and a Next.js frontend.
 
-## Applications
+---
 
-- `PETSHOP-UI` - Next.js frontend
-- `PETSHOP-API` - Spring Boot backend
+## Features (Implemented)
 
-## Documentation
+- **Authentication** — Register, login, logout, JWT, refresh token rotation, session restore
+- **RBAC** — Role-based access control (Customer, Merchant, Admin, Super Admin)
+- **Customer Profiles** — Profile management, delivery addresses
+- **Pet Management** — CRUD, pet types, breeds, vaccination history
+- **Internationalization** — English + Bahasa Indonesia, language switcher
+- **Platform Foundation** — Storage, Image, Email, Notification, Payment, Shipping abstractions
+- **Design System** — Oyen orange palette, consistent component library
+- **CI/CD** — GitHub Actions for backend and frontend
 
-Full project documentation is available in `docs/`.
+---
 
-Important entry points:
+## Architecture
 
-- `AGENTS.md` - operating instructions for AI coding agents
-- `docs/README.md` - documentation map and navigation index
-- `docs/PROJECT_CONTEXT.md` - canonical project context and source-of-truth hierarchy
-- `docs/FEATURE_KNOWLEDGE.md` - complete MVP feature specification
-- `docs/data/DATABASE_KNOWLEDGE.md` - canonical database/table specification
-- `docs/data/BUSINESS_RULES.md` - business invariants that implementations must preserve
-- `docs/architecture/STATE_MACHINES.md` - valid lifecycle/status transitions
-- `docs/architecture/ARCHITECTURE.md` - overall system architecture
-- `docs/architecture/BACKEND_ARCHITECTURE.md` - Spring Boot architecture conventions
-- `docs/architecture/FRONTEND_ARCHITECTURE.md` - Next.js architecture and state-management conventions
-- `docs/api/API_CONTRACT.md` - API conventions, response standards, and endpoint catalog
-- `docs/api/AUTHORIZATION_MATRIX.md` - roles, permissions, ownership, and scope
-- `docs/implementation/IMPLEMENTATION_ROADMAP.md` - recommended development order
-- `docs/implementation/USER_STORIES.md` - implementable MVP user stories
-- `docs/implementation/ACCEPTANCE_CRITERIA.md` - reusable acceptance requirements
-- `docs/implementation/DEFINITION_OF_DONE.md` - completion requirements
-- `docs/integration/INTEGRATION_SPEC.md` - payment, shipping, storage, OAuth, and notification integration boundaries
-- `docs/engineering/CODING_STANDARDS.md` - engineering conventions
-- `docs/engineering/TEST_CASES.md` - critical MVP test scenarios
-- `docs/engineering/SECURITY.md` - application security requirements
+```text
+Browser
+  │
+  ▼
+Next.js (Vercel)
+  │
+  ▼ REST/JSON
+Spring Boot (Koyeb)
+  │
+  ├── Controller → Service → Repository → PostgreSQL (Supabase)
+  │
+  └── Platform Services (abstractions)
+        ├── StorageService      (local → S3/R2)
+        ├── ImageService        (passthrough → imgproxy)
+        ├── EmailService        (console → Resend/SES)
+        ├── NotificationService (log → FCM)
+        ├── PaymentProvider     (mock → Midtrans/Xendit)
+        └── ShippingProvider    (mock → Biteship)
 
-AI coding agents must start with `AGENTS.md`. Human developers should use this README for setup and `docs/README.md` to navigate the full specification.
+Framework Infrastructure:
+  • Spring Cache (@Cacheable → Redis)
+  • Spring Scheduling (@Scheduled → Quartz)
+  • Flyway (database migrations)
+  • Spring Security (JWT authentication)
+```
 
-## Folders
+---
 
-- `PETSHOP-UI` - Next.js frontend
-- `PETSHOP-API` - Spring Boot backend
-- `docs` - product, architecture, API, implementation, frontend, integration, engineering, and operations documentation
-- `scripts` - local development and database utility scripts
+## Tech Stack
 
-## Prerequisites
+| Layer | Technology | Version |
+|-------|-----------|---------|
+| Backend | Java + Spring Boot | 21 + 3.5.3 |
+| Frontend | Next.js + TypeScript | 16.2.10 + 5.x |
+| Database | PostgreSQL | 16 |
+| ORM | Spring Data JPA / Hibernate | 6.6.x |
+| Migrations | Flyway | auto |
+| UI Library | shadcn/ui + Tailwind CSS | 4.x |
+| Server State | TanStack Query | 5.x |
+| Client State | Zustand | 5.x |
+| Validation | Zod (frontend) + Jakarta (backend) | — |
+| Testing | Vitest + JUnit 5 + Testcontainers | — |
+| CI/CD | GitHub Actions | — |
 
-Frontend:
+---
 
-- Node.js
-- npm
+## Repository Structure
 
-Backend:
+```
+/
+├── PETSHOP-API/          Spring Boot backend
+├── PETSHOP-UI/           Next.js frontend
+├── Docs/                 Canonical documentation
+│   ├── architecture/     System and backend/frontend architecture
+│   ├── api/              API contract and authorization
+│   ├── data/             Database and business rules
+│   ├── design/           Design system and UI patterns
+│   ├── engineering/      Coding standards, security, tests
+│   ├── integration/      External service integrations
+│   └── implementation/   Roadmap, stories, progress
+├── .github/workflows/    CI/CD pipelines
+├── AGENTS.md             AI agent operating manual
+└── README.md             This file
+```
+
+---
+
+## Quick Start
+
+### Prerequisites
 
 - Java 21
 - Maven
-- PostgreSQL
+- Node.js 20+
+- PostgreSQL 16
 
-Check your installed tools:
+### Backend
 
-```powershell
-node -v
-npm -v
-java -version
-mvn -version
+```bash
+cd PETSHOP-API
+cp .env.example .env
+# Edit .env with your database credentials
+mvn spring-boot:run
 ```
 
-Current backend requirement status on this machine:
+API runs at `http://localhost:8080`. Swagger UI at `http://localhost:8080/swagger-ui/index.html`.
 
-- Java 21 is installed at `C:\Program Files\Eclipse Adoptium\jdk-21.0.11.10-hotspot`
-- Maven 3.9.16 is installed at `C:\Tools\apache-maven-3.9.16`
-- If `java` or `mvn` is still not found, close and reopen PowerShell so it reloads `JAVA_HOME` and `Path`
+### Frontend
 
-## Install Backend Tools On Windows
-
-Install Java 21:
-
-```powershell
-winget install EclipseAdoptium.Temurin.21.JDK
+```bash
+cd PETSHOP-UI
+cp .env.example .env.local
+npm install
+npm run dev
 ```
 
-Install Maven with PowerShell:
+App runs at `http://localhost:3000`.
 
-```powershell
-$version="3.9.16"; $dir="C:\Tools"; New-Item -ItemType Directory -Force $dir; Invoke-WebRequest "https://dlcdn.apache.org/maven/maven-3/$version/binaries/apache-maven-$version-bin.zip" -OutFile "$env:TEMP\apache-maven.zip"; Expand-Archive "$env:TEMP\apache-maven.zip" -DestinationPath $dir -Force; [Environment]::SetEnvironmentVariable("MAVEN_HOME", "$dir\apache-maven-$version", "User"); [Environment]::SetEnvironmentVariable("Path", [Environment]::GetEnvironmentVariable("Path", "User") + ";$dir\apache-maven-$version\bin", "User")
-```
+### Database
 
-After installing Java or Maven, close and reopen the terminal.
-
-Verify again:
-
-```powershell
-java -version
-mvn -version
-```
-
-## Run Frontend
-
-Install dependencies if needed:
-
-```powershell
-cd C:\PETSHOP\PETSHOP\PETSHOP-UI
-npm.cmd install
-```
-
-Set up environment variables (first time only):
-
-```powershell
-Copy-Item .env.example .env.local
-```
-
-The default `.env.local` contains:
-
-```
-NEXT_PUBLIC_API_URL=http://localhost:8080/api/v1
-```
-
-Start the Next.js development server:
-
-```powershell
-npm.cmd run dev
-```
-
-Open:
-
-```text
-http://localhost:3000
-```
-
-Available starter pages:
-
-- `http://localhost:3000/customer/home`
-- `http://localhost:3000/mitra/home`
-- `http://localhost:3000/admin/home`
-
-## Setup Database (first time only)
-
-### Step 1: Install PostgreSQL
-
-```powershell
-winget install PostgreSQL.PostgreSQL.16
-```
-
-Or use Docker:
-
-```powershell
-docker run -d --name petshop-db -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=Petshop@2026 -e POSTGRES_DB=petshop -p 5432:5432 postgres:16-alpine
-```
-
-If using Docker, skip Step 2 (database is created automatically).
-
-### Step 2: Create the database
-
-Open DBeaver, connect to PostgreSQL with:
-
-- **Host:** localhost
-- **Port:** 5432
-- **Username:** postgres
-- **Password:** Petshop@2026
-
-Then open a SQL Editor and run:
+Flyway auto-runs migrations on backend startup. Just create an empty `petshop` database:
 
 ```sql
 CREATE DATABASE petshop;
 ```
 
-That's it. No extra users or grants needed — the app connects as `postgres`.
+---
 
-### Step 3: Start the API
+## Cloud Development
 
-```powershell
-cd C:\PETSHOP\PETSHOP\PETSHOP-API
-mvn spring-boot:run
+Official shared development environment:
+
+| Service | Provider | Purpose |
+|---------|----------|---------|
+| Repository | GitHub | Source control + CI |
+| Frontend | Vercel (Free) | Next.js hosting |
+| Backend | Koyeb (Free) | Spring Boot hosting |
+| Database | Supabase (Free) | PostgreSQL |
+
+All configuration is environment-variable driven. See `.env.example` files for required variables.
+
+---
+
+## Documentation Index
+
+| Document | Purpose |
+|----------|---------|
+| [AGENTS.md](AGENTS.md) | AI agent operating rules |
+| [PROJECT_CONTEXT.md](Docs/PROJECT_CONTEXT.md) | Canonical project context |
+| [ARCHITECTURE.md](Docs/architecture/ARCHITECTURE.md) | System architecture |
+| [BACKEND_ARCHITECTURE.md](Docs/architecture/BACKEND_ARCHITECTURE.md) | Spring Boot conventions |
+| [FRONTEND_ARCHITECTURE.md](Docs/architecture/FRONTEND_ARCHITECTURE.md) | Next.js architecture |
+| [API_CONTRACT.md](Docs/api/API_CONTRACT.md) | API standards + endpoint catalog |
+| [DESIGN_SYSTEM.md](Docs/design/DESIGN_SYSTEM.md) | Visual design system |
+| [UI_PATTERNS.md](Docs/design/UI_PATTERNS.md) | Page composition patterns |
+| [IMPLEMENTATION_ROADMAP.md](Docs/implementation/IMPLEMENTATION_ROADMAP.md) | Development phases |
+| [USER_STORIES.md](Docs/implementation/USER_STORIES.md) | Feature stories |
+| [PROJECT_PROGRESS.md](Docs/implementation/PROJECT_PROGRESS.md) | Current phase status |
+| [DEVELOPMENT_GUIDE.md](Docs/DEVELOPMENT_GUIDE.md) | Developer step-by-step guide |
+| [DOTNET_TO_SPRINGBOOT.md](Docs/DOTNET_TO_SPRINGBOOT.md) | .NET developer reference |
+
+AI agents start with `AGENTS.md`. Human developers start with this README.
+
+---
+
+## Contributing
+
+1. Read the canonical documentation relevant to your task.
+2. Create a feature branch from `dev`.
+3. Implement one feature at a time (vertical slice).
+4. Run all checks:
+   ```bash
+   # Backend
+   cd PETSHOP-API && mvn verify
+
+   # Frontend
+   cd PETSHOP-UI && npm run lint && npx tsc --noEmit && npm run test && npm run build
+   ```
+5. Submit a pull request to `dev`.
+6. Update `PROJECT_PROGRESS.md` when completing a phase.
+
+---
+
+## Branch Strategy
+
+```
+feature/*  →  Pull Request  →  dev  →  main
+                                │         │
+                          Auto-deploy   Production
+                          (shared dev)
 ```
 
-Flyway automatically runs all migration scripts on startup:
+| Branch | Purpose |
+|--------|---------|
+| `feature/*` | Feature development |
+| `dev` | Integration + shared cloud environment |
+| `main` | Production-ready releases |
 
-- `V1__init.sql` — creates all 87 tables (users, merchants, products, orders, bookings, payments, etc.)
-- `V2__seed_data.sql` — inserts reference data (roles, permissions, pet types, categories, etc.)
+Never push directly to `main`. All work flows through `dev` via PR.
 
-You do NOT need to run these SQL files manually. Just start the API and the database is ready.
+---
 
-### Database credentials
+## License
 
-| Setting | Value |
-|---------|-------|
-| Host | localhost |
-| Port | 5432 |
-| Database | petshop |
-| Username | postgres |
-| Password | Petshop@2026 |
-
-These are configured in `PETSHOP-API/src/main/resources/application.yml`. Change them there if your PostgreSQL uses different credentials.
-
-### Seed data (inserted automatically)
-
-The V2 migration inserts reference/lookup data needed for the app to function:
-
-| Table | Data |
-|-------|------|
-| `roles` | 8 roles (SUPER_ADMIN, ADMIN, CUSTOMER, PETSHOP_OWNER, PETSHOP_ADMIN, PETSHOP_STAFF, GROOMER, VETERINARIAN) |
-| `permissions` | 42 permissions across 11 modules |
-| `role_permissions` | Role-permission assignments for all 8 roles |
-| `pet_types` | Dog, Cat, Bird, Fish, Reptile, Small Animal |
-| `pet_breeds` | 10 dog breeds + 10 cat breeds |
-| `product_categories` | 6 parent categories + 17 subcategories |
-| `service_categories` | Grooming, Vaccination, Veterinary Consultation, Dental Care, Boarding |
-| `vaccine_types` | 6 dog vaccines + 5 cat vaccines |
-| `system_configurations` | Checkout expiration, slot hold duration, withdrawal minimum, commission %, review window |
-| `shipping_providers` | Biteship (aggregator) |
-| `payment_methods` | QRIS, Bank Transfer (BCA/BNI/BRI/Mandiri), GoPay, ShopeePay, DANA |
-
-No user accounts are seeded — user registration will be implemented as a feature.
-
-## Run Backend API
-
-Start the Spring Boot API (PostgreSQL must be running):
-
-```powershell
-cd C:\PETSHOP\PETSHOP\PETSHOP-API
-mvn spring-boot:run
-```
-
-If PostgreSQL is not installed/running yet, use local smoke-test mode:
-
-```powershell
-cd C:\PETSHOP\PETSHOP\PETSHOP-API
-mvn spring-boot:run "-Dspring-boot.run.profiles=local"
-```
-
-This starts the API without database, JPA, or Flyway so you can test the health endpoint first.
-
-If PowerShell says `mvn` is not recognized, either close and reopen PowerShell, or run this once in the current terminal:
-
-```powershell
-$env:JAVA_HOME="C:\Program Files\Eclipse Adoptium\jdk-21.0.11.10-hotspot"
-$env:Path="$env:JAVA_HOME\bin;C:\Tools\apache-maven-3.9.16\bin;$env:Path"
-mvn -version
-mvn spring-boot:run
-```
-
-For local smoke-test mode with the same PATH fix:
-
-```powershell
-$env:JAVA_HOME="C:\Program Files\Eclipse Adoptium\jdk-21.0.11.10-hotspot"
-$env:Path="$env:JAVA_HOME\bin;C:\Tools\apache-maven-3.9.16\bin;$env:Path"
-mvn spring-boot:run "-Dspring-boot.run.profiles=local"
-```
-
-Open the health check:
-
-```text
-http://localhost:8080/api/v1/health
-```
-
-Expected response:
-
-```json
-{
-  "status": "UP",
-  "service": "PETSHOP-API",
-  "timestamp": "..."
-}
-```
-
-Database environment variables can be changed if needed:
-
-```powershell
-$env:DATABASE_URL="jdbc:postgresql://localhost:5432/petshop"
-$env:DATABASE_USERNAME="postgres"
-$env:DATABASE_PASSWORD="Petshop@2026"
-```
-
-## CORS
-
-The API allows requests from `http://localhost:3000` by default (the Next.js dev server).
-
-To allow additional origins, set the environment variable before starting:
-
-```powershell
-$env:CORS_ALLOWED_ORIGINS="http://localhost:3000,https://yourdomain.com"
-```
-
-## Tech Stack (current)
-
-**Frontend:** Next.js 16, React 19, TypeScript, Tailwind CSS 4, Zustand, TanStack Query
-
-**Backend:** Java 21, Spring Boot 3.5, Spring Security, Spring Data JPA, Flyway, PostgreSQL
+License to be determined.

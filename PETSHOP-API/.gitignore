@@ -6,3 +6,9 @@ target/
 .idea/
 .vscode/
 *.iml
+
+# # Storage uploads
+# storage/
+
+# # Local config
+# application-local.yml

@@ -16,6 +16,19 @@ A multi-vendor pet marketplace for physical pet products and bookable pet servic
 - File storage: S3-compatible object storage / MinIO abstraction
 - API style: REST JSON, versioned under `/api/v1`
 
+## Development Environment
+
+| Service | Provider |
+|---------|----------|
+| Repository | GitHub |
+| Frontend Hosting | Vercel (Free) |
+| Backend Hosting | Koyeb (Free) |
+| Database | Supabase PostgreSQL (Free) |
+| Storage | Local filesystem → S3/R2 (production) |
+| CI/CD | GitHub Actions |
+
+All configuration is environment-variable driven. No secrets in Git. Business modules are provider-independent.
+
 ## Hard Product Rules
 1. One merchant can have multiple branches.
 2. One cart can contain multiple merchants.

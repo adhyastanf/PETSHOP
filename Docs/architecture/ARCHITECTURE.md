@@ -1,5 +1,83 @@
 # Oyen — Architecture
 
+---
+
+## High-Level System Overview
+
+```text
+┌──────────────────────────────────────────────────────────────┐
+│                         Browser                               │
+└──────────────────────────┬───────────────────────────────────┘
+                           │ HTTPS
+                           ▼
+┌──────────────────────────────────────────────────────────────┐
+│                    Next.js (Vercel)                            │
+│  • Pages & Components                                         │
+│  • TanStack Query (server state)                              │
+│  • Zustand (client state)                                     │
+│  • i18n (English + Bahasa Indonesia)                          │
+└──────────────────────────┬───────────────────────────────────┘
+                           │ REST/JSON (/api/v1/*)
+                           ▼
+┌──────────────────────────────────────────────────────────────┐
+│                  Spring Boot (Koyeb)                           │
+│                                                               │
+│  ┌─────────────────────────────────────────────────────────┐ │
+│  │ Controllers (HTTP layer)                                 │ │
+│  └────────────────────────┬────────────────────────────────┘ │
+│                           ▼                                   │
+│  ┌─────────────────────────────────────────────────────────┐ │
+│  │ Application Services (business logic)                    │ │
+│  └────────┬───────────────┬────────────────────────────────┘ │
+│           │               │                                   │
+│           ▼               ▼                                   │
+│  ┌────────────────┐  ┌────────────────────────────────────┐ │
+│  │ Repositories   │  │ Platform Services (interfaces)      │ │
+│  │ (Spring Data)  │  │  • StorageService                   │ │
+│  └────────┬───────┘  │  • ImageService                    │ │
+│           │          │  • EmailService                     │ │
+│           │          │  • NotificationService              │ │
+│           │          │  • PaymentProvider                  │ │
+│           │          │  • ShippingProvider                 │ │
+│           │          └────────────────┬───────────────────┘ │
+│           │                           │                       │
+│           │          ┌────────────────┴───────────────────┐ │
+│           │          │ Infrastructure Implementations      │ │
+│           │          │  • LocalStorageService              │ │
+│           │          │  • MockPaymentProvider              │ │
+│           │          │  • ConsoleEmailService              │ │
+│           │          │  • (future: S3, Midtrans, SES...)   │ │
+│           │          └────────────────────────────────────┘ │
+└───────────┼──────────────────────────────────────────────────┘
+            │ JDBC/SSL
+            ▼
+┌──────────────────────────────────────────────────────────────┐
+│              PostgreSQL (Supabase)                             │
+│  • Flyway migrations                                          │
+│  • 87 tables (users, merchants, products, orders, etc.)       │
+└──────────────────────────────────────────────────────────────┘
+```
+
+### Component Responsibilities
+
+| Component | Responsibility |
+|-----------|---------------|
+| Next.js | UI rendering, routing, client state, i18n, API consumption |
+| Spring Boot | Authentication, authorization, business logic, data access |
+| PostgreSQL | Persistent data, constraints, transactions |
+| Platform Services | Abstraction layer isolating business logic from external providers |
+| Infrastructure | Concrete implementations of platform services (swappable) |
+
+### Key Architectural Decisions
+
+- **Monorepo** — backend, frontend, and docs in one repository
+- **Modular monolith** — backend organized by domain, extractable later
+- **Provider independence** — business modules never depend on vendor SDKs
+- **Framework-native** — uses Spring Cache/Scheduling directly, not custom wrappers
+- **Database-first** — Flyway migrations are the schema source of truth
+
+---
+
 ## Architectural Style
 MVP is a **modular monolith**:
 - one Next.js frontend application (or separately routed customer/merchant/admin surfaces),
@@ -98,3 +176,19 @@ Platform services are abstractions that isolate business logic from external pro
 - Local/minimal implementations exist for development.
 - Prefer Spring framework abstractions (Cache, Scheduling) over custom wrappers.
 - Search uses PostgreSQL queries until dedicated search infrastructure is justified.
+
+
+---
+
+## Deployment Architecture
+
+```text
+┌─────────────┐     ┌──────────────┐     ┌──────────────────┐
+│   Vercel    │────▶│    Koyeb     │────▶│ Supabase PostgreSQL │
+│  (Next.js)  │     │ (Spring Boot) │     │                    │
+└─────────────┘     └──────────────┘     └──────────────────┘
+     HTTPS              REST/JSON              JDBC/SSL
+```
+
+All services communicate over HTTPS. Backend connects to database via JDBC with SSL.
+Frontend calls backend API only — never accesses database directly.

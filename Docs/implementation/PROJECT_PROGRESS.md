@@ -35,6 +35,7 @@ Quick status overview. Agents should read this first to avoid re-inspecting comp
 | Test Infrastructure | ✅ Done | Vitest + Testing Library, 28 tests passing |
 | Docs Reorganization | ✅ Done | Clean folder structure, merged API docs |
 | Project Branding | ✅ Done | Renamed to "Oyen" across all docs |
+| Cloud Dev Prep | ✅ Done | GitHub Actions CI, env vars, Vercel/Koyeb/Supabase config documented |
 
 ## Phase 1 — Remaining Items
 

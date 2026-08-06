@@ -1,14 +1,25 @@
-.kiro
-.agents/
-PETSHOP-API/.jqwik-database
+# .kiro
+# .agents/
+# PETSHOP-API/.jqwik-database
 
-# IDE
-.vscode/
-.idea/
-*.iml
+# # IDE
+# .vscode/
+# .idea/
+# *.iml
 
-# OS
-.DS_Store
+# # OS
+# .DS_Store
 
-# Logs
-*.log
+# # Logs
+# *.log
+
+# # Environment files
+# .env
+# .env.*
+# !.env.example
+
+# # Local storage
+# storage/
+
+# # Application local overrides
+# **/application-local.yml

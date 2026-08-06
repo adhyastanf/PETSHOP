@@ -492,3 +492,114 @@ Testing:
 | Service (FE) | Call API via apiClient | UI rendering |
 | Hook (FE) | Manage server state (cache, refetch) | Direct API calls |
 | Page (FE) | Render UI, handle user interaction | Business logic |
+
+
+---
+
+## Cloud Development Environment
+
+### Official Stack
+
+| Service | Provider | Tier | Purpose |
+|---------|----------|------|---------|
+| Repository | GitHub | Free | Source control, CI/CD |
+| Frontend | Vercel | Free | Next.js hosting |
+| Backend | Koyeb | Free | Spring Boot hosting |
+| Database | Supabase | Free | PostgreSQL |
+| Storage | Local filesystem | — | File uploads (production: S3/R2) |
+
+### Deployment Topology
+
+```text
+GitHub (monorepo)
+├── PETSHOP-UI/ → Vercel (auto-deploy from dev branch)
+└── PETSHOP-API/ → Koyeb (deploy from dev branch)
+                    ↓
+              Supabase PostgreSQL
+```
+
+### Vercel Configuration
+
+| Setting | Value |
+|---------|-------|
+| Root Directory | `PETSHOP-UI` |
+| Framework | Next.js |
+| Install Command | `npm install` |
+| Build Command | `npm run build` |
+| Output Directory | `.next` |
+
+Environment variables to set in Vercel dashboard:
+- `NEXT_PUBLIC_API_URL` — Koyeb backend URL + `/api/v1`
+- `NEXT_PUBLIC_APP_NAME` — `Oyen`
+- `NEXT_PUBLIC_DEFAULT_LOCALE` — `en`
+- `NEXT_PUBLIC_SUPPORTED_LOCALES` — `en,id`
+- `NEXT_PUBLIC_ENVIRONMENT` — `development`
+
+### Koyeb Configuration
+
+| Setting | Value |
+|---------|-------|
+| Root Directory | `PETSHOP-API` |
+| Builder | Maven |
+| Runtime | Java 21 |
+| Port | `PORT` env var (Koyeb sets this) |
+| Health Check | `/actuator/health` |
+
+Environment variables to set in Koyeb dashboard:
+- `DATABASE_URL` — Supabase JDBC connection string
+- `DATABASE_USERNAME` — Supabase DB user
+- `DATABASE_PASSWORD` — Supabase DB password
+- `JWT_SECRET` — Random 32+ character string
+- `CORS_ALLOWED_ORIGINS` — Vercel frontend URL
+- `PORT` — Set by Koyeb automatically
+- `SPRING_PROFILES_ACTIVE` — `default`
+
+### Supabase PostgreSQL
+
+| Setting | Value |
+|---------|-------|
+| Provider | Supabase |
+| Engine | PostgreSQL 15+ |
+| Auth | Database password (not Supabase Auth) |
+| SSL | Required for remote connections |
+
+Connection string format:
+```
+jdbc:postgresql://<host>:5432/postgres?sslmode=require
+```
+
+Flyway works normally with Supabase PostgreSQL. No special configuration needed.
+
+Do NOT use:
+- Supabase Auth (we have our own JWT auth)
+- Supabase Storage (we use StorageService abstraction)
+- Supabase SDKs (direct PostgreSQL connection only)
+
+### Git Branch Strategy
+
+```text
+feature/* → Pull Request → dev → auto-deploy to shared dev environment
+                            ↓
+                          main → production deployment
+```
+
+| Branch | Purpose | Deployment |
+|--------|---------|-----------|
+| `feature/*` | Feature development | None |
+| `dev` | Integration branch | Auto-deploy to dev environment |
+| `main` | Production-ready | Production deployment |
+
+Rules:
+- Never push directly to `main`
+- All work goes through `dev` via PR
+- `dev` auto-deploys to shared development environment
+- `main` is deployed only after QA on dev
+
+### CI/CD (GitHub Actions)
+
+Two workflows trigger on push/PR to `dev` or `main`:
+
+- `.github/workflows/backend.yml` — triggers on `PETSHOP-API/**` changes
+- `.github/workflows/frontend.yml` — triggers on `PETSHOP-UI/**` changes
+
+Both run build + tests. Deployment is handled by Vercel/Koyeb directly (connected to GitHub).
