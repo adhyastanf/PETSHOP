@@ -19,8 +19,8 @@ Important entry points:
 - `docs/README.md` - documentation map and navigation index
 - `docs/PROJECT_CONTEXT.md` - canonical project context and source-of-truth hierarchy
 - `docs/FEATURE_KNOWLEDGE.md` - complete MVP feature specification
-- `docs/DATABASE_KNOWLEDGE.md` - canonical database/table specification
-- `docs/BUSINESS_RULES.md` - business invariants that implementations must preserve
+- `docs/data/DATABASE_KNOWLEDGE.md` - canonical database/table specification
+- `docs/data/BUSINESS_RULES.md` - business invariants that implementations must preserve
 - `docs/architecture/STATE_MACHINES.md` - valid lifecycle/status transitions
 - `docs/architecture/ARCHITECTURE.md` - overall system architecture
 - `docs/architecture/BACKEND_ARCHITECTURE.md` - Spring Boot architecture conventions
@@ -32,8 +32,7 @@ Important entry points:
 - `docs/implementation/USER_STORIES.md` - implementable MVP user stories
 - `docs/implementation/ACCEPTANCE_CRITERIA.md` - reusable acceptance requirements
 - `docs/implementation/DEFINITION_OF_DONE.md` - completion requirements
-- `docs/frontend/PAGE_CATALOG.md` - planned customer, merchant, and admin pages
-- `docs/integrations/INTEGRATION_SPEC.md` - payment, shipping, storage, OAuth, and notification integration boundaries
+- `docs/integration/INTEGRATION_SPEC.md` - payment, shipping, storage, OAuth, and notification integration boundaries
 - `docs/engineering/CODING_STANDARDS.md` - engineering conventions
 - `docs/engineering/TEST_CASES.md` - critical MVP test scenarios
 - `docs/engineering/SECURITY.md` - application security requirements

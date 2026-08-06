@@ -423,8 +423,8 @@ migration
 
 ## 13. Backend Rules
 
-Follow `BACKEND_ARCHITECTURE.md`, `API_CONTRACT.md`,
-`AUTHORIZATION_MATRIX.md`, and `CODING_STANDARDS.md`.
+Follow `architecture/BACKEND_ARCHITECTURE.md`, `api/API_CONTRACT.md`,
+`api/AUTHORIZATION_MATRIX.md`, and `engineering/CODING_STANDARDS.md`.
 
 Prefer intent-based business operations such as:
 
@@ -444,7 +444,7 @@ External providers must be accessed through integration abstractions.
 
 ## 14. Frontend Rules
 
-Follow `FRONTEND_ARCHITECTURE.md`.
+Follow `architecture/FRONTEND_ARCHITECTURE.md`.
 
 Use TanStack Query for server state.
 
@@ -537,3 +537,18 @@ Therefore a request such as:
 
 is sufficient authorization to implement, test, validate, and complete
 that story according to the canonical documentation.
+
+
+---
+
+## 18. Frontend Design
+
+When implementing frontend features:
+
+- Read `docs/design/DESIGN_SYSTEM.md`.
+- Read `docs/design/UI_PATTERNS.md`.
+- Reuse existing components.
+- Do not redesign existing UI.
+- Extend the design system only when necessary.
+- Maintain one consistent visual language.
+- Prefer component reuse over creating new variants.
