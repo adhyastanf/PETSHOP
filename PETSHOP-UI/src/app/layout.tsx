@@ -17,8 +17,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'Pet Marketplace',
-  description: 'Multi-vendor pet marketplace for products and services',
+  title: 'Oyen',
+  description: 'Semua Kebutuhan Hewan Peliharaan, Lebih Dekat.',
 };
 
 export default function RootLayout({

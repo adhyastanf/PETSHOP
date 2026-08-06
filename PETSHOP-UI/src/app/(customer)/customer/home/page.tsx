@@ -1,15 +1,23 @@
-import CardProduct from '@/components/Layout/item-card';
-import CarouselComponent from '@/components/Layout/menu-carousel';
+import { PawPrint } from 'lucide-react';
 
 export default function HomeCustomer() {
   return (
-    <main className='py-10 space-y-10'>
-      <CarouselComponent />
-      <div className='grid grid-cols-4 gap-4'>
-        {Array.from({ length: 10 }).map((item, idx) => {
-          return <CardProduct key={idx} title={`MITRA `.concat('1')} description='2' />;
-        })}
+    <div className='space-y-8'>
+      <div>
+        <h1 className='text-2xl font-semibold'>Selamat Datang di Oyen</h1>
+        <p className='mt-1 text-sm text-muted-foreground'>
+          Temukan produk dan layanan untuk hewan peliharaan Anda.
+        </p>
       </div>
-    </main>
+
+      {/* Placeholder — will be replaced with real content in later phases */}
+      <div className='flex flex-col items-center justify-center py-16 text-center'>
+        <PawPrint className='size-12 text-muted-foreground/40' />
+        <p className='mt-4 text-lg font-medium'>Segera hadir</p>
+        <p className='mt-1 text-sm text-muted-foreground'>
+          Produk, layanan, dan petshop terdekat akan muncul di sini.
+        </p>
+      </div>
+    </div>
   );
 }

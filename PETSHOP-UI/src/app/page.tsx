@@ -1,28 +1,41 @@
+import { PawPrint } from 'lucide-react';
+import Link from 'next/link';
+
 export default function Home() {
   return (
-    <main className="min-h-screen bg-zinc-50 px-6 py-10 text-zinc-950">
-      <section className="mx-auto flex min-h-[calc(100vh-5rem)] max-w-5xl flex-col justify-center gap-8">
-        <div className="max-w-2xl">
-          <p className="text-sm font-semibold uppercase tracking-wide text-emerald-700">
-            Pet Marketplace
-          </p>
-          <h1 className="mt-3 text-4xl font-semibold tracking-normal sm:text-5xl">
-            Marketplace produk dan layanan hewan peliharaan.
+    <main className='min-h-screen bg-background px-4 py-10'>
+      <section className='mx-auto flex min-h-[calc(100vh-5rem)] max-w-5xl flex-col justify-center gap-8'>
+        <div className='max-w-2xl'>
+          <div className='flex items-center gap-2'>
+            <PawPrint className='size-8 text-primary' />
+            <span className='text-2xl font-bold'>Oyen</span>
+          </div>
+          <h1 className='mt-4 text-4xl font-semibold tracking-tight sm:text-5xl text-foreground'>
+            Semua Kebutuhan Hewan Peliharaan, Lebih Dekat.
           </h1>
-          <p className="mt-5 text-lg leading-8 text-zinc-600">
-            Starter UI untuk customer, mitra petshop, dan admin sesuai Product Vision Document.
+          <p className='mt-4 text-lg leading-8 text-muted-foreground'>
+            Marketplace produk dan layanan hewan peliharaan untuk customer, mitra petshop, dan admin.
           </p>
         </div>
-        <nav className="grid gap-3 sm:grid-cols-3">
-          <a className="rounded-lg border border-zinc-200 bg-white p-5 font-medium" href="/customer/home">
+        <nav className='grid gap-3 sm:grid-cols-3'>
+          <Link
+            className='rounded-xl border border-border bg-card p-5 font-medium hover:shadow-md transition-shadow'
+            href='/customer/home'
+          >
             Customer
-          </a>
-          <a className="rounded-lg border border-zinc-200 bg-white p-5 font-medium" href="/mitra/home">
+          </Link>
+          <Link
+            className='rounded-xl border border-border bg-card p-5 font-medium hover:shadow-md transition-shadow'
+            href='/mitra/home'
+          >
             Mitra
-          </a>
-          <a className="rounded-lg border border-zinc-200 bg-white p-5 font-medium" href="/admin/home">
+          </Link>
+          <Link
+            className='rounded-xl border border-border bg-card p-5 font-medium hover:shadow-md transition-shadow'
+            href='/admin/home'
+          >
             Admin
-          </a>
+          </Link>
         </nav>
       </section>
     </main>
