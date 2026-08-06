@@ -1,4 +1,4 @@
-# Pet Marketplace — API Contract Standards
+# Oyen — API Contract Standards
 
 ## Base
 All public application APIs use `/api/v1`.

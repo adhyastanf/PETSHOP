@@ -1,4 +1,4 @@
-# Pet Marketplace — Frontend Architecture
+# Oyen — Frontend Architecture
 
 ## Stack
 - Next.js

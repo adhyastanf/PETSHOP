@@ -1,4 +1,4 @@
-# Pet Marketplace --- MVP Database Knowledge Document
+# Oyen --- MVP Database Knowledge Document
 
 **Version:** 1.0\
 **Database:** PostgreSQL\

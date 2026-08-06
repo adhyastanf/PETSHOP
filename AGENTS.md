@@ -1,4 +1,4 @@
-# Pet Marketplace — Agent Operating Manual
+# Oyen — Agent Operating Manual
 
 This file defines how AI coding agents must work in this repository.
 

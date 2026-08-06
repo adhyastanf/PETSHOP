@@ -1,4 +1,4 @@
-# Pet Marketplace — Project Context
+# Oyen — Project Context
 
 **Status:** Canonical agent entry point  
 **Read this file before implementing any feature.**

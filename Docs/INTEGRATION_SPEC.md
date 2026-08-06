@@ -1,4 +1,4 @@
-# Pet Marketplace — Integration Specification
+# Oyen — Integration Specification
 
 Provider choices may change. Business code must depend on provider-neutral interfaces.
 

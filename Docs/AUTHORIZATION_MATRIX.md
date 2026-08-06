@@ -1,4 +1,4 @@
-# Pet Marketplace — Authorization Matrix
+# Oyen — Authorization Matrix
 
 This document describes defaults. Fine-grained RBAC permissions can narrow merchant/admin capabilities.
 

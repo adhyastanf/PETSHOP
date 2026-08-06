@@ -1,4 +1,4 @@
-# Pet Marketplace — Backend Architecture
+# Oyen — Backend Architecture
 
 ## Platform
 Spring Boot 3, Java 21, PostgreSQL, Flyway.

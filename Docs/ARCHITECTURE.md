@@ -1,4 +1,4 @@
-# Pet Marketplace — Architecture
+# Oyen — Architecture
 
 ## Architectural Style
 MVP is a **modular monolith**:

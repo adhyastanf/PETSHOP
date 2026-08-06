@@ -1,4 +1,4 @@
-# Pet Marketplace — Coding Standards
+# Oyen — Coding Standards
 
 ## General
 Optimize for clarity, consistency, testability and business correctness over clever abstractions.

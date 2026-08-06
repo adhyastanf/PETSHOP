@@ -1,4 +1,4 @@
-# Pet Marketplace — Development Guide
+# Oyen — Development Guide
 
 > **For human developers only.** This document is a reference guide for developers working on the project. AI agents should not read or use this file for implementation decisions — refer to `AGENTS.md` and canonical docs instead.
 

@@ -1,8 +1,8 @@
-# PETSHOP
+# Oyen
 
 Multi-vendor marketplace for pet products and pet services.
 
-PETSHOP allows customers to purchase pet products and book services such as grooming and vaccination from registered petshop partners.
+Oyen allows customers to purchase pet products and book services such as grooming and vaccination from registered petshop partners.
 
 ## Applications
 
