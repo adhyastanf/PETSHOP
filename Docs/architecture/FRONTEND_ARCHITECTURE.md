@@ -95,6 +95,20 @@ Normalize API errors by stable `code`; show useful messages and preserve `traceI
 
 ---
 
+---
+
+## Platform Service Consumption
+
+Frontend must consume only API contracts. Frontend must never assume provider-specific behavior.
+
+Rules:
+- Never reference storage URLs with provider-specific paths (use API-returned URLs).
+- Never assume payment provider redirect behavior (follow API instructions).
+- Never assume shipping provider tracking URL format (use API-provided links).
+- Image URLs may change if storage provider changes — always use API-provided URLs, never construct them.
+
+---
+
 ## Internationalization (i18n)
 
 ### Purpose

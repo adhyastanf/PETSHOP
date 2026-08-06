@@ -74,6 +74,8 @@ Default pagination: `page=0`, `size=20`. Maximum size defined centrally.
 
 `code` = stable/machine-readable. `message` = human-readable.
 
+This is the single canonical error contract. Every API endpoint must return errors in this exact structure. `code` is stable/machine-readable. `message` is human-readable. `details` contains field-level validation errors when applicable. `traceId` enables log correlation.
+
 ### HTTP Status Codes
 
 | Status | Meaning |

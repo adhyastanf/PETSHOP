@@ -63,6 +63,21 @@ Flag unresolved contradictions rather than silently inventing behavior.
 - `INTEGRATION_SPEC.md` — payment/shipping/storage/OAuth/webhook boundaries.
 - `CODING_STANDARDS.md` — engineering conventions.
 
+## Platform Service Architecture
+
+All external services must be accessed through platform abstractions (interfaces). Business modules must never depend directly on vendor SDKs.
+
+Dependency direction:
+```text
+Business Module → Platform Service Interface → Infrastructure Implementation → Vendor
+```
+
+This enables provider swaps (e.g., changing payment gateway, storage provider, email sender) without touching business logic.
+
+Platform services: Storage, Image, Email, Notification, Payment Provider, Shipping Provider.
+
+Framework infrastructure (Spring Cache, Spring Scheduling) is used directly via annotations — not wrapped in custom interfaces. Search uses PostgreSQL until dedicated search infrastructure is justified.
+
 ## Agent Working Rules
 Before coding:
 1. Identify the domain/module.

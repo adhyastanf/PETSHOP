@@ -13,6 +13,17 @@ User stories define observable behavior; detailed rules remain in their canonica
 - **US-AUTH-006 Remember Me:** login with "remember me" extends refresh token duration; without it, session expires at browser close or short duration.
 - **US-AUTH-007 Delete Account:** authenticated user can request permanent account deletion; system soft-deletes or schedules hard-delete with grace period; active orders/bookings must be resolved first.
 
+## Platform Foundation
+- **US-PLT-001 Storage Service:** application stores and retrieves files through a storage abstraction; provider can be swapped without changing business modules.
+- **US-PLT-002 Image Service:** application processes images (resize, thumbnail, format conversion) through an image service abstraction.
+- **US-PLT-003 Email Service:** application sends transactional emails through an email abstraction; provider can be swapped without changing business modules.
+- **US-PLT-004 Notification Service:** application dispatches notifications (in-app, push, email) through a notification abstraction.
+- **US-PLT-005 Spring Scheduling:** background and deferred jobs use Spring @Scheduled; complex scheduling uses Quartz. Business modules never implement scheduling logic directly.
+- **US-PLT-006 Spring Cache:** business services use Spring Cache annotations (@Cacheable, @CachePut, @CacheEvict); current backing is ConcurrentMapCacheManager, production uses RedisCacheManager.
+- **US-PLT-007 Payment Provider:** application creates payments and processes webhooks through a payment provider interface; provider can be swapped.
+- **US-PLT-008 Shipping Provider:** application quotes shipping rates and creates shipments through a shipping provider interface; provider can be swapped.
+- **US-PLT-009 API Error Contract:** all API endpoints return errors using one canonical error response structure with code, message, details, timestamp, and traceId.
+
 ## Customer
 - **US-CUS-001 View Profile:** customer views their own permitted profile information.
 - **US-CUS-002 Update Profile:** customer updates permitted fields of their own profile.

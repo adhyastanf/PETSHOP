@@ -110,3 +110,41 @@ Webhook/event processing stores external event IDs/provider transaction IDs and 
 - Repository integration tests: PostgreSQL behavior.
 - API integration tests: auth, validation and contracts.
 - Critical concurrency tests: inventory, slots, ledger/withdrawal.
+
+
+---
+
+## Dependency Direction
+
+```text
+Business Layer (application/domain)
+    ↓ depends on
+Platform Service Interface (e.g., StorageService, PaymentProvider)
+    ↓ implemented by
+Infrastructure Implementation (e.g., S3StorageService, MidtransPaymentProvider)
+    ↓ uses
+Vendor SDK / External API
+```
+
+### Rules
+
+- Business modules must never import vendor SDK classes.
+- Business modules depend only on platform service interfaces.
+- Infrastructure implementations are injected via Spring DI.
+- Swapping a provider means creating a new implementation, not changing business code.
+- Integration tests mock platform service interfaces; infrastructure tests verify implementations.
+
+### Framework Infrastructure
+
+Spring Cache and Spring Scheduling are framework infrastructure, not platform service interfaces.
+Business services use them directly via annotations:
+
+```java
+@Cacheable("products")
+public List<Product> findProducts(...) { ... }
+
+@Scheduled(fixedDelay = 60000)
+public void cleanupExpiredSessions() { ... }
+```
+
+Do not wrap these with custom interfaces.

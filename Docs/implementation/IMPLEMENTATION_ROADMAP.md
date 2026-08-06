@@ -91,6 +91,36 @@ history, and pet/customer media foundation.
 
 ---
 
+## Phase 2.5 — Platform Foundation
+
+**Stories**
+
+- US-PLT-001 through US-PLT-009
+
+**Scope**
+
+Platform service abstractions: storage, image processing, email, notifications,
+payment provider interface, shipping provider interface, and standard API error
+contract. Spring Cache and Spring Scheduling as framework infrastructure.
+
+Local/minimal implementations for development. Production providers are swapped
+without changing business logic. Search is deferred until requirements justify it.
+
+**Exit Criteria**
+
+- Platform service interfaces are defined (Storage, Image, Email, Notification, Payment, Shipping).
+- Local/minimal implementations exist for each platform service.
+- Spring Cache (@Cacheable/@CachePut/@CacheEvict) is enabled.
+- Spring Scheduling (@Scheduled) is enabled.
+- Search is intentionally deferred.
+- No business module depends directly on third-party vendor SDKs.
+- Payment and shipping provider abstractions support future provider swaps.
+- Standard API error contract is applied consistently.
+- Build and applicable tests pass.
+- Definition of Done passes.
+
+---
+
 ## Phase 3 — Merchant
 
 **Stories**

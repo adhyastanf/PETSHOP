@@ -70,3 +70,31 @@ Binary media does not belong in PostgreSQL. Store object key, metadata, ownershi
 
 ## Scaling Path
 Scale vertically/horizontally at application level first. Extract services only when module load, team ownership, independent scaling or reliability requirements justify it.
+
+
+---
+
+## Platform Services
+
+Platform services are abstractions that isolate business logic from external providers.
+
+| Service | Responsibility |
+|---------|---------------|
+| StorageService | Store/retrieve/delete files (S3, MinIO, local filesystem) |
+| ImageService | Resize, thumbnail, format conversion |
+| EmailService | Send transactional emails (SMTP, SES, Resend) |
+| NotificationService | Dispatch notifications (in-app, push, email routing) |
+| PaymentProvider | Create payments, process webhooks, verify signatures |
+| ShippingProvider | Quote rates, create shipments, track packages |
+| Spring Cache | @Cacheable/@CachePut/@CacheEvict (ConcurrentMap → Redis) |
+| Spring Scheduling | @Scheduled for background jobs (→ Quartz for complex) |
+
+### Rules
+
+- Business modules depend on interfaces, never on implementations.
+- Infrastructure implementations live in a separate package/layer.
+- Provider swap must not require changes to business modules.
+- Each service exposes a Java interface in its respective module.
+- Local/minimal implementations exist for development.
+- Prefer Spring framework abstractions (Cache, Scheduling) over custom wrappers.
+- Search uses PostgreSQL queries until dedicated search infrastructure is justified.

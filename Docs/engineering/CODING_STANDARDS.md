@@ -79,6 +79,21 @@ Keep migrations, API changes and tests in the same feature change where practica
 
 ---
 
+---
+
+## Platform Service Rules
+
+1. **Never reference vendor SDKs outside infrastructure packages.** Business code must not import AWS, Midtrans, Xendit, Biteship, or any provider-specific classes.
+2. **Always depend on interfaces.** Inject `StorageService`, `PaymentProvider`, etc. — never `S3Client` or `MidtransApi`.
+3. **Never bypass platform services.** Do not call external APIs directly from controllers or application services.
+4. **Infrastructure implementations are isolated.** Each lives in its own package under `infrastructure/`.
+5. **Local implementations exist for development.** File system for storage, console for email, in-memory for cache.
+6. **Prefer Spring framework abstractions over custom wrappers.** Use @Cacheable, not a custom CacheService. Use @Scheduled, not a custom SchedulerService.
+7. **Introduce abstractions only when they provide clear architectural value.** Do not abstract for the sake of abstraction.
+8. **Search uses PostgreSQL queries until dedicated search infrastructure is justified.** Do not create placeholder search interfaces.
+
+---
+
 ## Internationalization
 
 ### Rules
