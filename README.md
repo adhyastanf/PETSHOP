@@ -25,8 +25,7 @@ Important entry points:
 - `docs/architecture/ARCHITECTURE.md` - overall system architecture
 - `docs/architecture/BACKEND_ARCHITECTURE.md` - Spring Boot architecture conventions
 - `docs/architecture/FRONTEND_ARCHITECTURE.md` - Next.js architecture and state-management conventions
-- `docs/api/API_CONTRACT.md` - API conventions and response/error standards
-- `docs/api/API_ENDPOINT_CATALOG.md` - planned MVP endpoint catalog
+- `docs/api/API_CONTRACT.md` - API conventions, response standards, and endpoint catalog
 - `docs/api/AUTHORIZATION_MATRIX.md` - roles, permissions, ownership, and scope
 - `docs/implementation/IMPLEMENTATION_ROADMAP.md` - recommended development order
 - `docs/implementation/USER_STORIES.md` - implementable MVP user stories
