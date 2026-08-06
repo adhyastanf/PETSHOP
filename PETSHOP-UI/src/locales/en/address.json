@@ -1,0 +1,25 @@
+{
+  "title": "Addresses",
+  "noAddresses": "No addresses yet.",
+  "newAddress": "New Address",
+  "editAddress": "Edit Address",
+  "deleteAddress": "Delete address?",
+  "deleteConfirm": "Address \"{label}\" will be permanently deleted.",
+  "setDefault": "Set default",
+  "default": "Default",
+  "form": {
+    "label": "Label",
+    "recipient": "Recipient",
+    "phone": "Phone",
+    "postalCode": "Postal code",
+    "province": "Province",
+    "city": "City",
+    "district": "District",
+    "subdistrict": "Subdistrict",
+    "addressLine": "Address line",
+    "notes": "Notes",
+    "isDefault": "Set as default"
+  },
+  "submit": "Add Address",
+  "update": "Update Address"
+}

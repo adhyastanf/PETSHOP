@@ -8,6 +8,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { useI18n } from '@/lib/i18n';
+import ConfirmDialog from '@/components/feedback/ConfirmDialog';
 import {
   useAddresses,
   useCreateAddress,
@@ -72,6 +74,7 @@ function addressState(address?: Address): AddressRequest {
 }
 
 export default function AccountManager() {
+  const { t } = useI18n();
   const profileQuery = useCustomerProfile();
   const addressesQuery = useAddresses();
   const updateProfile = useUpdateCustomerProfile();
@@ -109,26 +112,26 @@ export default function AccountManager() {
   }
 
   if (profileQuery.isLoading || addressesQuery.isLoading) {
-    return <div className="py-10 text-sm text-muted-foreground">Loading account details...</div>;
+    return <div className="py-10 text-sm text-muted-foreground">{t('common.loading')}</div>;
   }
 
   return (
     <div className="space-y-8 py-8">
       <div className="flex items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-semibold">Account</h1>
-          <p className="text-sm text-muted-foreground">Profile and delivery addresses</p>
+          <h1 className="text-2xl font-semibold">{t('customer.profile.title')}</h1>
+          <p className="text-sm text-muted-foreground">{t('customer.profile.description')}</p>
         </div>
         <Link href="/customer/pets">
           <Button type="button" variant="outline">
-            Pets
+            {t('pet.title')}
           </Button>
         </Link>
       </div>
 
       {(profileQuery.isError || addressesQuery.isError) && (
         <div className="rounded-md border border-destructive/30 bg-destructive/5 p-3 text-sm text-destructive">
-          Could not load customer data. Refresh or try again later.
+          {t('common.unknownError')}
         </div>
       )}
 
@@ -143,11 +146,11 @@ export default function AccountManager() {
         <div className="space-y-3">
           <div className="flex items-center gap-2">
             <Home className="size-4" />
-            <h2 className="text-base font-medium">Addresses</h2>
+            <h2 className="text-base font-medium">{t('address.title')}</h2>
           </div>
           {addressesQuery.data?.length === 0 ? (
             <div className="rounded-md border border-dashed p-6 text-sm text-muted-foreground">
-              No addresses yet.
+              {t('address.noAddresses')}
             </div>
           ) : (
             <div className="space-y-3">
@@ -156,10 +159,10 @@ export default function AccountManager() {
                   <div className="flex flex-wrap items-start justify-between gap-3">
                     <div>
                       <div className="flex items-center gap-2">
-                        <h3 className="font-medium">{address.label || 'Address'}</h3>
+                        <h3 className="font-medium">{address.label || t('address.title')}</h3>
                         {address.isDefault && (
                           <span className="rounded-sm bg-primary/10 px-2 py-0.5 text-xs text-primary">
-                            Default
+                            {t('address.default')}
                           </span>
                         )}
                       </div>
@@ -175,7 +178,7 @@ export default function AccountManager() {
                           type="button"
                           variant="outline"
                           size="icon"
-                          title="Set default"
+                          title={t('address.setDefault')}
                           onClick={() => setDefaultAddress.mutate(address.id)}
                           disabled={pending}
                         >
@@ -186,7 +189,7 @@ export default function AccountManager() {
                         type="button"
                         variant="outline"
                         size="icon"
-                        title="Edit address"
+                        title={t('address.editAddress')}
                         onClick={() => {
                           setEditingAddressId(address.id);
                           setAddressForm(addressState(address));
@@ -194,16 +197,25 @@ export default function AccountManager() {
                       >
                         <Edit3 className="size-4" />
                       </Button>
-                      <Button
-                        type="button"
-                        variant="destructive"
-                        size="icon"
-                        title="Delete address"
-                        onClick={() => deleteAddress.mutate(address.id)}
-                        disabled={pending}
+                      <ConfirmDialog
+                        title={t('address.deleteAddress')}
+                        description={t('address.deleteConfirm', { label: address.label || 'this' })}
+                        onConfirm={() => deleteAddress.mutate(address.id)}
+                        loading={deleteAddress.isPending}
                       >
-                        <Trash2 className="size-4" />
-                      </Button>
+                        {(open) => (
+                          <Button
+                            type="button"
+                            variant="destructive"
+                            size="icon"
+                            title={t('address.deleteAddress')}
+                            onClick={open}
+                            disabled={pending}
+                          >
+                            <Trash2 className="size-4" />
+                          </Button>
+                        )}
+                      </ConfirmDialog>
                     </div>
                   </div>
                 </div>
@@ -216,28 +228,28 @@ export default function AccountManager() {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Plus className="size-4" />
-              <h2 className="text-base font-medium">{editingAddressId ? 'Edit Address' : 'New Address'}</h2>
+              <h2 className="text-base font-medium">{editingAddressId ? t('address.editAddress') : t('address.newAddress')}</h2>
             </div>
             {editingAddressId && (
-              <Button type="button" variant="ghost" size="icon" title="Cancel edit" onClick={resetAddressForm}>
+              <Button type="button" variant="ghost" size="icon" title={t('common.cancel')} onClick={resetAddressForm}>
                 <X className="size-4" />
               </Button>
             )}
           </div>
           <div className="grid gap-3 sm:grid-cols-2">
-            <Field label="Label"><Input value={addressForm.label ?? ''} onChange={(event) => setAddressForm({ ...addressForm, label: event.target.value })} /></Field>
-            <Field label="Recipient"><Input required value={addressForm.recipientName} onChange={(event) => setAddressForm({ ...addressForm, recipientName: event.target.value })} /></Field>
-            <Field label="Phone"><Input required value={addressForm.recipientPhone} onChange={(event) => setAddressForm({ ...addressForm, recipientPhone: event.target.value })} /></Field>
-            <Field label="Postal code"><Input required value={addressForm.postalCode} onChange={(event) => setAddressForm({ ...addressForm, postalCode: event.target.value })} /></Field>
-            <Field label="Province"><Input value={addressForm.provinceName ?? ''} onChange={(event) => setAddressForm({ ...addressForm, provinceName: event.target.value })} /></Field>
-            <Field label="City"><Input value={addressForm.cityName ?? ''} onChange={(event) => setAddressForm({ ...addressForm, cityName: event.target.value })} /></Field>
-            <Field label="District"><Input value={addressForm.districtName ?? ''} onChange={(event) => setAddressForm({ ...addressForm, districtName: event.target.value })} /></Field>
-            <Field label="Subdistrict"><Input value={addressForm.subdistrictName ?? ''} onChange={(event) => setAddressForm({ ...addressForm, subdistrictName: event.target.value })} /></Field>
+            <Field label={t('address.form.label')}><Input value={addressForm.label ?? ''} onChange={(event) => setAddressForm({ ...addressForm, label: event.target.value })} /></Field>
+            <Field label={t('address.form.recipient')}><Input required value={addressForm.recipientName} onChange={(event) => setAddressForm({ ...addressForm, recipientName: event.target.value })} /></Field>
+            <Field label={t('address.form.phone')}><Input required value={addressForm.recipientPhone} onChange={(event) => setAddressForm({ ...addressForm, recipientPhone: event.target.value })} /></Field>
+            <Field label={t('address.form.postalCode')}><Input required value={addressForm.postalCode} onChange={(event) => setAddressForm({ ...addressForm, postalCode: event.target.value })} /></Field>
+            <Field label={t('address.form.province')}><Input value={addressForm.provinceName ?? ''} onChange={(event) => setAddressForm({ ...addressForm, provinceName: event.target.value })} /></Field>
+            <Field label={t('address.form.city')}><Input value={addressForm.cityName ?? ''} onChange={(event) => setAddressForm({ ...addressForm, cityName: event.target.value })} /></Field>
+            <Field label={t('address.form.district')}><Input value={addressForm.districtName ?? ''} onChange={(event) => setAddressForm({ ...addressForm, districtName: event.target.value })} /></Field>
+            <Field label={t('address.form.subdistrict')}><Input value={addressForm.subdistrictName ?? ''} onChange={(event) => setAddressForm({ ...addressForm, subdistrictName: event.target.value })} /></Field>
           </div>
-          <Field label="Address line">
+          <Field label={t('address.form.addressLine')}>
             <Textarea required value={addressForm.addressLine} onChange={(event) => setAddressForm({ ...addressForm, addressLine: event.target.value })} />
           </Field>
-          <Field label="Notes">
+          <Field label={t('address.form.notes')}>
             <Textarea value={addressForm.notes ?? ''} onChange={(event) => setAddressForm({ ...addressForm, notes: event.target.value })} />
           </Field>
           <label className="flex items-center gap-2 text-sm">
@@ -246,11 +258,11 @@ export default function AccountManager() {
               checked={addressForm.isDefault}
               onChange={(event) => setAddressForm({ ...addressForm, isDefault: event.target.checked })}
             />
-            Set as default
+            {t('address.form.isDefault')}
           </label>
           <Button type="submit" loading={createAddress.isPending || updateAddress.isPending}>
             <Save className="size-4" />
-            {editingAddressId ? 'Update Address' : 'Add Address'}
+            {editingAddressId ? t('address.update') : t('address.submit')}
           </Button>
         </form>
       </section>
@@ -276,6 +288,7 @@ function ProfileForm({
   pending: boolean;
   onSubmit: (data: UpdateCustomerProfileRequest) => void;
 }) {
+  const { t } = useI18n();
   const [profileForm, setProfileForm] = useState(profileState(profile));
 
   function submitProfile(event: FormEvent) {
@@ -292,33 +305,33 @@ function ProfileForm({
     <form onSubmit={submitProfile} className="space-y-4 rounded-md border p-4">
       <div className="flex items-center gap-2">
         <Edit3 className="size-4" />
-        <h2 className="text-base font-medium">Profile</h2>
+        <h2 className="text-base font-medium">{t('customer.profile.title')}</h2>
       </div>
       <div className="grid gap-4 md:grid-cols-2">
-        <Field label="Full name">
+        <Field label={t('auth.register.fullName')}>
           <Input
             value={profileForm.fullName}
             onChange={(event) => setProfileForm({ ...profileForm, fullName: event.target.value })}
             required
           />
         </Field>
-        <Field label="Phone">
+        <Field label={t('address.form.phone')}>
           <Input
             value={profileForm.phoneNumber}
             onChange={(event) => setProfileForm({ ...profileForm, phoneNumber: event.target.value })}
           />
         </Field>
-        <Field label="Gender">
+        <Field label={t('pet.form.gender')}>
           <select
             className="h-8 w-full rounded-lg border bg-background px-2 text-sm"
             value={profileForm.gender}
             onChange={(event) => setProfileForm({ ...profileForm, gender: event.target.value })}
           >
-            <option value="MALE">Male</option>
-            <option value="FEMALE">Female</option>
+            <option value="MALE">{t('pet.form.male')}</option>
+            <option value="FEMALE">{t('pet.form.female')}</option>
           </select>
         </Field>
-        <Field label="Birth date">
+        <Field label={t('pet.form.birthDate')}>
           <Input
             type="date"
             value={profileForm.birthDate}
@@ -328,7 +341,7 @@ function ProfileForm({
       </div>
       <Button type="submit" loading={pending}>
         <Save className="size-4" />
-        Save Profile
+        {t('common.save')}
       </Button>
     </form>
   );

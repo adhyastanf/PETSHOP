@@ -4,12 +4,14 @@ import { useAuthStore } from '@/store/auth-store';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { PawPrint } from 'lucide-react';
+import { useI18n } from '@/lib/i18n';
 
 /**
  * Auth layout — redirects authenticated users away from login/register.
  * Provides a centered card layout for auth forms with Oyen branding.
  */
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
+  const { t } = useI18n();
   const { isAuthenticated, isHydrated } = useAuthStore();
   const router = useRouter();
 
@@ -34,7 +36,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
           <PawPrint className='size-8 text-primary' />
           <span className='text-2xl font-bold text-foreground'>Oyen</span>
         </div>
-        <p className='text-sm text-muted-foreground'>Semua Kebutuhan Hewan Peliharaan, Lebih Dekat.</p>
+        <p className='text-sm text-muted-foreground'>{t('common.tagline')}</p>
       </div>
       <div className='w-full max-w-md'>{children}</div>
     </div>

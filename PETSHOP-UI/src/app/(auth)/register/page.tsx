@@ -13,8 +13,10 @@ import { Label } from '@/components/ui/label';
 import { useRegister } from '@/hooks/use-auth';
 import { registerSchema, type RegisterFormData } from '@/lib/validators/auth-validators';
 import { ApiError } from '@/lib/api-client';
+import { useI18n } from '@/lib/i18n';
 
 export default function RegisterPage() {
+  const { t } = useI18n();
   const [formData, setFormData] = useState<RegisterFormData>({
     fullName: '',
     email: '',
@@ -63,14 +65,14 @@ export default function RegisterPage() {
       onError: (error) => {
         if (error instanceof ApiError) {
           if (error.code === 'DUPLICATE_EMAIL') {
-            setErrors((prev) => ({ ...prev, email: 'Email sudah terdaftar' }));
+            setErrors((prev) => ({ ...prev, email: t('auth.register.duplicateEmail') }));
           } else if (error.code === 'DUPLICATE_PHONE') {
-            setErrors((prev) => ({ ...prev, phoneNumber: 'Nomor telepon sudah terdaftar' }));
+            setErrors((prev) => ({ ...prev, phoneNumber: t('auth.register.duplicatePhone') }));
           } else {
-            toast.error(error.message || 'Registrasi gagal. Silakan coba lagi.');
+            toast.error(error.message || t('auth.register.failed'));
           }
         } else {
-          toast.error('Terjadi kesalahan jaringan. Silakan coba lagi.');
+          toast.error(t('common.networkError'));
         }
       },
     });
@@ -79,18 +81,18 @@ export default function RegisterPage() {
   return (
     <Card>
       <CardHeader className='text-center'>
-        <CardTitle className='text-xl'>Daftar Akun</CardTitle>
-        <CardDescription>Buat akun baru untuk mulai berbelanja</CardDescription>
+        <CardTitle className='text-xl'>{t('auth.register.title')}</CardTitle>
+        <CardDescription>{t('auth.register.description')}</CardDescription>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className='space-y-4' noValidate>
           {/* Full Name */}
           <div className='space-y-2'>
-            <Label htmlFor='fullName'>Nama Lengkap</Label>
+            <Label htmlFor='fullName'>{t('auth.register.fullName')}</Label>
             <Input
               id='fullName'
               type='text'
-              placeholder='Nama lengkap Anda'
+              placeholder={t('auth.register.fullNamePlaceholder')}
               value={formData.fullName}
               onChange={(e) => handleChange('fullName', e.target.value)}
               aria-invalid={!!errors.fullName}
@@ -107,11 +109,11 @@ export default function RegisterPage() {
 
           {/* Email */}
           <div className='space-y-2'>
-            <Label htmlFor='email'>Email</Label>
+            <Label htmlFor='email'>{t('auth.register.email')}</Label>
             <Input
               id='email'
               type='email'
-              placeholder='nama@email.com'
+              placeholder={t('auth.register.emailPlaceholder')}
               value={formData.email}
               onChange={(e) => handleChange('email', e.target.value)}
               aria-invalid={!!errors.email}
@@ -129,12 +131,12 @@ export default function RegisterPage() {
           {/* Phone (optional) */}
           <div className='space-y-2'>
             <Label htmlFor='phoneNumber'>
-              Nomor Telepon <span className='text-muted-foreground font-normal'>(opsional)</span>
+              {t('auth.register.phone')} <span className='text-muted-foreground font-normal'>{t('auth.register.optional')}</span>
             </Label>
             <Input
               id='phoneNumber'
               type='tel'
-              placeholder='+6281234567890'
+              placeholder={t('auth.register.phonePlaceholder')}
               value={formData.phoneNumber}
               onChange={(e) => handleChange('phoneNumber', e.target.value)}
               aria-invalid={!!errors.phoneNumber}
@@ -151,12 +153,12 @@ export default function RegisterPage() {
 
           {/* Password */}
           <div className='space-y-2'>
-            <Label htmlFor='password'>Password</Label>
+            <Label htmlFor='password'>{t('auth.register.password')}</Label>
             <div className='relative'>
               <Input
                 id='password'
                 type={showPassword ? 'text' : 'password'}
-                placeholder='Minimal 8 karakter'
+                placeholder={t('auth.register.passwordPlaceholder')}
                 value={formData.password}
                 onChange={(e) => handleChange('password', e.target.value)}
                 aria-invalid={!!errors.password}
@@ -169,7 +171,7 @@ export default function RegisterPage() {
                 className='absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground'
                 onClick={() => setShowPassword(!showPassword)}
                 tabIndex={-1}
-                aria-label={showPassword ? 'Sembunyikan password' : 'Tampilkan password'}
+                aria-label={showPassword ? t('auth.login.hidePassword') : t('auth.login.showPassword')}
               >
                 {showPassword ? <EyeOff className='size-4' /> : <Eye className='size-4' />}
               </button>
@@ -183,12 +185,12 @@ export default function RegisterPage() {
 
           {/* Confirm Password */}
           <div className='space-y-2'>
-            <Label htmlFor='confirmPassword'>Konfirmasi Password</Label>
+            <Label htmlFor='confirmPassword'>{t('auth.register.confirmPassword')}</Label>
             <div className='relative'>
               <Input
                 id='confirmPassword'
                 type={showConfirm ? 'text' : 'password'}
-                placeholder='Ulangi password'
+                placeholder={t('auth.register.confirmPasswordPlaceholder')}
                 value={formData.confirmPassword}
                 onChange={(e) => handleChange('confirmPassword', e.target.value)}
                 aria-invalid={!!errors.confirmPassword}
@@ -201,7 +203,7 @@ export default function RegisterPage() {
                 className='absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground'
                 onClick={() => setShowConfirm(!showConfirm)}
                 tabIndex={-1}
-                aria-label={showConfirm ? 'Sembunyikan password' : 'Tampilkan password'}
+                aria-label={showConfirm ? t('auth.login.hidePassword') : t('auth.login.showPassword')}
               >
                 {showConfirm ? <EyeOff className='size-4' /> : <Eye className='size-4' />}
               </button>
@@ -219,14 +221,14 @@ export default function RegisterPage() {
             size='lg'
             loading={registerMutation.isPending}
           >
-            Daftar
+            {t('auth.register.submit')}
           </Button>
         </form>
 
         <p className='mt-4 text-center text-sm text-muted-foreground'>
-          Sudah punya akun?{' '}
+          {t('auth.register.hasAccount')}{' '}
           <Link href='/login' className='font-medium text-primary hover:underline'>
-            Masuk
+            {t('common.signIn')}
           </Link>
         </p>
       </CardContent>

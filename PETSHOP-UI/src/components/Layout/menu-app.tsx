@@ -4,6 +4,7 @@ import IconButtonCartBell from '../general/cart-bell';
 import IconButtonNotificationBell from '../general/notification-bell';
 import InputSearch from '../Input/InputSearch';
 import { Separator } from '../ui/separator';
+import LanguageSwitcher from './language-switcher';
 import UserNav from './user-nav';
 
 export default function MenuAppComponent() {
@@ -20,6 +21,7 @@ export default function MenuAppComponent() {
         <div className='flex gap-3 items-center'>
           <IconButtonCartBell />
           <IconButtonNotificationBell />
+          <LanguageSwitcher />
           <Separator orientation='vertical' className='h-6' />
           <UserNav />
         </div>

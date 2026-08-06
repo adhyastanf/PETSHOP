@@ -1,0 +1,25 @@
+{
+  "title": "Alamat",
+  "noAddresses": "Belum ada alamat.",
+  "newAddress": "Alamat Baru",
+  "editAddress": "Edit Alamat",
+  "deleteAddress": "Hapus alamat?",
+  "deleteConfirm": "Alamat \"{label}\" akan dihapus permanen.",
+  "setDefault": "Jadikan utama",
+  "default": "Utama",
+  "form": {
+    "label": "Label",
+    "recipient": "Penerima",
+    "phone": "Telepon",
+    "postalCode": "Kode pos",
+    "province": "Provinsi",
+    "city": "Kota",
+    "district": "Kecamatan",
+    "subdistrict": "Kelurahan",
+    "addressLine": "Alamat lengkap",
+    "notes": "Catatan",
+    "isDefault": "Jadikan alamat utama"
+  },
+  "submit": "Tambah Alamat",
+  "update": "Perbarui Alamat"
+}

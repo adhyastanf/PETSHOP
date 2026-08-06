@@ -552,3 +552,5 @@ When implementing frontend features:
 - Extend the design system only when necessary.
 - Maintain one consistent visual language.
 - Prefer component reuse over creating new variants.
+- Use English for all user-facing text.
+- Always show toast notification for API errors using Sonner.

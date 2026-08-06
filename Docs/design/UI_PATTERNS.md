@@ -137,7 +137,7 @@ Full marketplace browsing experience:
 [Category tabs (horizontal scroll)]
 [Filter chips row (horizontal scroll)]
 [Sort dropdown (right-aligned)]
-[Result count ("150 produk ditemukan")]
+[Result count ("150 products found")]
 [Content Grid: Product Cards / Service Cards / Merchant Cards]
 [Pagination (desktop) / Infinite Scroll (mobile)]
 ```
@@ -145,9 +145,9 @@ Full marketplace browsing experience:
 ### Rules
 
 - Tabs switch between: Produk, Layanan, Toko
-- Filter chips: active filters visible, "Hapus semua" at end
+- Filter chips: active filters visible, "Clear all" at end
 - Full filter panel: bottom sheet (mobile), side drawer (desktop)
-- Sort: "Terbaru", "Harga ↑", "Harga ↓", "Rating", "Terlaris"
+- Sort: "Newest", "Price ↑", "Price ↓", "Rating", "Best seller"
 - Grid: 2 col (mobile), 3 col (tablet), 4 col (desktop)
 - Infinite scroll on mobile, pagination on desktop
 
@@ -226,7 +226,7 @@ Full marketplace browsing experience:
 ## Cart Pattern
 
 ```
-[App Header: "Keranjang"]
+[App Header: "Cart"]
 [Merchant Group A]
   [Merchant name + checkbox (select all)]
   [Cart Item 1]
@@ -234,7 +234,7 @@ Full marketplace browsing experience:
 [Merchant Group B]
   [Merchant name + checkbox]
   [Cart Item 3]
-[Voucher row: "Gunakan voucher" → opens voucher sheet]
+[Voucher row: "Use voucher" → opens voucher sheet]
 [Sticky Bottom: Total + Checkout button]
 ```
 
@@ -245,7 +245,7 @@ Full marketplace browsing experience:
 - Service items show date/time/pet instead of quantity
 - Select/deselect items for checkout
 - Voucher: one per checkout, applied after selection
-- Empty cart: canonical Empty State ("Keranjang kosong")
+- Empty cart: canonical Empty State ("Cart is empty")
 - Checkout button shows selected item count + total
 
 ---
@@ -253,14 +253,14 @@ Full marketplace browsing experience:
 ## Checkout Pattern
 
 ```
-[Stepper: Pengiriman → Pembayaran → Konfirmasi]
+[Stepper: Shipping → Payment → Confirmation]
 [Shipping Section]
   [Address Card (selected, changeable)]
   [Shipping options per merchant group]
 [Booking Section (if services in cart)]
   [Date/Time/Pet confirmation per service]
 [Voucher Section]
-  [Applied voucher or "Tambah Voucher" button]
+  [Applied voucher or "Add Voucher" button]
 [Payment Section]
   [Payment method selection]
 [Order Summary Card (sticky desktop, bottom sheet mobile)]
@@ -284,8 +284,8 @@ Full marketplace browsing experience:
 ### Order List
 
 ```
-[App Header: "Pesanan Saya"]
-[Status tabs (horizontal scroll): Semua | Dikemas | Dikirim | Selesai | Batal]
+[App Header: "My Orders"]
+[Status tabs (horizontal scroll): All | Packed | Shipped | Completed | Cancelled]
 [Order Cards (vertical list)]
 [Empty State if no orders in tab]
 ```
@@ -298,7 +298,7 @@ Full marketplace browsing experience:
 [Item list (product cards mini)]
 [Shipping info + tracking number + courier]
 [Price breakdown]
-[Action buttons: Konfirmasi Terima / Ajukan Pengembalian / Beri Ulasan]
+[Action buttons: Confirm Received / Request Return / Leave Review]
 ```
 
 ### Tracking
@@ -316,8 +316,8 @@ Full marketplace browsing experience:
 ### Booking List
 
 ```
-[App Header: "Booking Saya"]
-[Status tabs: Semua | Akan Datang | Berlangsung | Selesai | Batal]
+[App Header: "My Bookings"]
+[Status tabs: All | Upcoming | In Progress | Completed | Cancelled]
 [Booking Cards (vertical list)]
 [Empty State if no bookings]
 ```
@@ -331,7 +331,7 @@ Full marketplace browsing experience:
 [Staff assigned (if known)]
 [Price breakdown]
 [Timeline (status history)]
-[Action buttons: Batalkan / Check-in QR / Beri Ulasan]
+[Action buttons: Cancel / Check-in QR / Leave Review]
 ```
 
 ---
@@ -339,17 +339,17 @@ Full marketplace browsing experience:
 ## Customer Profile Pattern
 
 ```
-[App Header: "Akun"]
+[App Header: "Account"]
 [User Profile Card (avatar + name + email)]
 [Menu List:]
-  - Profil Saya → Profile edit page
-  - Hewan Saya → Pet list
-  - Alamat → Address list
-  - Pesanan → Order list
-  - Booking → Booking list
+  - My Profile → Profile edit page
+  - My Pets → Pet list
+  - Addresses → Address list
+  - Orders → Order list
+  - Bookings → Booking list
   - Wishlist → Favorites
-  - Pengaturan → Settings
-  - Keluar → Logout confirmation
+  - Settings → Settings
+  - Sign Out → Logout confirmation
 ```
 
 ### Rules
@@ -366,10 +366,10 @@ Full marketplace browsing experience:
 ### Pet List
 
 ```
-[App Header: "Hewan Saya"]
+[App Header: "My Pets"]
 [Pet Cards (grid 2-col or list)]
-[FAB: "Tambah Hewan" (mobile) / Button (desktop)]
-[Empty State: "Belum ada hewan"]
+[FAB: "Add Pet" (mobile) / Button (desktop)]
+[Empty State: "No pets yet"]
 ```
 
 ### Pet Detail
@@ -501,7 +501,7 @@ After submit success:
 [Suggestions (as user types, debounced)]
 [Results grouped: Produk | Layanan | Toko]
 [Each result: mini card, tappable]
-["Lihat semua hasil" link per group]
+["View all results" link per group]
 ```
 
 ### Category/Filtered Search
@@ -516,9 +516,9 @@ After submit success:
 
 ```
 [Canonical Empty State]
-[Title: "Tidak ditemukan"]
-[Description: "Coba kata kunci lain atau hapus filter"]
-[CTA: "Hapus Filter" or "Kembali"]
+[Title: "No results found"]
+[Description: "Try a different keyword or clear filters"]
+[CTA: "Clear Filters" or "Go Back"]
 ```
 
 ---
@@ -531,12 +531,12 @@ After submit success:
 [Handle bar]
 [Filter title + "Reset" link]
 [Filter sections (collapsible):]
-  - Kategori (checkbox list)
-  - Harga (range slider or min/max inputs)
+  - Category (checkbox list)
+  - Price (range slider or min/max inputs)
   - Rating (star buttons)
-  - Lokasi (radius selector)
-  - Ketersediaan (toggle)
-[Sticky bottom: "Tampilkan X hasil" button]
+  - Location (radius selector)
+  - Availability (toggle)
+[Sticky bottom: "Show X results" button]
 ```
 
 ### Desktop (Side Panel or Dropdown)
@@ -570,10 +570,10 @@ One pattern, never deviate:
 ```
 
 Contextual examples:
-- Cart: `ShoppingCart` + "Keranjang kosong" + "Mulai belanja"
-- Orders: `Package` + "Belum ada pesanan" + "Lihat produk"
-- Pets: `PawPrint` + "Belum ada hewan" + "Tambah hewan"
-- Search: `Search` + "Tidak ditemukan" + "Coba kata kunci lain"
+- Cart: `ShoppingCart` + "Cart is empty" + "Start shopping"
+- Orders: `Package` + "No orders yet" + "Browse products"
+- Pets: `PawPrint` + "No pets yet" + "Add pet"
+- Search: `Search` + "No results found" + "Try a different keyword"
 
 ---
 
@@ -581,11 +581,11 @@ Contextual examples:
 
 | Type | Icon | Title | Action |
 |------|------|-------|--------|
-| Network Error | `WifiOff` | "Koneksi terputus" | "Coba Lagi" button |
-| 404 Not Found | `FileQuestion` | "Halaman tidak ditemukan" | "Kembali" button |
-| 403 Forbidden | `ShieldX` | "Akses ditolak" | "Kembali" + "Beranda" |
-| 500 Server Error | `ServerCrash` | "Terjadi kesalahan" | "Coba Lagi" button |
-| Timeout | `Timer` | "Request timeout" | "Coba Lagi" button |
+| Network Error | `WifiOff` | "Connection lost" | "Try Again" button |
+| 404 Not Found | `FileQuestion` | "Page not found" | "Go Back" button |
+| 403 Forbidden | `ShieldX` | "Access denied" | "Go Back" + "Home" |
+| 500 Server Error | `ServerCrash` | "Something went wrong" | "Try Again" button |
+| Timeout | `Timer` | "Request timeout" | "Try Again" button |
 
 Layout: same as Empty State pattern (centered, icon + title + description + action).
 
@@ -610,7 +610,7 @@ Rules: See DESIGN_SYSTEM.md Loading State Guidelines for full specs.
 
 | Context | Method |
 |---------|--------|
-| Simple CRUD | Toast (top-right): "Berhasil disimpan" |
+| Simple CRUD | Toast (top-right): "Saved successfully" |
 | Important flow | Success Dialog: icon + title + description + CTA |
 | Payment | Full success page: checkmark + amount + order ID + "Lihat Pesanan" |
 | Registration | Redirect to home with welcome toast |

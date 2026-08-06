@@ -73,3 +73,14 @@ Before coding:
 6. Reuse existing conventions instead of creating a parallel pattern.
 
 Do not create generic CRUD endpoints simply because a table exists.
+
+
+---
+
+## Internationalization
+
+English is the canonical language for development and the source language for all translations. The application architecture supports multiple languages through externalized translation resources.
+
+Bahasa Indonesia is the first supported localization.
+
+All future frontend work must follow the internationalization architecture defined in `architecture/FRONTEND_ARCHITECTURE.md`. Hardcoded user-facing strings are prohibited in new code.

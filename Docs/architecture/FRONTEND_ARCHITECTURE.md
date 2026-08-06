@@ -91,3 +91,97 @@ Do not store long-lived secrets in browser-accessible code. UI role checks are c
 
 ## Error UX
 Normalize API errors by stable `code`; show useful messages and preserve `traceId` for support/debugging where appropriate.
+
+
+---
+
+## Internationalization (i18n)
+
+### Purpose
+
+The application supports multiple languages without runtime refactoring. All user-facing text is externalized into translation resources.
+
+### Architecture
+
+```text
+src/
+├── locales/
+│   ├── en/                    ← English (source language)
+│   │   ├── common.json
+│   │   ├── auth.json
+│   │   ├── customer.json
+│   │   ├── pets.json
+│   │   ├── checkout.json
+│   │   └── merchant.json
+│   └── id/                    ← Bahasa Indonesia (first localization)
+│       ├── common.json
+│       ├── auth.json
+│       └── ...
+├── lib/
+│   └── i18n.ts               ← Translation provider setup
+└── components/
+    └── Provider/
+        └── I18nProvider.tsx   ← Language context wrapper
+```
+
+### Supported Languages
+
+| Language | Code | Status |
+|----------|------|--------|
+| English | `en` | Source language (canonical) |
+| Bahasa Indonesia | `id` | First localization |
+
+### Translation Library Strategy
+
+Use `next-intl` or equivalent Next.js-compatible i18n library. The library must support:
+- Static and dynamic route segments
+- Server and client components
+- Namespace-based organization
+- Interpolation and pluralization
+- Lazy loading of locale bundles
+
+### Translation Key Naming Convention
+
+Keys are grouped by feature with dot notation:
+
+```text
+auth.login.title
+auth.login.email
+auth.login.password
+auth.register.title
+common.cancel
+common.save
+common.delete
+common.loading
+checkout.summary.total
+merchant.products.title
+pets.register.title
+pets.form.name
+```
+
+Rules:
+- `common.*` — shared across features (buttons, labels, errors)
+- `{feature}.*` — feature-specific text
+- Use camelCase for multi-word segments: `auth.forgotPassword.title`
+- Keep keys stable — never rename without migration
+
+### Language Persistence
+
+- Store preference in `localStorage` key: `oyen_locale`
+- Default: browser `navigator.language` detection
+- Fallback: `en` (English)
+- User can override in settings
+
+### Dynamic Content Rules
+
+- Product names, merchant names, service names: **never translate** (user-generated)
+- Reviews, chat messages: **never translate**
+- Status labels, categories, error codes: **translate via keys**
+- Dates and numbers: use `Intl` API for locale-aware formatting
+
+### Performance Considerations
+
+- Load only the active locale bundle
+- Split translation files by feature (lazy load per route)
+- English strings can be used as fallback without loading a separate bundle
+- Do not load all locales upfront

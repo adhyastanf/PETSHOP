@@ -89,7 +89,7 @@ describe('ProtectedRoute', () => {
     );
 
     expect(screen.queryByText('Admin Content')).not.toBeInTheDocument();
-    expect(screen.getByText('Akses Ditolak')).toBeInTheDocument();
+    expect(screen.getByText('error.forbidden.title')).toBeInTheDocument();
   });
 
   it('allows access for multi-role user if any role matches', () => {
@@ -126,7 +126,7 @@ describe('ProtectedRoute', () => {
     );
 
     expect(screen.queryByText('Admin Content')).not.toBeInTheDocument();
-    expect(screen.getByText('Akses Ditolak')).toBeInTheDocument();
+    expect(screen.getByText('error.forbidden.title')).toBeInTheDocument();
   });
 
   it('shows 403 for CUSTOMER trying to access mitra routes', () => {
@@ -145,7 +145,7 @@ describe('ProtectedRoute', () => {
     );
 
     expect(screen.queryByText('Mitra Content')).not.toBeInTheDocument();
-    expect(screen.getByText('Akses Ditolak')).toBeInTheDocument();
+    expect(screen.getByText('error.forbidden.title')).toBeInTheDocument();
   });
 
   it('shows spinner while hydrating', () => {

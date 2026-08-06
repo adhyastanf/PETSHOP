@@ -75,3 +75,25 @@ Every critical business rule should have tests. State transitions, authorization
 
 ## Git / Change Discipline
 Keep migrations, API changes and tests in the same feature change where practical. Do not perform unrelated broad refactors while implementing a scoped feature unless explicitly approved.
+
+
+---
+
+## Internationalization
+
+### Rules
+
+1. **Never hardcode user-facing strings.** All UI text must come from translation resources.
+2. **Always use translation keys.** Components reference keys, not raw text.
+3. **Never use translated text as identifiers.** Logic must use stable codes/enums, not display strings.
+4. **Group keys by feature.** Example: `auth.login.title`, `pets.form.name`, `common.save`.
+5. **Keep keys stable.** Renaming a key is a breaking change requiring migration.
+6. **Prefer descriptive key names.** `auth.login.invalidCredentials` over `auth.error1`.
+7. **Use interpolation for dynamic values.** Example: `"Welcome, {name}"` not string concatenation.
+8. **Pluralization uses ICU format.** Example: `"{count, plural, one {# item} other {# items}}"`.
+9. **Date/number formatting uses `Intl` API.** Never manually format dates for display.
+10. **Source language is English.** English JSON files are the source of truth for all keys.
+
+### Migration Strategy
+
+Existing hardcoded strings should be refactored to use translation keys whenever the file is touched for other work. This is a progressive migration — do not create a dedicated refactoring phase.

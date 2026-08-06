@@ -4,11 +4,14 @@ import type React from 'react';
 import { FormEvent, useMemo, useState } from 'react';
 import { CalendarDays, Edit3, Plus, Save, ShieldCheck, Trash2, X } from 'lucide-react';
 import Link from 'next/link';
+import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { ApiError } from '@/lib/api-client';
+import { useI18n } from '@/lib/i18n';
+import ConfirmDialog from '@/components/feedback/ConfirmDialog';
 import {
   useBreeds,
   useCreatePet,
@@ -55,25 +58,8 @@ function petState(pet?: Pet): PetRequest {
   };
 }
 
-function loadErrorMessage(error: unknown) {
-  if (error instanceof ApiError) {
-    if (error.status === 401) {
-      return 'Your session has expired. Please log in again.';
-    }
-    if (error.status === 403) {
-      return 'This page is available only for customer or super admin accounts.';
-    }
-    return error.message;
-  }
-
-  if (error instanceof TypeError) {
-    return 'Cannot reach the API server. Make sure the backend is running on http://localhost:8080.';
-  }
-
-  return 'Could not load pet data. Refresh or try again later.';
-}
-
 export default function PetManager() {
+  const { t } = useI18n();
   const petTypesQuery = usePetTypes();
   const petsQuery = usePets();
   const createPet = useCreatePet();
@@ -82,6 +68,9 @@ export default function PetManager() {
   const [petForm, setPetForm] = useState<PetRequest>(emptyPet);
   const [editingPetId, setEditingPetId] = useState<string | null>(null);
   const [selectedPetId, setSelectedPetId] = useState<string | null>(null);
+  const [hasMicrochip, setHasMicrochip] = useState(false);
+  const [hasAllergies, setHasAllergies] = useState(false);
+  const [hasSpecialNotes, setHasSpecialNotes] = useState(false);
   const activePetTypeId = petForm.petTypeId || petTypesQuery.data?.[0]?.id || '';
   const activeSelectedPetId = selectedPetId || petsQuery.data?.[0]?.id || null;
   const breedsQuery = useBreeds(activePetTypeId);
@@ -91,6 +80,24 @@ export default function PetManager() {
     () => petsQuery.data?.find((pet) => pet.id === activeSelectedPetId) ?? null,
     [petsQuery.data, activeSelectedPetId],
   );
+
+  function loadErrorMessage(error: unknown) {
+    if (error instanceof ApiError) {
+      if (error.status === 401) {
+        return t('error.sessionExpired');
+      }
+      if (error.status === 403) {
+        return t('error.noPermission');
+      }
+      return error.message;
+    }
+
+    if (error instanceof TypeError) {
+      return t('error.apiUnavailable');
+    }
+
+    return t('common.unknownError');
+  }
 
   function submitPet(event: FormEvent) {
     event.preventDefault();
@@ -103,30 +110,51 @@ export default function PetManager() {
       profileImageFileId: petForm.profileImageFileId || null,
     };
     if (editingPetId) {
-      updatePet.mutate({ id: editingPetId, data: body }, { onSuccess: resetPetForm });
+      updatePet.mutate({ id: editingPetId, data: body }, {
+        onSuccess: resetPetForm,
+        onError: (error) => {
+          if (error instanceof ApiError) {
+            toast.error(error.message || t('pet.failedUpdate'));
+          } else {
+            toast.error(t('common.networkError'));
+          }
+        },
+      });
     } else {
-      createPet.mutate(body, { onSuccess: resetPetForm });
+      createPet.mutate(body, {
+        onSuccess: resetPetForm,
+        onError: (error) => {
+          if (error instanceof ApiError) {
+            toast.error(error.message || t('pet.failedCreate'));
+          } else {
+            toast.error(t('common.networkError'));
+          }
+        },
+      });
     }
   }
 
   function resetPetForm() {
     setEditingPetId(null);
     setPetForm({ ...emptyPet, petTypeId: petTypesQuery.data?.[0]?.id ?? '' });
+    setHasMicrochip(false);
+    setHasAllergies(false);
+    setHasSpecialNotes(false);
   }
 
   if (petTypesQuery.isLoading || petsQuery.isLoading) {
-    return <div className="py-10 text-sm text-muted-foreground">Loading pets...</div>;
+    return <div className="py-10 text-sm text-muted-foreground">{t('common.loading')}</div>;
   }
 
   return (
     <div className="space-y-8 py-8">
       <div className="flex items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-semibold">Pets</h1>
-          <p className="text-sm text-muted-foreground">Pet profiles and vaccination history</p>
+          <h1 className="text-2xl font-semibold">{t('pet.title')}</h1>
+          <p className="text-sm text-muted-foreground">{t('pet.description')}</p>
         </div>
         <Link href="/customer/account">
-          <Button type="button" variant="outline">Account</Button>
+          <Button type="button" variant="outline">{t('customer.nav.myProfile')}</Button>
         </Link>
       </div>
 
@@ -140,7 +168,7 @@ export default function PetManager() {
         <div className="space-y-4">
           {petsQuery.data?.length === 0 ? (
             <div className="rounded-md border border-dashed p-6 text-sm text-muted-foreground">
-              No pets registered yet.
+              {t('pet.noPets')}
             </div>
           ) : (
             <div className="grid gap-3 md:grid-cols-2">
@@ -158,31 +186,50 @@ export default function PetManager() {
                         type="button"
                         size="icon"
                         variant="outline"
-                        title="Edit pet"
+                        title={t('pet.editPet')}
                         onClick={() => {
                           setEditingPetId(pet.id);
                           setPetForm(petState(pet));
+                          setHasMicrochip(Boolean(pet.microchipNumber));
+                          setHasAllergies(Boolean(pet.allergies));
+                          setHasSpecialNotes(Boolean(pet.specialNotes));
                         }}
                       >
                         <Edit3 className="size-4" />
                       </Button>
-                      <Button
-                        type="button"
-                        size="icon"
-                        variant="destructive"
-                        title="Delete pet"
-                        onClick={() => deletePet.mutate(pet.id)}
+                      <ConfirmDialog
+                        title={t('pet.deletePet')}
+                        description={t('pet.deleteConfirm', { name: pet.name })}
+                        onConfirm={() => deletePet.mutate(pet.id, {
+                          onError: (error) => {
+                            if (error instanceof ApiError) {
+                              toast.error(error.message || t('pet.failedDelete'));
+                            } else {
+                              toast.error(t('common.networkError'));
+                            }
+                          },
+                        })}
                         loading={deletePet.isPending}
                       >
-                        <Trash2 className="size-4" />
-                      </Button>
+                        {(open) => (
+                          <Button
+                            type="button"
+                            size="icon"
+                            variant="destructive"
+                            title={t('pet.deletePet')}
+                            onClick={open}
+                          >
+                            <Trash2 className="size-4" />
+                          </Button>
+                        )}
+                      </ConfirmDialog>
                     </div>
                   </div>
                   <dl className="mt-4 grid grid-cols-2 gap-3 text-sm">
-                    <Info label="Gender" value={pet.gender || '-'} />
-                    <Info label="Weight" value={pet.weightKg ? `${pet.weightKg} kg` : '-'} />
-                    <Info label="Birth date" value={pet.birthDate || '-'} />
-                    <Info label="Microchip" value={pet.microchipNumber || '-'} />
+                    <Info label={t('pet.form.gender')} value={pet.gender || '-'} />
+                    <Info label={t('pet.form.weight')} value={pet.weightKg ? `${pet.weightKg} kg` : '-'} />
+                    <Info label={t('pet.form.birthDate')} value={pet.birthDate || '-'} />
+                    <Info label={t('pet.form.microchipNumber')} value={pet.microchipNumber || '-'} />
                   </dl>
                   <Button
                     type="button"
@@ -191,7 +238,7 @@ export default function PetManager() {
                     onClick={() => setSelectedPetId(pet.id)}
                   >
                     <CalendarDays className="size-4" />
-                    Vaccinations
+                    {t('pet.vaccination.title')}
                   </Button>
                 </div>
               ))}
@@ -202,15 +249,15 @@ export default function PetManager() {
             <div className="flex items-center gap-2">
               <ShieldCheck className="size-4" />
               <h2 className="font-medium">
-                {selectedPet ? `${selectedPet.name} Vaccinations` : 'Vaccination History'}
+                {selectedPet ? `${selectedPet.name} ${t('pet.vaccination.title')}` : t('pet.vaccination.title')}
               </h2>
             </div>
             {!activeSelectedPetId ? (
-              <p className="mt-3 text-sm text-muted-foreground">Select a pet to view vaccination history.</p>
+              <p className="mt-3 text-sm text-muted-foreground">{t('pet.vaccination.selectPet')}</p>
             ) : vaccinationsQuery.isLoading ? (
-              <p className="mt-3 text-sm text-muted-foreground">Loading vaccination history...</p>
+              <p className="mt-3 text-sm text-muted-foreground">{t('pet.vaccination.loading')}</p>
             ) : vaccinationsQuery.data?.length === 0 ? (
-              <p className="mt-3 text-sm text-muted-foreground">No vaccination records yet.</p>
+              <p className="mt-3 text-sm text-muted-foreground">{t('pet.vaccination.noRecords')}</p>
             ) : (
               <div className="mt-3 divide-y">
                 {vaccinationsQuery.data?.map((vaccination) => (
@@ -235,19 +282,19 @@ export default function PetManager() {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Plus className="size-4" />
-              <h2 className="text-base font-medium">{editingPetId ? 'Edit Pet' : 'Register Pet'}</h2>
+              <h2 className="text-base font-medium">{editingPetId ? t('pet.editPet') : t('pet.register')}</h2>
             </div>
             {editingPetId && (
-              <Button type="button" variant="ghost" size="icon" title="Cancel edit" onClick={resetPetForm}>
+              <Button type="button" variant="ghost" size="icon" title={t('common.cancel')} onClick={resetPetForm}>
                 <X className="size-4" />
               </Button>
             )}
           </div>
           <div className="grid gap-3 sm:grid-cols-2">
-            <Field label="Name">
+            <Field label={t('pet.form.name')}>
               <Input required value={petForm.name} onChange={(event) => setPetForm({ ...petForm, name: event.target.value })} />
             </Field>
-            <Field label="Pet type">
+            <Field label={t('pet.form.petType')}>
               <select
                 className="h-8 w-full rounded-lg border bg-background px-2 text-sm"
                 required
@@ -259,39 +306,36 @@ export default function PetManager() {
                 ))}
               </select>
             </Field>
-            <Field label="Breed">
+            <Field label={t('pet.form.breed')}>
               <select
                 className="h-8 w-full rounded-lg border bg-background px-2 text-sm"
                 value={petForm.breedId ?? ''}
                 onChange={(event) => setPetForm({ ...petForm, breedId: event.target.value || null })}
               >
-                <option value="">Unknown</option>
+                <option value="">{t('pet.form.breedUnknown')}</option>
                 {breedsQuery.data?.map((breed) => (
                   <option key={breed.id} value={breed.id}>{breed.name}</option>
                 ))}
               </select>
             </Field>
-            <Field label="Gender">
+            <Field label={t('pet.form.gender')}>
               <select
                 className="h-8 w-full rounded-lg border bg-background px-2 text-sm"
                 value={petForm.gender}
                 onChange={(event) => setPetForm({ ...petForm, gender: event.target.value })}
               >
-                <option value="MALE">Male</option>
-                <option value="FEMALE">Female</option>
+                <option value="MALE">{t('pet.form.male')}</option>
+                <option value="FEMALE">{t('pet.form.female')}</option>
               </select>
             </Field>
-            <Field label="Birth date">
+            <Field label={t('pet.form.birthDate')}>
               <Input type="date" value={petForm.birthDate ?? ''} onChange={(event) => setPetForm({ ...petForm, birthDate: event.target.value || null })} />
             </Field>
-            <Field label="Weight kg">
+            <Field label={t('pet.form.weight')}>
               <Input type="number" min="0" step="0.01" value={petForm.weightKg ?? ''} onChange={(event) => setPetForm({ ...petForm, weightKg: event.target.value || null })} />
             </Field>
-            <Field label="Color">
+            <Field label={t('pet.form.color')}>
               <Input value={petForm.color} onChange={(event) => setPetForm({ ...petForm, color: event.target.value })} />
-            </Field>
-            <Field label="Microchip">
-              <Input value={petForm.microchipNumber} onChange={(event) => setPetForm({ ...petForm, microchipNumber: event.target.value })} />
             </Field>
           </div>
           <label className="flex items-center gap-2 text-sm">
@@ -300,7 +344,7 @@ export default function PetManager() {
               checked={petForm.birthDateEstimated}
               onChange={(event) => setPetForm({ ...petForm, birthDateEstimated: event.target.checked })}
             />
-            Birth date is estimated
+            {t('pet.form.birthDateEstimated')}
           </label>
           <label className="flex items-center gap-2 text-sm">
             <input
@@ -308,17 +352,69 @@ export default function PetManager() {
               checked={petForm.sterilized}
               onChange={(event) => setPetForm({ ...petForm, sterilized: event.target.checked })}
             />
-            Sterilized
+            {t('pet.form.sterilized')}
           </label>
-          <Field label="Allergies">
-            <Textarea value={petForm.allergies} onChange={(event) => setPetForm({ ...petForm, allergies: event.target.value })} />
-          </Field>
-          <Field label="Special notes">
-            <Textarea value={petForm.specialNotes} onChange={(event) => setPetForm({ ...petForm, specialNotes: event.target.value })} />
-          </Field>
+
+          {/* Optional fields — only show input when checked */}
+          <div className="space-y-3">
+            <label className="flex items-center gap-2 text-sm">
+              <input
+                type="checkbox"
+                checked={hasMicrochip}
+                onChange={(event) => {
+                  setHasMicrochip(event.target.checked);
+                  if (!event.target.checked) setPetForm({ ...petForm, microchipNumber: '' });
+                }}
+              />
+              {t('pet.form.hasMicrochip')}
+            </label>
+            {hasMicrochip && (
+              <Field label={t('pet.form.microchipNumber')}>
+                <Input value={petForm.microchipNumber} onChange={(event) => setPetForm({ ...petForm, microchipNumber: event.target.value })} />
+              </Field>
+            )}
+          </div>
+
+          <div className="space-y-3">
+            <label className="flex items-center gap-2 text-sm">
+              <input
+                type="checkbox"
+                checked={hasAllergies}
+                onChange={(event) => {
+                  setHasAllergies(event.target.checked);
+                  if (!event.target.checked) setPetForm({ ...petForm, allergies: '' });
+                }}
+              />
+              {t('pet.form.hasAllergies')}
+            </label>
+            {hasAllergies && (
+              <Field label={t('pet.form.allergies')}>
+                <Textarea value={petForm.allergies} onChange={(event) => setPetForm({ ...petForm, allergies: event.target.value })} />
+              </Field>
+            )}
+          </div>
+
+          <div className="space-y-3">
+            <label className="flex items-center gap-2 text-sm">
+              <input
+                type="checkbox"
+                checked={hasSpecialNotes}
+                onChange={(event) => {
+                  setHasSpecialNotes(event.target.checked);
+                  if (!event.target.checked) setPetForm({ ...petForm, specialNotes: '' });
+                }}
+              />
+              {t('pet.form.hasSpecialNotes')}
+            </label>
+            {hasSpecialNotes && (
+              <Field label={t('pet.form.specialNotes')}>
+                <Textarea value={petForm.specialNotes} onChange={(event) => setPetForm({ ...petForm, specialNotes: event.target.value })} />
+              </Field>
+            )}
+          </div>
           <Button type="submit" loading={createPet.isPending || updatePet.isPending}>
             <Save className="size-4" />
-            {editingPetId ? 'Update Pet' : 'Register Pet'}
+            {editingPetId ? t('pet.editPet') : t('pet.register')}
           </Button>
         </form>
       </section>

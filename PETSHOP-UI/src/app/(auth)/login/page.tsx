@@ -13,6 +13,7 @@ import { Label } from '@/components/ui/label';
 import { useLogin } from '@/hooks/use-auth';
 import { loginSchema, type LoginFormData } from '@/lib/validators/auth-validators';
 import { ApiError } from '@/lib/api-client';
+import { useI18n } from '@/lib/i18n';
 
 /**
  * Signal browser credential manager to save password.
@@ -81,6 +82,7 @@ function signalCredentialSave(email: string, password: string) {
 }
 
 export default function LoginPage() {
+  const { t } = useI18n();
   const [formData, setFormData] = useState<LoginFormData>({ email: '', password: '' });
   const [errors, setErrors] = useState<Partial<Record<keyof LoginFormData, string>>>({});
   const [showPassword, setShowPassword] = useState(false);
@@ -119,18 +121,18 @@ export default function LoginPage() {
       onError: (error) => {
         if (error instanceof ApiError) {
           if (error.status === 401 || error.code === 'INVALID_CREDENTIALS') {
-            toast.error('Email atau password salah');
+            toast.error(t('auth.login.invalidCredentials'));
           } else if (error.code === 'ACCOUNT_BLOCKED') {
-            toast.error('Akun Anda diblokir. Hubungi dukungan.');
+            toast.error(t('auth.login.accountBlocked'));
           } else if (error.code === 'ACCOUNT_INACTIVE') {
-            toast.error('Akun Anda tidak aktif.');
+            toast.error(t('auth.login.accountInactive'));
           } else if (error.code === 'ACCOUNT_SUSPENDED') {
-            toast.error('Akun Anda ditangguhkan.');
+            toast.error(t('auth.login.accountSuspended'));
           } else {
-            toast.error(error.message || 'Login gagal. Silakan coba lagi.');
+            toast.error(error.message || t('auth.login.failed'));
           }
         } else {
-          toast.error('Terjadi kesalahan jaringan. Silakan coba lagi.');
+          toast.error(t('common.networkError'));
         }
       },
     });
@@ -139,18 +141,18 @@ export default function LoginPage() {
   return (
     <Card>
       <CardHeader className='text-center'>
-        <CardTitle className='text-xl'>Masuk</CardTitle>
-        <CardDescription>Masukkan email dan password untuk masuk ke akun Anda</CardDescription>
+        <CardTitle className='text-xl'>{t('auth.login.title')}</CardTitle>
+        <CardDescription>{t('auth.login.description')}</CardDescription>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className='space-y-4' noValidate>
           <div className='space-y-2'>
-            <Label htmlFor='email'>Email</Label>
+            <Label htmlFor='email'>{t('auth.login.email')}</Label>
             <Input
               id='email'
               name='email'
               type='email'
-              placeholder='nama@email.com'
+              placeholder={t('auth.login.emailPlaceholder')}
               value={formData.email}
               onChange={(e) => handleChange('email', e.target.value)}
               aria-invalid={!!errors.email}
@@ -167,14 +169,14 @@ export default function LoginPage() {
 
           <div className='space-y-2'>
             <div className='flex items-center justify-between'>
-              <Label htmlFor='password'>Password</Label>
+              <Label htmlFor='password'>{t('auth.login.password')}</Label>
             </div>
             <div className='relative'>
               <Input
                 id='password'
                 name='password'
                 type={showPassword ? 'text' : 'password'}
-                placeholder='Masukkan password'
+                placeholder={t('auth.login.passwordPlaceholder')}
                 value={formData.password}
                 onChange={(e) => handleChange('password', e.target.value)}
                 aria-invalid={!!errors.password}
@@ -187,7 +189,7 @@ export default function LoginPage() {
                 className='absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground'
                 onClick={() => setShowPassword(!showPassword)}
                 tabIndex={-1}
-                aria-label={showPassword ? 'Sembunyikan password' : 'Tampilkan password'}
+                aria-label={showPassword ? t('auth.login.hidePassword') : t('auth.login.showPassword')}
               >
                 {showPassword ? <EyeOff className='size-4' /> : <Eye className='size-4' />}
               </button>
@@ -205,14 +207,14 @@ export default function LoginPage() {
             size='lg'
             loading={loginMutation.isPending}
           >
-            Masuk
+            {t('auth.login.submit')}
           </Button>
         </form>
 
         <p className='mt-4 text-center text-sm text-muted-foreground'>
-          Belum punya akun?{' '}
+          {t('auth.login.noAccount')}{' '}
           <Link href='/register' className='font-medium text-primary hover:underline'>
-            Daftar
+            {t('common.signUp')}
           </Link>
         </p>
       </CardContent>

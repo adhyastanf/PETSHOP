@@ -1,0 +1,38 @@
+{
+  "title": "Hewan Peliharaan",
+  "description": "Profil hewan dan riwayat vaksinasi",
+  "register": "Daftarkan Hewan",
+  "editPet": "Edit Hewan",
+  "deletePet": "Hapus hewan?",
+  "deleteConfirm": "Data \"{name}\" akan dihapus permanen.",
+  "failedCreate": "Gagal mendaftarkan hewan.",
+  "failedUpdate": "Gagal mengupdate hewan.",
+  "failedDelete": "Gagal menghapus hewan.",
+  "noPets": "Belum ada hewan terdaftar.",
+  "form": {
+    "name": "Nama",
+    "petType": "Jenis hewan",
+    "breed": "Ras",
+    "breedUnknown": "Tidak diketahui",
+    "gender": "Jenis kelamin",
+    "male": "Jantan",
+    "female": "Betina",
+    "birthDate": "Tanggal lahir",
+    "birthDateEstimated": "Tanggal lahir perkiraan",
+    "weight": "Berat (kg)",
+    "color": "Warna",
+    "sterilized": "Steril",
+    "hasMicrochip": "Memiliki microchip",
+    "microchipNumber": "Nomor Microchip",
+    "hasAllergies": "Memiliki alergi",
+    "allergies": "Alergi",
+    "hasSpecialNotes": "Catatan khusus",
+    "specialNotes": "Catatan Khusus"
+  },
+  "vaccination": {
+    "title": "Riwayat Vaksinasi",
+    "selectPet": "Pilih hewan untuk melihat riwayat vaksinasi.",
+    "loading": "Memuat riwayat vaksinasi...",
+    "noRecords": "Belum ada riwayat vaksinasi."
+  }
+}

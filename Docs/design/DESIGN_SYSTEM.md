@@ -1,7 +1,7 @@
 # Oyen — Design System
 
 Nama aplikasi: **Oyen**
-Tagline: Semua Kebutuhan Hewan Peliharaan, Lebih Dekat.
+Tagline: All Your Pet Needs, Closer to You.
 
 ---
 
@@ -383,8 +383,8 @@ Left sidebar (collapsible) with grouped menu sections
 
 - Center vertically and horizontally in content area
 - Use relevant Lucide icon (muted at 40% opacity)
-- Title: short, specific ("Belum ada hewan terdaftar")
-- Description: helpful next step ("Tambahkan hewan untuk booking layanan")
+- Title: short, specific ("No pets registered yet")
+- Description: helpful next step ("Add a pet to book services")
 - Action button: primary, leads to creation flow
 - Minimum height: 200px to avoid collapsed appearance
 
@@ -660,7 +660,7 @@ Consistent badge styling for all marketplace entity states:
 - Metric: `H2` size, bold
 - Label: `Small`, `Secondary` color
 - Trend indicator: up arrow `Success` / down arrow `Error` + percentage
-- Period selector: "Hari ini", "7 hari", "30 hari"
+- Period selector: "Today", "7 days", "30 days"
 
 **Charts:**
 - Follow Data Visualization section for styles
@@ -732,7 +732,7 @@ Series 6: #EC4899 (Pink)
 - Responsive: charts resize with container
 - Tooltips: show exact value + label on hover
 - Legend: below chart, horizontal, `Small` text
-- Empty state: "Belum ada data" message, no blank chart
+- Empty state: "No data yet" message, no blank chart
 - Animate on first render only (300ms)
 - Grid lines: subtle `Border` color, horizontal only
 
@@ -776,7 +776,7 @@ Series 6: #EC4899 (Pink)
 
 | Type | Usage | Size |
 |------|-------|------|
-| Confirmation | "Apakah Anda yakin?" before non-trivial actions | Small (400px) |
+| Confirmation | "Are you sure?" before non-trivial actions | Small (400px) |
 | Delete confirmation | Destructive action with consequences | Small (400px) |
 | Destructive action | Irreversible (account deletion, data loss) | Small, red accent |
 | Success dialog | Completion of important flow (payment, booking) | Medium (500px) |
@@ -861,41 +861,43 @@ Target: WCAG 2.1 Level AA
 
 ## Content & Copywriting
 
+> **UI language: English. All user-facing text must be in English.**
+
 ### Tone
 
-- **Friendly**: use "Anda" (formal but warm), casual vocabulary
+- **Friendly**: warm but professional, second person ("you/your")
 - **Helpful**: tell users what to do next, not just what went wrong
 - **Professional**: no slang, no excessive punctuation
 - **Concise**: shortest sentence that preserves meaning
 
 ### Button Labels
 
-- Use verbs: "Simpan", "Kirim", "Hapus", "Batal"
-- Primary action: specific ("Daftar Hewan" not "Submit")
-- Destructive: explicit ("Hapus Akun" not "Lanjutkan")
+- Use verbs: "Save", "Submit", "Delete", "Cancel"
+- Primary action: specific ("Register Pet" not "Submit")
+- Destructive: explicit ("Delete Account" not "Continue")
 
 ### Error Messages
 
-- Say what happened + what to do: "Email sudah terdaftar. Gunakan email lain atau masuk."
+- Say what happened + what to do: "Email already registered. Use a different email or sign in."
 - Never blame the user
 - Never show raw technical errors to users
 
 ### Success Messages
 
-- Confirm what was done: "Hewan berhasil didaftarkan"
-- Brief — no "Selamat!" or excessive celebration
+- Confirm what was done: "Pet registered successfully"
+- Brief — no "Congratulations!" or excessive celebration
 
 ### Empty States
 
-- Title: what's missing ("Belum ada pesanan")
-- Description: what to do ("Pesanan Anda akan muncul di sini setelah checkout")
-- No apologetic language ("Maaf" unnecessary)
+- Title: what's missing ("No orders yet")
+- Description: what to do ("Your orders will appear here after checkout")
+- No apologetic language ("Sorry" unnecessary)
 
 ### Confirmation Dialogs
 
-- Title: action-oriented question ("Hapus hewan ini?")
-- Description: consequence ("Data hewan akan dihapus permanen")
-- Buttons: "Batal" + "Hapus" (match action)
+- Title: action-oriented question ("Delete this pet?")
+- Description: consequence ("Pet data will be permanently deleted")
+- Buttons: "Cancel" + "Delete" (match action)
 
 ---
 
@@ -956,7 +958,7 @@ Target: WCAG 2.1 Level AA
 - Show file preview before upload (client-side)
 - Progress indicator during upload
 - Crop tool for avatar/profile photos (square crop)
-- Error: show specific reason ("File terlalu besar. Maksimum 5MB.")
+- Error: show specific reason ("File too large. Maximum 5MB.")
 - Multiple file upload where applicable (product images)
 - Reorder via drag-and-drop (product image gallery)
 
@@ -974,7 +976,7 @@ Target: WCAG 2.1 Level AA
 
 ### Search Behavior
 
-- Input with search icon, placeholder: "Cari produk, layanan, atau toko..."
+- Input with search icon, placeholder: "Search products, services, or shops..."
 - Debounce: 300ms after user stops typing
 - Minimum query length: 2 characters
 - Recent searches: show last 5 on focus (stored locally)
@@ -984,7 +986,7 @@ Target: WCAG 2.1 Level AA
 ### Sorting
 
 - Dropdown or segmented control
-- Common sorts: "Terbaru", "Harga terendah", "Harga tertinggi", "Rating tertinggi", "Terlaris"
+- Common sorts: "Newest", "Price lowest", "Price highest", "Highest rated", "Best seller"
 - Active sort visually indicated
 - Default: relevance (when searching) or newest (when browsing)
 
@@ -993,23 +995,51 @@ Target: WCAG 2.1 Level AA
 - Horizontal scrollable row below search
 - Active filters: `Primary` background, white text
 - Inactive: `Surface` background, `Border` outline
-- "Hapus semua" link when any filter active
+- "Clear all" link when any filter active
 - Common filters: category, price range, rating, location
 
 ### Pagination
 
 - Default: 20 items per page
 - Desktop: numbered pagination (1, 2, 3... 10, Next)
-- Show: "Menampilkan 1-20 dari 150 produk"
+- Show: "Showing 1-20 of 150 products"
 - Keep scroll position on filter/sort change
 
 ### Infinite Scroll
 
 - Use for mobile marketplace browsing (products, services)
 - Load indicator: skeleton cards at bottom
-- "Muat lebih banyak" button as fallback if scroll detection fails
-- End indicator: "Tidak ada lagi produk" when all loaded
+- "Load more" button as fallback if scroll detection fails
+- End indicator: "No more products" when all loaded
 - Do NOT use infinite scroll for tables or admin lists (use pagination)
+
+---
+
+## Localization
+
+### Component Requirements
+
+- All components must support localized text without layout breakage.
+- Layouts must tolerate longer translated text (some languages are 30-50% longer than English).
+- Avoid fixed-width text containers — use `min-w` and flexible layouts.
+- Buttons must resize naturally based on text content.
+- Components must never assume English text length.
+- Use `truncate` or `line-clamp` for user-generated content, not for UI labels.
+
+### Layout Rules
+
+- Navigation labels: allow wrapping or abbreviation at mobile breakpoints.
+- Form labels: stack above input (never inline) to accommodate longer translations.
+- Buttons: use `px` padding, never fixed `w-*` (unless icon-only).
+- Tables: allow column content to wrap; do not set `whitespace-nowrap` on translatable columns.
+- Badges/chips: text determines width, add reasonable `max-w` only as overflow protection.
+
+### Future Language Support
+
+The design system is built to support RTL (right-to-left) languages in the future:
+- Use logical properties (`ps`, `pe`, `ms`, `me`) over physical (`pl`, `pr`, `ml`, `mr`) where Tailwind supports them.
+- Avoid hardcoded directional icons (use `start`/`end` semantics).
+- Keep layout mirroring in mind for navigation and reading order.
 
 ---
 
@@ -1158,7 +1188,7 @@ Same specifications as Merchant Dashboard. Different menu items.
 | Background | `Background` |
 | Border | 1px `Border`, focus: `Primary` |
 | Icon | Search (`size-4`), left, `Secondary` |
-| Placeholder | "Cari produk, layanan, atau toko..." |
+| Placeholder | "Search products, services, or shops..." |
 | Clear button | X icon, appears when value present |
 | Debounce | 300ms |
 | Min query | 2 characters |

@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { LogOut, User, ShoppingBag, Heart, PawPrint, Settings } from 'lucide-react';
 import { useAuthStore } from '@/store/auth-store';
 import { useLogout } from '@/hooks/use-auth';
+import { useI18n } from '@/lib/i18n';
 import { Button } from '../ui/button';
 import {
   DropdownMenu,
@@ -16,6 +17,7 @@ import {
 } from '../ui/dropdown-menu';
 
 export default function UserNav() {
+  const { t } = useI18n();
   const { isAuthenticated, user } = useAuthStore();
   const logoutMutation = useLogout();
 
@@ -24,12 +26,12 @@ export default function UserNav() {
       <div className='flex gap-2'>
         <Link href='/login'>
           <Button variant='outline' size='sm'>
-            Masuk
+            {t('common.signIn')}
           </Button>
         </Link>
         <Link href='/register'>
           <Button size='sm'>
-            Daftar
+            {t('common.signUp')}
           </Button>
         </Link>
       </div>
@@ -62,31 +64,31 @@ export default function UserNav() {
           <Link href='/customer/profile'>
             <DropdownMenuItem>
               <User className='mr-2 size-4' />
-              Profil Saya
+              {t('customer.nav.myProfile')}
             </DropdownMenuItem>
           </Link>
           <Link href='/customer/pets'>
             <DropdownMenuItem>
               <PawPrint className='mr-2 size-4' />
-              Hewan Saya
+              {t('customer.nav.myPets')}
             </DropdownMenuItem>
           </Link>
           <Link href='/customer/orders'>
             <DropdownMenuItem>
               <ShoppingBag className='mr-2 size-4' />
-              Pesanan Saya
+              {t('customer.nav.myOrders')}
             </DropdownMenuItem>
           </Link>
           <Link href='/customer/wishlist'>
             <DropdownMenuItem>
               <Heart className='mr-2 size-4' />
-              Wishlist
+              {t('customer.nav.wishlist')}
             </DropdownMenuItem>
           </Link>
           <Link href='/customer/settings'>
             <DropdownMenuItem>
               <Settings className='mr-2 size-4' />
-              Pengaturan
+              {t('customer.nav.settings')}
             </DropdownMenuItem>
           </Link>
         </DropdownMenuGroup>
@@ -96,7 +98,7 @@ export default function UserNav() {
           disabled={logoutMutation.isPending}
         >
           <LogOut className='mr-2 size-4' />
-          Keluar
+          {t('common.signOut')}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

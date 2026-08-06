@@ -11,10 +11,10 @@ export default function Home() {
             <span className='text-2xl font-bold'>Oyen</span>
           </div>
           <h1 className='mt-4 text-4xl font-semibold tracking-tight sm:text-5xl text-foreground'>
-            Semua Kebutuhan Hewan Peliharaan, Lebih Dekat.
+            All Your Pet Needs, Closer to You.
           </h1>
           <p className='mt-4 text-lg leading-8 text-muted-foreground'>
-            Marketplace produk dan layanan hewan peliharaan untuk customer, mitra petshop, dan admin.
+            Pet products and services marketplace for customers, merchants, and admins.
           </p>
         </div>
         <nav className='grid gap-3 sm:grid-cols-3'>
