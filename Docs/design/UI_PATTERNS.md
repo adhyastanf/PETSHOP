@@ -2,6 +2,12 @@
 
 Canonical page composition patterns. Complements `DESIGN_SYSTEM.md`.
 
+## Visual Reference
+
+![Initial Reference — Customer Mobile Screens](./InitialReference.png)
+
+Home, Cart, Explore, and Account screens with design tokens. This is the canonical visual target for the customer mobile experience.
+
 ---
 
 ## Purpose
