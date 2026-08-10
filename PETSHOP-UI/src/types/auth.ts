@@ -43,6 +43,10 @@ export interface MeResponse {
   roles: string[];
 }
 
+export interface LogoutResponse {
+  message: string;
+}
+
 // --- Error ---
 
 export interface ApiErrorResponse {
@@ -51,4 +55,36 @@ export interface ApiErrorResponse {
   details: string[];
   timestamp: string;
   traceId?: string;
+}
+
+// ---- for next auth -----
+export interface DecodedAccessToken {
+  sub: string;
+  email: string;
+  authorities: string[];
+  iat: number;
+  exp: number;
+}
+
+export interface LoginResponse {
+  userId: string;
+  email: string;
+  authorities: string[];
+  accessToken: string;
+  refreshToken: string;
+  expiresIn: number;
+}
+
+export interface RefreshResponse {
+  accessToken: string;
+  refreshToken?: string;
+  expiresIn: number;
+}
+
+export interface JWTPayload {
+  sub: string;
+  email: string;
+  authorities: string[];
+  iat: number;
+  exp: number;
 }

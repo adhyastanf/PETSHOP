@@ -1,12 +1,11 @@
 import { AppSidebar } from '@/components/app-sidebar';
-import ProtectedRoute from '@/components/Provider/ProtectedRoute';
 import { SiteHeader } from '@/components/site-header';
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
 import React from 'react';
 
 export default function LayoutAdmin({ children }: { children: React.ReactNode }) {
   return (
-    <ProtectedRoute allowedRoles={['SUPER_ADMIN', 'ADMIN']}>
+    // <ProtectedRoute allowedRoles={['SUPER_ADMIN', 'ADMIN']}>
       <SidebarProvider
         style={
           {
@@ -21,6 +20,6 @@ export default function LayoutAdmin({ children }: { children: React.ReactNode })
           {children}
         </SidebarInset>
       </SidebarProvider>
-    </ProtectedRoute>
+    // </ProtectedRoute>
   );
 }

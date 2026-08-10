@@ -1,5 +1,6 @@
 import ProductSummary from '@/components/Layout/product-summary';
 import { ProductDetailTypes } from '@/types/product-detail-types';
+import { formatCurrency } from '@/utils/format';
 
 export default async function ProductDetail({ params }: ProductDetailProps) {
   const param = await params;
@@ -13,7 +14,7 @@ export default async function ProductDetail({ params }: ProductDetailProps) {
       </div>
       <div className='h-250'>
         <h2 className='font-bold'>{data.description}</h2>
-        <h2 className='font-bold text-3xl'>{data.originalPrice}</h2>
+        <h2 className='font-bold text-3xl'>{formatCurrency(data.originalPrice)}</h2>
       </div>
       <ProductSummary data={data} className='self-start sticky top-20' />
     </main>

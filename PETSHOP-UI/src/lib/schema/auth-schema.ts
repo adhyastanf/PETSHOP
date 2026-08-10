@@ -14,7 +14,7 @@ export const loginSchema = z.object({
     .min(1, 'Password wajib diisi'),
 });
 
-export type LoginFormData = z.infer<typeof loginSchema>;
+export type LoginSchema = z.infer<typeof loginSchema>;
 
 export const registerSchema = z.object({
   fullName: z
@@ -43,4 +43,4 @@ export const registerSchema = z.object({
   path: ['confirmPassword'],
 });
 
-export type RegisterFormData = z.infer<typeof registerSchema>;
+export type RegisterSchema = z.infer<typeof registerSchema>;

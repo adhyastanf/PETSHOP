@@ -1,80 +1,90 @@
 'use client';
 
-import { useState } from 'react';
+import { EyeIcon, EyeOffIcon } from 'lucide-react';
 import Link from 'next/link';
-import { Eye, EyeOff } from 'lucide-react';
+import { useState } from 'react';
 import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 
+import { Field, FieldError, FieldLabel } from '@/components/ui/field';
+import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput } from '@/components/ui/input-group';
 import { useRegister } from '@/hooks/use-auth';
-import { registerSchema, type RegisterFormData } from '@/lib/validators/auth-validators';
-import { ApiError } from '@/lib/api-client';
+import { RegisterSchema, registerSchema } from '@/lib/schema/auth-schema';
+import { RegisterRequest } from '@/types/auth';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Controller, useForm } from 'react-hook-form';
 
 export default function RegisterPage() {
-  const [formData, setFormData] = useState<RegisterFormData>({
-    fullName: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
-    phoneNumber: '',
-  });
-  const [errors, setErrors] = useState<Partial<Record<keyof RegisterFormData, string>>>({});
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
 
-  const registerMutation = useRegister();
+  const { mutate, isPending } = useRegister();
+  const { handleSubmit, control, reset } = useForm<RegisterSchema>({
+    resolver: zodResolver(registerSchema),
+    defaultValues: {
+      email: '',
+      fullName: '',
+      password: '',
+      confirmPassword: '',
+      phoneNumber: '',
+    },
+  });
 
-  function handleChange(field: keyof RegisterFormData, value: string) {
-    setFormData((prev) => ({ ...prev, [field]: value }));
-    if (errors[field]) {
-      setErrors((prev) => ({ ...prev, [field]: undefined }));
-    }
-  }
-
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setErrors({});
-
-    const result = registerSchema.safeParse(formData);
-    if (!result.success) {
-      const fieldErrors: Partial<Record<keyof RegisterFormData, string>> = {};
-      for (const issue of result.error.issues) {
-        const field = issue.path[0] as keyof RegisterFormData;
-        if (!fieldErrors[field]) {
-          fieldErrors[field] = issue.message;
-        }
-      }
-      setErrors(fieldErrors);
-      return;
-    }
-
-    // Build request payload (exclude confirmPassword)
-    const { confirmPassword: _, ...payload } = result.data;
-    const requestData = {
-      ...payload,
-      phoneNumber: payload.phoneNumber || undefined,
+  async function onSubmit(values: RegisterRequest) {
+    const payload = {
+      fullName: values.fullName,
+      email: values.email,
+      password: values.password,
+      phoneNumber: values.phoneNumber || undefined,
     };
 
-    registerMutation.mutate(requestData, {
-      onError: (error) => {
-        if (error instanceof ApiError) {
-          if (error.code === 'DUPLICATE_EMAIL') {
-            setErrors((prev) => ({ ...prev, email: 'Email sudah terdaftar' }));
-          } else if (error.code === 'DUPLICATE_PHONE') {
-            setErrors((prev) => ({ ...prev, phoneNumber: 'Nomor telepon sudah terdaftar' }));
-          } else {
-            toast.error(error.message || 'Registrasi gagal. Silakan coba lagi.');
-          }
-        } else {
-          toast.error('Terjadi kesalahan jaringan. Silakan coba lagi.');
-        }
-      },
-    });
+    mutate(payload);
   }
+
+  // async function handleSubmit(e: React.FormEvent) {
+  //   e.preventDefault();
+  //   setErrors({});
+
+  //   const result = registerSchema.safeParse(formData);
+  //   if (!result.success) {
+  //     const fieldErrors: Partial<Record<keyof RegisterFormData, string>> = {};
+  //     for (const issue of result.error.issues) {
+  //       const field = issue.path[0] as keyof RegisterFormData;
+  //       if (!fieldErrors[field]) {
+  //         fieldErrors[field] = issue.message;
+  //       }
+  //     }
+  //     setErrors(fieldErrors);
+  //     return;
+  //   }
+
+  //   // Build request payload (exclude confirmPassword)
+  //   const requestData = {
+  //     fullName: result.data.fullName,
+  //     email: result.data.email,
+  //     password: result.data.password,
+  //     phoneNumber: result.data.phoneNumber || undefined,
+  //   };
+
+  //   registerMutation.mutate(requestData, {
+  //     onError: (error) => {
+  //       if (error instanceof ApiError) {
+  //         if (error.code === 'DUPLICATE_EMAIL') {
+  //           setErrors((prev) => ({ ...prev, email: 'Email sudah terdaftar' }));
+  //         } else if (error.code === 'DUPLICATE_PHONE') {
+  //           setErrors((prev) => ({ ...prev, phoneNumber: 'Nomor telepon sudah terdaftar' }));
+  //         } else {
+  //           toast.error(error.message || 'Registrasi gagal. Silakan coba lagi.');
+  //         }
+  //       } else {
+  //         toast.error('Terjadi kesalahan jaringan. Silakan coba lagi.');
+  //       }
+  //     },
+  //   });
+  // }
 
   return (
     <Card>
@@ -83,142 +93,102 @@ export default function RegisterPage() {
         <CardDescription>Buat akun baru untuk mulai berbelanja</CardDescription>
       </CardHeader>
       <CardContent>
-        <form onSubmit={handleSubmit} className='space-y-4' noValidate>
+        <form onSubmit={handleSubmit(onSubmit)} className='space-y-4' noValidate>
           {/* Full Name */}
-          <div className='space-y-2'>
-            <Label htmlFor='fullName'>Nama Lengkap</Label>
-            <Input
-              id='fullName'
-              type='text'
-              placeholder='Nama lengkap Anda'
-              value={formData.fullName}
-              onChange={(e) => handleChange('fullName', e.target.value)}
-              aria-invalid={!!errors.fullName}
-              aria-describedby={errors.fullName ? 'fullName-error' : undefined}
-              autoComplete='name'
-              disabled={registerMutation.isPending}
-            />
-            {errors.fullName && (
-              <p id='fullName-error' className='text-xs text-destructive'>
-                {errors.fullName}
-              </p>
+          <Controller
+            name='fullName'
+            control={control}
+            render={({ field, fieldState }) => (
+              <Field data-invalid={fieldState.invalid}>
+                <FieldLabel htmlFor='form-input-fullname'>Nama Lengkap</FieldLabel>
+                <Input {...field} aria-invalid={fieldState.invalid} placeholder='Nama Lengkap' id='form-input-fullname' />
+                {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+              </Field>
             )}
-          </div>
+          />
 
           {/* Email */}
-          <div className='space-y-2'>
-            <Label htmlFor='email'>Email</Label>
-            <Input
-              id='email'
-              type='email'
-              placeholder='nama@email.com'
-              value={formData.email}
-              onChange={(e) => handleChange('email', e.target.value)}
-              aria-invalid={!!errors.email}
-              aria-describedby={errors.email ? 'email-error' : undefined}
-              autoComplete='email'
-              disabled={registerMutation.isPending}
-            />
-            {errors.email && (
-              <p id='email-error' className='text-xs text-destructive'>
-                {errors.email}
-              </p>
+          <Controller
+            name='email'
+            control={control}
+            render={({ field, fieldState }) => (
+              <Field data-invalid={fieldState.invalid}>
+                <FieldLabel htmlFor='form-input-email'>Email</FieldLabel>
+                <Input {...field} type='email' aria-invalid={fieldState.invalid} placeholder='nama@gmail.com' id='form-input-email' />
+                {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+              </Field>
             )}
-          </div>
+          />
 
           {/* Phone (optional) */}
-          <div className='space-y-2'>
-            <Label htmlFor='phoneNumber'>
-              Nomor Telepon <span className='text-muted-foreground font-normal'>(opsional)</span>
-            </Label>
-            <Input
-              id='phoneNumber'
-              type='tel'
-              placeholder='+6281234567890'
-              value={formData.phoneNumber}
-              onChange={(e) => handleChange('phoneNumber', e.target.value)}
-              aria-invalid={!!errors.phoneNumber}
-              aria-describedby={errors.phoneNumber ? 'phoneNumber-error' : undefined}
-              autoComplete='tel'
-              disabled={registerMutation.isPending}
-            />
-            {errors.phoneNumber && (
-              <p id='phoneNumber-error' className='text-xs text-destructive'>
-                {errors.phoneNumber}
-              </p>
+          <Controller
+            name='phoneNumber'
+            control={control}
+            render={({ field, fieldState }) => (
+              <Field data-invalid={fieldState.invalid}>
+                <FieldLabel htmlFor='form-input-phonenumber'>Nomor Telepon</FieldLabel>
+                <Input {...field} aria-invalid={fieldState.invalid} placeholder='+6281234567890' id='form-input-phonenumber' />
+                {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+              </Field>
             )}
-          </div>
+          />
 
           {/* Password */}
-          <div className='space-y-2'>
-            <Label htmlFor='password'>Password</Label>
-            <div className='relative'>
-              <Input
-                id='password'
-                type={showPassword ? 'text' : 'password'}
-                placeholder='Minimal 8 karakter'
-                value={formData.password}
-                onChange={(e) => handleChange('password', e.target.value)}
-                aria-invalid={!!errors.password}
-                aria-describedby={errors.password ? 'password-error' : undefined}
-                autoComplete='new-password'
-                disabled={registerMutation.isPending}
-              />
-              <button
-                type='button'
-                className='absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground'
-                onClick={() => setShowPassword(!showPassword)}
-                tabIndex={-1}
-                aria-label={showPassword ? 'Sembunyikan password' : 'Tampilkan password'}
-              >
-                {showPassword ? <EyeOff className='size-4' /> : <Eye className='size-4' />}
-              </button>
-            </div>
-            {errors.password && (
-              <p id='password-error' className='text-xs text-destructive'>
-                {errors.password}
-              </p>
+          <Controller
+            name='password'
+            control={control}
+            render={({ field, fieldState }) => (
+              <Field data-invalid={fieldState.invalid}>
+                <FieldLabel htmlFor='form-input-password'>Password</FieldLabel>
+                <InputGroup>
+                  <InputGroupInput {...field} aria-invalid={fieldState.invalid} id='form-input-password' className='border-0 shadow-none focus-visible:ring-0' placeholder='Minimal 8 Karakter' type={showPassword ? 'text' : 'password'} />
+                  <InputGroupAddon align='inline-end'>
+                    <InputGroupButton
+                      onClick={() => {
+                        setShowPassword(!showPassword);
+                      }}
+                    >
+                      {showPassword ? <EyeOffIcon className='size-4 text-muted-foreground' /> : <EyeIcon className='size-4 text-muted-foreground' />}
+                    </InputGroupButton>
+                  </InputGroupAddon>
+                </InputGroup>
+                {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+              </Field>
             )}
-          </div>
+          />
 
           {/* Confirm Password */}
-          <div className='space-y-2'>
-            <Label htmlFor='confirmPassword'>Konfirmasi Password</Label>
-            <div className='relative'>
-              <Input
-                id='confirmPassword'
-                type={showConfirm ? 'text' : 'password'}
-                placeholder='Ulangi password'
-                value={formData.confirmPassword}
-                onChange={(e) => handleChange('confirmPassword', e.target.value)}
-                aria-invalid={!!errors.confirmPassword}
-                aria-describedby={errors.confirmPassword ? 'confirmPassword-error' : undefined}
-                autoComplete='new-password'
-                disabled={registerMutation.isPending}
-              />
-              <button
-                type='button'
-                className='absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground'
-                onClick={() => setShowConfirm(!showConfirm)}
-                tabIndex={-1}
-                aria-label={showConfirm ? 'Sembunyikan password' : 'Tampilkan password'}
-              >
-                {showConfirm ? <EyeOff className='size-4' /> : <Eye className='size-4' />}
-              </button>
-            </div>
-            {errors.confirmPassword && (
-              <p id='confirmPassword-error' className='text-xs text-destructive'>
-                {errors.confirmPassword}
-              </p>
+          <Controller
+            name='confirmPassword'
+            control={control}
+            render={({ field, fieldState }) => (
+              <Field data-invalid={fieldState.invalid}>
+                <FieldLabel htmlFor='form-input-confirmPassword'>Konfirmasi Password</FieldLabel>
+                <InputGroup>
+                  <InputGroupInput
+                    {...field}
+                    aria-invalid={fieldState.invalid}
+                    id='form-input-confirmPassword'
+                    className='border-0 shadow-none focus-visible:ring-0'
+                    placeholder='Minimal 8 Karakter'
+                    type={showConfirm ? 'text' : 'password'}
+                  />
+                  <InputGroupAddon align='inline-end'>
+                    <InputGroupButton
+                      onClick={() => {
+                        setShowConfirm(!showConfirm);
+                      }}
+                    >
+                      {showConfirm ? <EyeOffIcon className='size-4 text-muted-foreground' /> : <EyeIcon className='size-4 text-muted-foreground' />}
+                    </InputGroupButton>
+                  </InputGroupAddon>
+                </InputGroup>
+                {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+              </Field>
             )}
-          </div>
+          />
 
-          <Button
-            type='submit'
-            className='w-full'
-            size='lg'
-            loading={registerMutation.isPending}
-          >
+          <Button type='submit' className='w-full' size='lg' loading={isPending}>
             Daftar
           </Button>
         </form>

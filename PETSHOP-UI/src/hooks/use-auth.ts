@@ -1,136 +1,75 @@
-/**
- * Auth hooks — TanStack Query mutations and queries for authentication.
- */
-
-'use client';
-
+import { ApiError } from '@/lib/api-error';
+import { loginService, logoutService, meService, registerService } from '@/services/auth.service';
+import { getErrorMessage } from '@/utils/get-error-message';
+import { getHomeRoute } from '@/utils/route-utils';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
-import { useAuthStore } from '@/store/auth-store';
-import { authService } from '@/services/auth-service';
-import type { LoginRequest, MeResponse, RegisterRequest } from '@/types/auth';
-import { ApiError } from '@/lib/api-client';
+import { toast } from 'sonner';
 
-export const AUTH_QUERY_KEYS = {
-  me: ['auth', 'me'] as const,
-};
-
-/**
- * Determine the home route based on user roles.
- */
-function getHomeRoute(roles: string[]): string {
-  if (roles.includes('SUPER_ADMIN') || roles.includes('ADMIN')) {
-    return '/admin/home';
-  }
-  if (
-    roles.includes('PETSHOP_OWNER') ||
-    roles.includes('PETSHOP_ADMIN') ||
-    roles.includes('PETSHOP_STAFF') ||
-    roles.includes('GROOMER') ||
-    roles.includes('VETERINARIAN')
-  ) {
-    return '/mitra/home';
-  }
-  return '/customer/home';
-}
-
-/**
- * Hook: fetch the current user profile.
- * Only enabled when we have a valid access token.
- */
-export function useCurrentUser() {
-  const { isAuthenticated } = useAuthStore();
-
-  return useQuery({
-    queryKey: AUTH_QUERY_KEYS.me,
-    queryFn: () => authService.me(),
-    enabled: isAuthenticated,
-    staleTime: 5 * 60 * 1000,
-    retry: (failureCount, error) => {
-      // Don't retry on auth errors
-      if (error instanceof ApiError && (error.status === 401 || error.status === 403)) {
-        return false;
-      }
-      return failureCount < 2;
-    },
-  });
-}
-
-/**
- * Hook: login mutation.
- */
 export function useLogin() {
   const router = useRouter();
   const queryClient = useQueryClient();
-  const { setTokens, setUser } = useAuthStore();
 
   return useMutation({
-    mutationFn: (data: LoginRequest) => authService.login(data),
-    onSuccess: async (response) => {
-      setTokens(response.accessToken, response.refreshToken);
-
-      // Fetch user profile immediately after login
-      let user: MeResponse | null = null;
+    mutationFn: loginService,
+    onSuccess: async () => {
       try {
-        user = await authService.me();
-        setUser(user);
-        queryClient.setQueryData(AUTH_QUERY_KEYS.me, user);
-      } catch {
-        // Non-blocking: user can still navigate
-      }
+        const userData = await queryClient.ensureQueryData({
+          queryKey: ['me'],
+          queryFn: meService,
+        });
 
-      const route = user ? getHomeRoute(user.roles) : '/customer/home';
-      router.push(route);
+        const roles = userData?.roles || [];
+        const destination = getHomeRoute(roles);
+
+        toast.success('Login berhasil!');
+        router.replace(destination);
+        router.refresh();
+      } catch {
+        // Kosongkan atau biarkan kosong sesuai permintaan
+      }
+    },
+    onError: (error: ApiError) => {
+      toast.error(getErrorMessage(error));
     },
   });
 }
 
-/**
- * Hook: register mutation.
- * Registration always creates CUSTOMER, so always redirect to customer home.
- */
-export function useRegister() {
-  const router = useRouter();
-  const queryClient = useQueryClient();
-  const { setTokens, setUser } = useAuthStore();
-
-  return useMutation({
-    mutationFn: (data: RegisterRequest) => authService.register(data),
-    onSuccess: async (response) => {
-      setTokens(response.accessToken, response.refreshToken);
-
-      try {
-        const user = await authService.me();
-        setUser(user);
-        queryClient.setQueryData(AUTH_QUERY_KEYS.me, user);
-      } catch {
-        // Non-blocking
-      }
-
-      router.push('/customer/home');
-    },
-  });
-}
-
-/**
- * Hook: logout mutation.
- */
 export function useLogout() {
   const router = useRouter();
   const queryClient = useQueryClient();
-  const { refreshToken, clearAuth } = useAuthStore();
 
   return useMutation({
-    mutationFn: async () => {
-      if (refreshToken) {
-        await authService.logout(refreshToken);
-      }
+    mutationFn: logoutService,
+    onSuccess: async () => {
+      queryClient.removeQueries({ queryKey: ['me'] });
+      router.push('/');
+      router.refresh();
     },
-    onSettled: () => {
-      // Always clear client state, even if the API call fails
-      clearAuth();
-      queryClient.removeQueries({ queryKey: AUTH_QUERY_KEYS.me });
+    onError: (error: ApiError) => {
+      toast.error(getErrorMessage(error));
+    },
+  });
+}
+
+export function useRegister() {
+  const router = useRouter();
+
+  return useMutation({
+    mutationFn: registerService,
+    onSuccess: () => {
       router.push('/login');
     },
+    onError: (error: ApiError) => {
+      toast.error(getErrorMessage(error));
+    },
+  });
+}
+
+export function useMe() {
+  return useQuery({
+    queryKey: ['me'],
+    queryFn: meService,
+    staleTime: 5 * 60 * 1000,
   });
 }

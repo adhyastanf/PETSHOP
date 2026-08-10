@@ -1,25 +1,30 @@
 'use client';
 
+import { useLogout, useMe } from '@/hooks/use-auth';
+import { Heart, LogOut, Settings, ShoppingBag, User } from 'lucide-react';
 import Link from 'next/link';
-import { LogOut, User, ShoppingBag, Heart, Settings } from 'lucide-react';
-import { useAuthStore } from '@/store/auth-store';
-import { useLogout } from '@/hooks/use-auth';
 import { Button } from '../ui/button';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '../ui/dropdown-menu';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '../ui/dropdown-menu';
+import { Skeleton } from '../ui/skeleton';
 
 export default function UserNav() {
-  const { isAuthenticated, user } = useAuthStore();
-  const logoutMutation = useLogout();
+  const { data: user, isLoading } = useMe();
 
-  if (!isAuthenticated) {
+  const { mutate: logout } = useLogout();
+
+  function handleLogout() {
+    logout();
+  }
+
+  if (isLoading) {
+    return (
+      <div className='flex items-center gap-2'>
+        <Skeleton className='h-9 w-28 rounded-lg' />
+      </div>
+    );
+  }
+
+  if (!user) {
     return (
       <div className='flex gap-2'>
         <Link href='/login'>
@@ -28,9 +33,7 @@ export default function UserNav() {
           </Button>
         </Link>
         <Link href='/register'>
-          <Button size='sm'>
-            Daftar
-          </Button>
+          <Button size='sm'>Daftar</Button>
         </Link>
       </div>
     );
@@ -42,9 +45,7 @@ export default function UserNav() {
         render={
           <button className='inline-flex items-center gap-1.5 rounded-lg border border-border bg-background px-2.5 py-1.5 text-sm font-medium hover:bg-muted cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-ring'>
             <User className='size-4' />
-            <span className='max-w-32 truncate'>
-              {user?.fullName ?? 'Akun'}
-            </span>
+            <span className='max-w-32 truncate'>{user?.fullName}</span>
           </button>
         }
       />
@@ -77,10 +78,7 @@ export default function UserNav() {
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem
-          onClick={() => logoutMutation.mutate()}
-          disabled={logoutMutation.isPending}
-        >
+        <DropdownMenuItem onClick={handleLogout} disabled={false}>
           <LogOut className='mr-2 size-4' />
           Keluar
         </DropdownMenuItem>

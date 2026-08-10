@@ -6,6 +6,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import QuantityInput from '@/components/Input/InputQuantity';
 import { CartItemTypes } from '@/types/cart-types';
+import { formatCurrency } from '@/utils/format';
 
 export default function CartMain() {
   const items = useCartStore((state) => state.data);
@@ -98,7 +99,7 @@ function CardCart({ item }: { item: CartItemTypes }) {
         </div>
 
         <div className='w-44 shrink-0 flex flex-col items-end gap-3'>
-          <div className='text-lg font-bold text-primary'>Rp {item.product.price.toLocaleString('id-ID')}</div>
+          <div className='text-lg font-bold text-primary'>{formatCurrency(item.product.price)}</div>
           <QuantityInput value={quantity} onValueChange={(qty) => setQuantity(item.id, qty)} />
         </div>
       </CardContent>
