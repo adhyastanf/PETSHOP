@@ -45,6 +45,21 @@ All configuration is environment-variable driven. No secrets in Git. Business mo
 13. Backend is authoritative for price, discount, voucher, stock, availability, fees and totals.
 14. Historical transactions preserve snapshots.
 15. Payment/webhook/financial/inventory finalization must be idempotent.
+16. Oyen is pet-centric: care reminders drive repeat transactions.
+17. Pet species supported: CAT, DOG (expandable).
+18. Recommendations are initially rule-based and deterministic (no ML in MVP).
+19. Nearby merchant discovery uses PostgreSQL/PostGIS spatial queries.
+20. Merchant QR attribution is an offline acquisition channel.
+21. Free core for customer and merchant during initial growth phase.
+22. Payment gateway: Xendit.
+23. Oyen commission = 4% from merchant product/service subtotal only (shipping and payment fees excluded).
+24. QRIS payment fee to customer = Rp0 (Oyen absorbs the cost).
+25. Non-QRIS payment fees may be passed to customer based on configured Xendit fee.
+26. Payment fee calculation is backend-only; frontend never determines fees.
+27. Product delivery: Biteship aggregator, focus on Instant Delivery for MVP.
+28. Pet transport is NOT product delivery — separate domain/flow.
+29. Pet transport options: customer brings pet OR merchant-owned pet transport.
+30. Merchant settlement follows order lifecycle, not just payment success.
 
 ## Architecture Direction
 Start as a modular monolith. Do not introduce microservices without a demonstrated scaling/organizational reason. Keep domain boundaries explicit so modules can later be extracted.

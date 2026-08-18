@@ -6,7 +6,7 @@ Quick status overview. Agents should read this first to avoid re-inspecting comp
 |-------|------|--------|-------|
 | 0 | Foundation | ✅ Done | DB migrations, seed data, JPA, Flyway, project skeleton |
 | 1 | Identity & RBAC | ✅ Done | Register, login, logout, JWT, refresh, role-based frontend routing, tests. Remember Me and Delete Account pending. |
-| 2 | Customer & Pets | ✅ Done | Profile, addresses, pet CRUD, types/breeds, vaccinations, frontend wired |
+| 2 | Customer & Pets | ✅ Done | Profile, addresses, pet CRUD, types/breeds, vaccinations, frontend wired. Pet Ownership Transfer pending. |
 | 2.5 | Platform Foundation | ✅ Done | Storage, Image, Email, Notification, Payment, Shipping abstractions + Spring Cache + Spring Scheduling enabled |
 | 3 | Merchant | ⏳ Not started | |
 | 4 | Catalog | ⏳ Not started | |
@@ -22,6 +22,9 @@ Quick status overview. Agents should read this first to avoid re-inspecting comp
 | 14 | Engagement | ⏳ Not started | |
 | 15 | Marketing | ⏳ Not started | |
 | 16 | Admin & Disputes | ⏳ Not started | |
+| 16.5 | Discovery & Recommendations | ⏳ Not started | Nearby merchants, map, personalized home, pet-specific recommendations |
+| 16.6 | Pet Care Reminders | ⏳ Not started | Care events, merchant follow-up, reminders, push notifications |
+| 16.7 | Merchant Acquisition | ⏳ Not started | QR attribution, acquisition analytics, funnel tracking |
 | 17 | Legal & Store Compliance | ⏳ Not started | |
 | 18 | Production Hardening | ⏳ Not started | |
 

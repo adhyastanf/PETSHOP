@@ -189,6 +189,64 @@ Validate each endpoint against business rules and authorization matrix.
 
 ---
 
+---
+
+### Pet Ownership Transfer
+
+| Method | URL | Purpose | Auth | Permission |
+|--------|-----|---------|------|------------|
+| POST | `/api/v1/pets/{petId}/ownership-transfers` | Request ownership transfer | Yes | CUSTOMER + Own |
+| GET | `/api/v1/pet-ownership-transfers` | List transfers (sent/received) | Yes | CUSTOMER |
+| POST | `/api/v1/pet-ownership-transfers/{transferId}/accept` | Accept transfer | Yes | Recipient |
+| POST | `/api/v1/pet-ownership-transfers/{transferId}/reject` | Reject transfer | Yes | Recipient |
+| POST | `/api/v1/pet-ownership-transfers/{transferId}/cancel` | Cancel pending transfer | Yes | Current Owner |
+
+**Request (create):** `{ "recipientUserId": "OYEN-8F42K1" }`
+
+**States:** `PENDING` → `ACCEPTED` / `REJECTED` / `CANCELLED` / `EXPIRED`
+
+**Rules:**
+- Only current owner can initiate
+- Only intended recipient can accept/reject
+- Only current owner can cancel while PENDING
+- Ownership changes atomically only on ACCEPTED
+- Pet ID never changes
+- One active PENDING transfer per pet at a time
+
+---
+
+### Pet Care & Reminders
+
+| Method | URL | Purpose | Auth | Permission |
+|--------|-----|---------|------|------------|
+| POST | `/api/v1/pets/{petId}/care-events` | Record care event | Yes | CUSTOMER + Own |
+| GET | `/api/v1/pets/{petId}/care-events` | List pet care history | Yes | CUSTOMER + Own |
+| GET | `/api/v1/pets/{petId}/reminders` | List upcoming reminders | Yes | CUSTOMER + Own |
+| PATCH | `/api/v1/reminders/{reminderId}` | Update reminder (dismiss/snooze) | Yes | CUSTOMER + Own |
+| POST | `/api/v1/merchant/bookings/{bookingId}/care-follow-up` | Merchant records next care date | Yes | Merchant + Authorized |
+
+---
+
+### Discovery
+
+| Method | URL | Purpose | Auth | Permission |
+|--------|-----|---------|------|------------|
+| GET | `/api/v1/merchants/nearby` | Find nearby merchants | Yes | CUSTOMER |
+
+Query params: `latitude`, `longitude`, `radius`, `category`, `service`, `openNow`, `rating`, `page`, `size`
+
+---
+
+### Home (Personalized)
+
+| Method | URL | Purpose | Auth | Permission |
+|--------|-----|---------|------|------------|
+| GET | `/api/v1/home` | Personalized home sections | Yes | CUSTOMER |
+
+Response sections: `petCare`, `recommendedProducts`, `recommendedServices`, `nearbyMerchants`, `buyAgain`, `recentlyViewed`
+
+---
+
 ### Public Marketplace
 
 | Method | URL | Purpose | Auth | Permission |

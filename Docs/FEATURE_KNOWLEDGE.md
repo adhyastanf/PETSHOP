@@ -107,6 +107,24 @@ sufficient authorization.
 
 Only the pet owner may modify/use the pet for customer booking flows.
 
+## 4a. Pet Ownership Transfer
+
+- Transfer pet ownership from one Oyen user to another
+- Two-step consent flow: request → recipient accepts/rejects
+- Transfer identified by recipient's unique Oyen User ID
+- State machine: PENDING → ACCEPTED / REJECTED / CANCELLED / EXPIRED
+- Ownership does not change until recipient accepts
+- Pet ID remains unchanged throughout transfer
+- All pet-level history follows the pet (grooming, vaccination, care, reminders)
+- Customer-private data does NOT transfer (orders, payments, addresses, preferences)
+- Only one active PENDING transfer per pet at a time
+- Atomic ownership update on acceptance
+- Concurrency-safe (prevents double acceptance, stale ownership)
+- Previous owner loses owner-level access after acceptance
+- Future care reminders transfer to new owner's notification preferences
+- Transfer records are immutable/auditable
+- Notifications: transfer requested, accepted, rejected, cancelled
+
 ## 5. Basic Vaccination History
 
 -   Vaccine type/name
@@ -119,6 +137,20 @@ Only the pet owner may modify/use the pet for customer booking flows.
 -   Notes
 -   Booking linkage
 -   Completed vaccination booking may generate vaccination history
+
+## 5a. Pet Care Events & Reminders
+
+- Pet care history (grooming, vaccination, vet check, other)
+- Care event records with type, date, source merchant, source booking
+- Merchant-created next recommended care date after service completion
+- Pet care reminders (upcoming care events per pet)
+- Reminder categories: Grooming, Vaccination, Vet check-up, Other
+- Reminder supports: pet, care type, due date, source merchant, notification state, status
+- Reminder actions: book service, view merchant, find alternatives, dismiss/snooze
+- Push notification for upcoming care
+- Notification deduplication
+- User notification preferences respected
+- Rebook/repurchase from reminder
 
 ## 6. Merchant Registration & Verification
 
@@ -396,6 +428,15 @@ Shipping calculation uses branch origin, customer destination, package
 weight/dimensions, external quotes, customer selection, and shipment
 creation.
 
+### Oyen Shipping Architecture
+
+- Aggregator: Biteship.
+- MVP focus: Instant Delivery only.
+- Couriers via Biteship: GoSend, GrabExpress, Lalamove.
+- MVP decision: cheapest available courier for simple UX.
+- Architecture: ShippingService → ShippingProvider → BiteshipShippingProvider.
+- Future: direct GoSend/Grab API integration when volume justifies it.
+
 ## 34. Shipping Rate Comparison
 
 -   Multiple couriers
@@ -422,6 +463,28 @@ Potential methods include QRIS, virtual accounts, e-wallets, and cards.
 Supports: - Payment creation - URL/instructions - Expiration -
 Pending/paid/failed/expired/cancelled - External transaction ID -
 Multiple payment attempts - Status history - Idempotent callbacks
+
+### Oyen Payment Architecture
+
+- Payment gateway: Xendit.
+- Supported methods: QRIS, Virtual Account, E-Wallet, Credit/Debit Card.
+- QRIS: customer pays Rp0 application fee (Oyen absorbs Xendit fee).
+- Non-QRIS: application/payment fee passed to customer based on configured Xendit fee.
+- Payment lifecycle: PENDING → PAYMENT_CREATED → PAID → SETTLED.
+- Xendit webhook is source of truth for payment status.
+- Merchant commission (4%) deducted at settlement, not charged to customer.
+
+## 36a. Pet Transport
+
+Pet transport is a separate domain from product delivery.
+
+- Pet/live animals must NOT use product delivery providers (GoSend/Grab via Biteship).
+- Option A: Customer brings pet (Rp0 transport fee).
+- Option B: Merchant-owned pet transport (merchant configures pricing, coverage, vehicle).
+- Merchant pet transport configuration: operating hours, coverage radius, vehicle type, capacity, base fare, per-km rate.
+- Carrier/crate requirement can be enforced by merchant.
+- Pet transport has its own lifecycle separate from product delivery.
+- Oyen does not own fleet/logistics on MVP.
 
 ## 37. Payment Success Processing
 
@@ -664,6 +727,36 @@ Branch/location - Price - Rating - Nearby merchants using branch
 coordinates
 
 Elasticsearch/OpenSearch is not required for MVP.
+
+## 70a. Nearby Merchant Discovery
+
+- Geographic proximity search using PostgreSQL/PostGIS
+- Supported categories: Petshop, Grooming, Veterinary/Clinic, Boarding, Other
+- Filters: distance/radius, category, service, open now, rating, price range
+- Configurable radius options (1km, 3km, 5km, 10km, 25km)
+- Spatial indexes for performance
+- Persist merchant coordinates (avoid repeated geocoding)
+- Map rendering via Mapbox (markers, location UX)
+- Database is source of truth for search, not Mapbox
+
+## 70b. Personalized Home
+
+- Home personalized per customer and per pet
+- Recommendation signals: pet species, breed, age, purchase history, booking history, care history, reminders, recently viewed, search behavior, favorites, location, merchant proximity, popularity
+- Initial implementation: deterministic/rule-based (no ML in MVP)
+- Sections: care reminders, recommended for pet, buy again, nearby merchants, popular nearby, recently viewed, relevant services
+- Home API returns ranked recommendation sections
+- New users receive fallback content
+- Pet-specific recommendations: purchases for Dog A do not influence Cat B
+
+## 70c. Merchant Acquisition QR & Attribution
+
+- Each merchant receives unique QR/deep link for customer acquisition
+- QR scan → Oyen landing/deep link → merchant attribution
+- Attribution tracks: scans, registrations, activated customers, first transactions
+- Merchant analytics: aggregate acquisition metrics (authorized scope only)
+- Privacy-compliant attribution
+- Offline acquisition channel (poster, counter stand, packaging sticker)
 
 ## 71. Legal & Store Compliance
 

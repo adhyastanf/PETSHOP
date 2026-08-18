@@ -75,11 +75,14 @@ unless explicitly introduced by a later approved requirement.
 
 - US-CUS-*
 - US-PET-*
+- US-PET-TRANSFER-*
 
 **Scope**
 
 Customer profile, addresses, pet CRUD, pet types/breeds, basic vaccination
-history, and pet/customer media foundation.
+history, pet ownership transfer, and pet/customer media foundation.
+
+Pet care events foundation and pet care reminder infrastructure.
 
 **Exit Criteria**
 
@@ -195,6 +198,9 @@ Services, pricing, branch availability, staff assignment, schedules/exceptions,
 availability engine, slot holds, capacity protection, and verified-veterinarian
 eligibility.
 
+Service completion → next recommended care date → pet care history → reminder scheduling.
+Merchant records next care date from authorized booking completion.
+
 **Exit Criteria**
 
 - Service configuration and pricing rules work.
@@ -216,6 +222,8 @@ eligibility.
 
 Product and service cart items, required service booking context,
 multi-merchant behavior, and mixed product+service carts.
+
+Optional pet association for product cart items (for future personalization).
 
 **Exit Criteria**
 
@@ -454,6 +462,85 @@ marketplace configuration, and explicit permission enforcement.
 - Sensitive administrative actions are audited.
 - Admin functionality does not bypass domain invariants/state machines.
 - Applicable security tests and Definition of Done pass.
+
+---
+
+## Phase 16.5 — Discovery, Recommendations & Local Marketplace
+
+**Stories**
+
+- US-DISCOVERY-001 Find Nearby Merchants
+- US-DISCOVERY-002 View Nearby Merchant on Map
+- US-HOME-001 Personalized Home
+- US-HOME-002 Pet-Specific Recommendations
+
+**Scope**
+
+Nearby merchant discovery using PostgreSQL/PostGIS spatial queries, map integration
+(Mapbox for rendering), personalized home with rule-based recommendations,
+pet-specific recommendation context, recently viewed, buy-again, and location-based sections.
+
+**Exit Criteria**
+
+- Nearby merchant search works with spatial indexes.
+- Map renders merchant markers accurately.
+- Home API returns personalized recommendation sections.
+- Pet-specific recommendations do not cross-contaminate between pets.
+- Rule-based recommendation logic is deterministic and testable.
+- Applicable tests pass.
+
+---
+
+## Phase 16.6 — Pet Care Reminders & Merchant Follow-up
+
+**Stories**
+
+- US-PETCARE-001 View Pet Care History
+- US-PETCARE-002 Merchant Records Next Recommended Care Date
+- US-PETCARE-003 Receive Care Reminder
+- US-PETCARE-004 Rebook From Care Reminder
+
+**Scope**
+
+Pet care event recording, merchant-created next care date from service completion,
+care reminder scheduling, push notification for upcoming care, reminder-to-rebooking
+flow, notification deduplication, and user preference enforcement.
+
+**Exit Criteria**
+
+- Customer can view pet care history (authorized scope only).
+- Merchant can record next care date from authorized booking completion.
+- Reminders are generated from eligible care events.
+- Push notification is sent without duplication.
+- Customer can navigate from reminder to booking.
+- Authorization boundaries are enforced.
+- Applicable tests pass.
+
+---
+
+## Phase 16.7 — Merchant Acquisition & QR Attribution
+
+**Stories**
+
+- US-MERCHANT-QR-001 Merchant Acquisition QR
+- US-MERCHANT-QR-002 Merchant Acquisition Analytics
+- US-MARKETING-001 Track Acquisition Funnel
+
+**Scope**
+
+Merchant-specific QR codes/deep links for offline customer acquisition,
+attribution tracking (scans, registrations, activations, first transactions),
+aggregate analytics for merchants, core funnel event tracking for marketing
+evaluation.
+
+**Exit Criteria**
+
+- Each merchant has a unique attribution identifier/deep link.
+- Attribution is preserved through registration flow.
+- Merchant can view aggregate acquisition metrics (authorized scope).
+- Core funnel events are tracked.
+- Privacy requirements are respected.
+- Applicable tests pass.
 
 ---
 

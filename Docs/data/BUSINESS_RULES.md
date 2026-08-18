@@ -104,3 +104,77 @@ Rule IDs are stable references for code, tests and tickets.
 - **BR-SEC-002:** Every merchant-scoped query validates merchant ownership/access.
 - **BR-SEC-003:** Private files/chat require ownership or membership authorization.
 - **BR-SEC-004:** Sensitive financial/admin actions are audited.
+
+
+---
+
+## Payment & Commission
+
+- **BR-PAY-007:** Oyen commission = 4% of merchant product/service subtotal.
+- **BR-PAY-008:** Commission base excludes shipping fee and payment/application fee.
+- **BR-PAY-009:** QRIS: customer payment fee = Rp0 (Oyen absorbs gateway cost).
+- **BR-PAY-010:** Non-QRIS: payment fee passed to customer based on actual/configured Xendit fee.
+- **BR-PAY-011:** Backend is source of truth for: payment method, payment fee, subtotal, application fee, customer total, merchant commission.
+- **BR-PAY-012:** Frontend must not calculate or determine payment fees or commission.
+- **BR-PAY-013:** Payment webhook from Xendit is source of truth for payment status.
+- **BR-PAY-014:** Payment processing must be idempotent (no duplicate processing).
+- **BR-PAY-015:** Merchant is not entitled to settlement merely because payment succeeded — settlement follows order completion lifecycle.
+
+### Checkout Calculation
+
+```text
+Product/Service Subtotal
++ Shipping Fee
++ Customer Payment/Application Fee
+= Customer Total
+
+Oyen Commission (4% of subtotal) is deducted from merchant settlement, not added to customer total.
+```
+
+---
+
+## Product Delivery
+
+- **BR-SHP-005:** Biteship is the shipping aggregator for MVP product delivery.
+- **BR-SHP-006:** MVP focus: Instant Delivery only (GoSend, GrabExpress, Lalamove via Biteship).
+- **BR-SHP-007:** Shipping provider must be abstracted: `ShippingProvider → BiteshipShippingProvider`.
+- **BR-SHP-008:** Biteship can be replaced with direct GoSend/Grab integration without changing order domain.
+- **BR-SHP-009:** Shipping webhook processing must be idempotent.
+- **BR-SHP-010:** Frontend must not determine shipping status or cost.
+
+### Product Delivery Lifecycle
+
+```text
+PENDING → BOOKED → PICKED_UP → ON_DELIVERY → DELIVERED
+```
+
+---
+
+## Pet Transport
+
+- **BR-PET-004:** Pet/live animals must NEVER use normal product delivery (GoSend/GrabExpress/Biteship).
+- **BR-PET-005:** Pet transport is a separate domain from product shipping.
+- **BR-PET-006:** Two options: customer brings pet OR merchant-owned pet transport.
+- **BR-PET-007:** Merchant pet transport has its own configuration: operating hours, coverage radius, vehicle type, capacity, pricing.
+- **BR-PET-008:** Pet transport lifecycle is independent from product delivery lifecycle.
+
+### Pet Transport Options
+
+```text
+Option A: Customer brings pet (fee = Rp0)
+Option B: Merchant pet transport (configurable pricing by merchant)
+```
+
+### Pet Service Lifecycle (with merchant transport)
+
+```text
+BOOKED → CONFIRMED → PET_PICKUP → ARRIVED_AT_VENUE → SERVICE_IN_PROGRESS → SERVICE_COMPLETED → ORDER_COMPLETED
+```
+
+### Pet Service Lifecycle (customer brings pet)
+
+```text
+BOOKED → CONFIRMED → ARRIVED_AT_VENUE → SERVICE_IN_PROGRESS → SERVICE_COMPLETED → ORDER_COMPLETED
+```
+
+- Carrier/crate requirement can be enforced by merchant configuration.

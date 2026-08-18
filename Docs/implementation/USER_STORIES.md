@@ -40,6 +40,31 @@ User stories define observable behavior; detailed rules remain in their canonica
 - **US-PET-004 Delete Pet:** customer removes/deactivates only their own pet according to applicable rules.
 - **US-PET-005 Vaccination History:** customer views basic vaccination history for their own pet.
 
+## Pet Ownership Transfer
+- **US-PET-TRANSFER-001 Request Transfer:** pet owner requests transfer to another Oyen user by recipient's unique User ID; ownership remains unchanged until accepted; only one pending transfer per pet at a time.
+- **US-PET-TRANSFER-002 Accept Transfer:** recipient accepts pending transfer; ownership changes atomically; pet ID unchanged; all pet-level history (grooming, vaccination, care) remains with the pet; previous owner loses owner-level access.
+- **US-PET-TRANSFER-003 Reject Transfer:** recipient rejects transfer; ownership remains unchanged; current owner is notified.
+- **US-PET-TRANSFER-004 Cancel Transfer:** current owner cancels pending transfer before acceptance; ownership remains unchanged.
+- **US-PET-TRANSFER-005 Preserve Pet History:** after transfer, pet profile, grooming history, vaccination history, care events, and eligible reminders remain associated with the same pet ID; no new pet record is created.
+- **US-PET-TRANSFER-006 Transfer Audit:** ownership transfers are auditable; transfer records contain pet, previous owner, new owner, status, and timestamps; admin access follows RBAC.
+
+## Pet Care & Reminders
+- **US-PETCARE-001 View Pet Care History:** customer views their pet's care history including grooming, vaccination, vet, and other care events; only owned pets accessible.
+- **US-PETCARE-002 Merchant Records Next Care Date:** authorized merchant staff records a recommended next care date after completing a service; creates reminder for pet owner.
+- **US-PETCARE-003 Receive Care Reminder:** customer receives push notification before pet's next recommended care date; deduplication enforced; preferences respected.
+- **US-PETCARE-004 Rebook From Care Reminder:** customer can book a relevant service directly from a care reminder; can choose original merchant or alternatives.
+
+## Discovery & Recommendations
+- **US-DISCOVERY-001 Find Nearby Merchants:** customer discovers nearby merchants by geographic proximity with filters (radius, category, service, open now, rating).
+- **US-DISCOVERY-002 View Nearby Merchant on Map:** customer sees nearby merchants on a map with markers; selecting a marker shows merchant summary.
+- **US-HOME-001 Personalized Home:** customer's home page shows relevant products, services, and pet-care actions using deterministic rule-based recommendations.
+- **US-HOME-002 Pet-Specific Recommendations:** recommendations account for selected pet; purchases for one pet do not contaminate another pet's context.
+
+## Merchant Acquisition
+- **US-MERCHANT-QR-001 Merchant Acquisition QR:** each eligible merchant receives a unique QR/deep link for customer acquisition attribution.
+- **US-MERCHANT-QR-002 Merchant Acquisition Analytics:** authorized merchant views aggregate acquisition metrics (scans, registrations, activations) within their scope.
+- **US-MARKETING-001 Track Acquisition Funnel:** platform tracks core acquisition funnel events for campaign evaluation and optimization.
+
 ## Merchant
 - **US-MER-001 Apply:** business submits a merchant application and required documents.
 - **US-MER-002 View Application:** applicant views their merchant application status/details.

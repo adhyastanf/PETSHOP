@@ -60,3 +60,77 @@ External timeout does not imply business failure. Persist enough provider identi
 
 ## Secrets
 All provider credentials come from environment/secret management. Never commit them to repository or expose them to frontend bundles.
+
+
+---
+
+## Payment Provider — Xendit
+
+| Property | Value |
+|----------|-------|
+| Provider | Xendit |
+| Integration | REST API + Webhooks |
+| Methods | QRIS, Virtual Account, E-Wallet, Credit/Debit Card |
+| Webhook | POST callback with signature verification |
+| Idempotency | External payment ID + event deduplication |
+
+### Architecture
+
+```text
+PaymentProvider (interface)
+    ↓
+XenditPaymentProvider (implementation)
+    ↓
+Xendit REST API
+```
+
+### Key Rules
+
+- Verify webhook signature before processing.
+- Process each webhook event exactly once (idempotent).
+- Store external payment ID, amount, method, status, gateway fee.
+- Support expiration, failure, and refund.
+- Never store Xendit API keys in frontend or logs.
+
+---
+
+## Shipping Provider — Biteship
+
+| Property | Value |
+|----------|-------|
+| Provider | Biteship |
+| Integration | REST API + Webhooks |
+| Scope | Product Instant Delivery only |
+| Couriers | GoSend, GrabExpress, Lalamove (via Biteship) |
+
+### Architecture
+
+```text
+ShippingProvider (interface)
+    ↓
+BiteshipShippingProvider (implementation)
+    ↓
+Biteship API
+```
+
+### Key Rules
+
+- Quote shipping rates based on origin + destination + weight.
+- Create shipment after checkout confirmation.
+- Process tracking webhooks idempotently.
+- Never use Biteship for pet/live animal transport.
+- Provider swap (direct GoSend/Grab) must not change order domain.
+
+---
+
+## Pet Transport
+
+Pet transport is NOT a shipping provider integration. It is a merchant-managed service.
+
+```text
+PetTransportService
+    ├── CustomerTransport (fee = Rp0)
+    └── MerchantPetTransport (merchant pricing/config)
+```
+
+No external transport API integration for MVP. Merchant manages their own drivers/vehicles.

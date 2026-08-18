@@ -164,6 +164,7 @@ Platform services are abstractions that isolate business logic from external pro
 | NotificationService | Dispatch notifications (in-app, push, email routing) |
 | PaymentProvider | Create payments, process webhooks, verify signatures |
 | ShippingProvider | Quote rates, create shipments, track packages |
+| PetTransportService | Manage merchant-owned pet transport (separate from product shipping) |
 | Spring Cache | @Cacheable/@CachePut/@CacheEvict (ConcurrentMap → Redis) |
 | Spring Scheduling | @Scheduled for background jobs (→ Quartz for complex) |
 
@@ -176,6 +177,7 @@ Platform services are abstractions that isolate business logic from external pro
 - Local/minimal implementations exist for development.
 - Prefer Spring framework abstractions (Cache, Scheduling) over custom wrappers.
 - Search uses PostgreSQL queries until dedicated search infrastructure is justified.
+- Pet transport is a separate domain from product shipping — never route through ShippingProvider.
 
 
 ---
