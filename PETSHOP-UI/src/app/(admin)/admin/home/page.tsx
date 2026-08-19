@@ -1,20 +1,38 @@
-import { ChartAreaInteractive } from '@/components/chart-area-interactive';
-import { DataTable } from '@/components/data-table';
-import { SectionCards } from '@/components/section-cards';
+'use client';
 
-import data from '@/mock/data.json';
+import { Store, Stethoscope } from 'lucide-react';
+import Link from 'next/link';
+import { useI18n } from '@/lib/i18n';
+import { Card, CardContent } from '@/components/ui/card';
 
 export default function AdminHomePage() {
+  const { t } = useI18n();
+
+  const links = [
+    { href: '/admin/merchants', icon: Store, label: t('merchant.verification.title') },
+    { href: '/admin/veterinarians', icon: Stethoscope, label: t('merchant.verification.vetTitle') },
+  ];
+
   return (
-    <div className='flex flex-1 flex-col'>
-      <div className='@container/main flex flex-1 flex-col gap-2'>
-        <div className='flex flex-col gap-4 py-4 md:gap-6 md:py-6'>
-          <SectionCards />
-          <div className='px-4 lg:px-6'>
-            <ChartAreaInteractive />
-          </div>
-          <DataTable data={data} />
-        </div>
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-2xl font-semibold">Admin Dashboard</h1>
+        <p className="mt-1 text-sm text-muted-foreground">Platform administration</p>
+      </div>
+
+      <div className="grid gap-4 md:grid-cols-3">
+        {links.map((link) => (
+          <Link key={link.href} href={link.href}>
+            <Card className="cursor-pointer transition-colors hover:bg-muted/50">
+              <CardContent>
+                <div className="flex items-center gap-3">
+                  <link.icon className="size-5 text-muted-foreground" />
+                  <span className="font-medium">{link.label}</span>
+                </div>
+              </CardContent>
+            </Card>
+          </Link>
+        ))}
       </div>
     </div>
   );

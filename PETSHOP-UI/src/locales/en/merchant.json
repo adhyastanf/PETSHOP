@@ -1,0 +1,92 @@
+{
+  "application": {
+    "title": "Become a Merchant",
+    "description": "Submit your business to join the Oyen marketplace",
+    "businessName": "Business Name",
+    "displayName": "Display Name",
+    "email": "Business Email",
+    "phone": "Phone Number",
+    "whatsapp": "WhatsApp",
+    "nib": "NIB Number",
+    "npwp": "NPWP Number",
+    "submit": "Submit Application",
+    "status": "Application Status",
+    "myApplications": "My Applications",
+    "noApplications": "No applications yet",
+    "submitted": "Application submitted successfully"
+  },
+  "profile": {
+    "title": "Merchant Profile",
+    "edit": "Edit Profile",
+    "save": "Save Profile"
+  },
+  "branch": {
+    "title": "Branches",
+    "create": "Add Branch",
+    "edit": "Edit Branch",
+    "code": "Branch Code",
+    "name": "Branch Name",
+    "phone": "Phone",
+    "email": "Email",
+    "address": "Address",
+    "hours": "Operating Hours",
+    "noHours": "No hours configured",
+    "noBranches": "No branches yet",
+    "closed": "Closed"
+  },
+  "staff": {
+    "title": "Staff",
+    "add": "Add Staff",
+    "edit": "Edit Staff",
+    "userId": "User ID",
+    "email": "Staff Email",
+    "role": "Role",
+    "employeeCode": "Employee Code",
+    "displayName": "Display Name",
+    "noStaff": "No staff members yet",
+    "assignBranch": "Assign Branch",
+    "branches": "Branch Assignments",
+    "noBranches": "Not assigned to any branch",
+    "deleteConfirm": "Remove this staff member?"
+  },
+  "setup": {
+    "title": "Setup Your First Branch",
+    "description": "Create your first branch to start managing your business on Oyen.",
+    "namePlaceholder": "e.g. Main Branch",
+    "addressPlaceholder": "Full address",
+    "city": "City",
+    "postalCode": "Postal Code",
+    "submit": "Create Branch & Continue",
+    "success": "Branch created! Welcome to Oyen Mitra."
+  },
+  "verification": {
+    "title": "Merchant Verification",
+    "approve": "Approve",
+    "reject": "Reject",
+    "notes": "Notes",
+    "reason": "Rejection Reason",
+    "vetTitle": "Veterinarian Verification",
+    "verify": "Verify",
+    "decision": "Decision",
+    "noVets": "No veterinarians pending verification.",
+    "selectDecision": "-- Select --",
+    "submit": "Submit"
+  },
+  "status": {
+    "SUBMITTED": "Submitted",
+    "UNDER_REVIEW": "Under Review",
+    "APPROVED": "Approved",
+    "REJECTED": "Rejected",
+    "SUSPENDED": "Suspended",
+    "DRAFT": "Draft"
+  },
+  "days": {
+    "1": "Monday",
+    "2": "Tuesday",
+    "3": "Wednesday",
+    "4": "Thursday",
+    "5": "Friday",
+    "6": "Saturday",
+    "7": "Sunday"
+  }
+}

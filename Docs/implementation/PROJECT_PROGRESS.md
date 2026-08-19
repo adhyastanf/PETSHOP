@@ -1,50 +1,94 @@
 # Project Progress
 
-Quick status overview. Agents should read this first to avoid re-inspecting completed work.
+Quick status overview. Agents should read this FIRST to avoid re-inspecting completed work.
+
+---
+
+## Phase Status
 
 | Phase | Name | Status | Notes |
 |-------|------|--------|-------|
 | 0 | Foundation | ✅ Done | DB migrations, seed data, JPA, Flyway, project skeleton |
-| 1 | Identity & RBAC | ✅ Done | Register, login, logout, JWT, refresh, role-based frontend routing, tests. Remember Me and Delete Account pending. |
-| 2 | Customer & Pets | ✅ Done | Profile, addresses, pet CRUD, types/breeds, vaccinations, frontend wired. Pet Ownership Transfer pending. |
-| 2.5 | Platform Foundation | ✅ Done | Storage, Image, Email, Notification, Payment, Shipping abstractions + Spring Cache + Spring Scheduling enabled |
-| 3 | Merchant | ⏳ Not started | |
-| 4 | Catalog | ⏳ Not started | |
-| 5 | Inventory | ⏳ Not started | |
-| 6 | Services & Scheduling | ⏳ Not started | |
-| 7 | Cart | ⏳ Not started | |
-| 8 | Checkout | ⏳ Not started | |
-| 9 | Payment | ⏳ Not started | |
-| 10 | Fulfillment | ⏳ Not started | |
-| 11 | Pet Hotel (Boarding) | ⏳ Not started | |
-| 12 | Cancellation & Refund | ⏳ Not started | |
-| 13 | Finance | ⏳ Not started | |
-| 14 | Engagement | ⏳ Not started | |
-| 15 | Marketing | ⏳ Not started | |
-| 16 | Admin & Disputes | ⏳ Not started | |
-| 16.5 | Discovery & Recommendations | ⏳ Not started | Nearby merchants, map, personalized home, pet-specific recommendations |
-| 16.6 | Pet Care Reminders | ⏳ Not started | Care events, merchant follow-up, reminders, push notifications |
-| 16.7 | Merchant Acquisition | ⏳ Not started | QR attribution, acquisition analytics, funnel tracking |
-| 17 | Legal & Store Compliance | ⏳ Not started | |
-| 18 | Production Hardening | ⏳ Not started | |
+| 1 | Identity & RBAC | ✅ Done | Register, login, logout, JWT, refresh, role-based frontend routing, tests |
+| 2 | Customer & Pets | ✅ Done | Profile, addresses, pet CRUD, types/breeds, vaccinations, frontend wired |
+| 2.5 | Platform Foundation | ✅ Done | Storage, Image, Email, Notification, Payment, Shipping abstractions + Spring Cache + Spring Scheduling |
+| 3 | Merchant | ✅ Done | Backend + Frontend complete. Application, verification, profile, branches, hours, staff, branch assignment, vet verification. |
+| 4 | Catalog | ⏳ | |
+| 5 | Inventory | ⏳ | |
+| 6 | Services & Scheduling | ⏳ | |
+| 7 | Cart | ⏳ | |
+| 8 | Checkout | ⏳ | |
+| 9 | Payment | ⏳ | |
+| 10 | Fulfillment | ⏳ | |
+| 11 | Pet Hotel | ⏳ | |
+| 12 | Cancellation & Refund | ⏳ | |
+| 13 | Finance | ⏳ | |
+| 14 | Engagement | ⏳ | |
+| 15 | Marketing | ⏳ | |
+| 16 | Admin & Disputes | ⏳ | |
+| 16.5 | Discovery & Recommendations | ⏳ | |
+| 16.6 | Pet Care Reminders | ⏳ | |
+| 16.7 | Merchant Acquisition | ⏳ | |
+| 17 | Legal & Store Compliance | ⏳ | |
+| 18 | Production Hardening | ⏳ | |
 
-## Cross-Cutting Work Completed
+---
+
+## Pending Items (from completed phases)
+
+| Story | Phase | Status | Priority | Blocks Phase 3? |
+|-------|-------|--------|----------|-----------------|
+| US-AUTH-006 Remember Me | 1 | ❌ Not started | Low | No |
+| US-AUTH-007 Delete Account | 1 | ❌ Not started | Low | No |
+| US-PET-TRANSFER-* | 2 | ❌ Not started | Medium | No |
+
+---
+
+## Cross-Cutting Infrastructure
 
 | Area | Status | Notes |
 |------|--------|-------|
-| Design System | ✅ Done | DESIGN_SYSTEM.md + UI_PATTERNS.md, Oyen orange palette applied |
-| Internationalization (i18n) | ✅ Done | English + Bahasa Indonesia, all Phase 1+2 pages use t() keys |
-| UI Redesign (Phase 1+2) | ✅ Done | Oyen branding, consistent tokens, empty states, footer |
-| Test Infrastructure | ✅ Done | Vitest + Testing Library, 28 tests passing |
+| Design System | ✅ Done | DESIGN_SYSTEM.md + UI_PATTERNS.md, Oyen orange palette |
+| Internationalization (i18n) | ✅ Done | EN + ID, all Phase 1+2 pages use t() keys |
+| UI Redesign (Phase 1+2) | ✅ Done | Oyen branding, consistent tokens |
+| Test Infrastructure | ✅ Done | Vitest + Testing Library (28 tests) |
 | Docs Reorganization | ✅ Done | Clean folder structure, merged API docs |
-| Project Branding | ✅ Done | Renamed to "Oyen" across all docs |
-| Cloud Dev Prep | ✅ Done | GitHub Actions CI, env vars, Vercel/Koyeb/Supabase config documented |
+| Cloud Dev Prep | ✅ Done | GitHub Actions CI, env vars, deployment config |
+| Kiro Multi-Agent Setup | ✅ Done | 6 agents: orchestrator, database, backend, frontend, tester, reviewer |
+| Payment Architecture | ✅ Documented | Xendit, 4% commission, QRIS fee Rp0 |
+| Shipping Architecture | ✅ Documented | Biteship instant delivery, pet transport separate |
 
-## Phase 1 — Remaining Items
+---
 
-- [ ] US-AUTH-006 Remember Me
-- [ ] US-AUTH-007 Delete Account
+## Phase 3 Readiness
+
+| Requirement | Status |
+|-------------|--------|
+| DB schema exists (merchants, branches, staff, hours) | ✅ |
+| Roles seeded (PETSHOP_OWNER, ADMIN, STAFF, GROOMER, VET) | ✅ |
+| Permissions seeded (merchants module) | ✅ |
+| RBAC service loads authorities | ✅ |
+| SecurityConfig enforces auth | ✅ |
+| Platform abstractions ready | ✅ |
+| Merchant authorization (ownership check) | ❌ Needs implementation |
+| Merchant business logic | ❌ Needs implementation |
+| Merchant frontend | ❌ Needs implementation |
+
+**Verdict: Ready to start Phase 3.** The schema foundation exists. Business logic and ownership enforcement will be built as part of Phase 3 implementation.
+
+---
+
+## Technical Debt
+
+| Item | Severity | Phase |
+|------|----------|-------|
+| Two error contracts coexist (ApiResponse + ErrorResponse) | Low | Consolidate during Phase 3 |
+| Some empty packages exist (dto/, repository/, service/) | Low | Clean up organically |
+| Frontend lint has 3 pre-existing errors (chart/carousel/use-mobile) | Low | Fix when touching those files |
+| .next cache occasionally creates stale type errors | Low | Delete .next when it happens |
+
+---
 
 ## Last Updated
 
-2026-08-06
+2026-08-18

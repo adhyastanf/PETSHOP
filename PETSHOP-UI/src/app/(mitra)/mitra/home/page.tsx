@@ -1,20 +1,39 @@
-import { ChartAreaInteractive } from '@/components/chart-area-interactive';
-import { DataTable } from '@/components/data-table';
-import { SectionCards } from '@/components/section-cards';
+'use client';
 
-import data from '@/mock/data.json';
+import Link from 'next/link';
+import { Building2, Store, Users } from 'lucide-react';
+import { useI18n } from '@/lib/i18n';
+import { Card, CardContent } from '@/components/ui/card';
 
 export default function MitraHomePage() {
+  const { t } = useI18n();
+
+  const links = [
+    { href: '/mitra/profile', icon: Store, label: t('merchant.profile.title') },
+    { href: '/mitra/branches', icon: Building2, label: t('merchant.branch.title') },
+    { href: '/mitra/staff', icon: Users, label: t('merchant.staff.title') },
+  ];
+
   return (
-    <div className='flex flex-1 flex-col'>
-      <div className='@container/main flex flex-1 flex-col gap-2'>
-        <div className='flex flex-col gap-4 py-4 md:gap-6 md:py-6'>
-          <SectionCards />
-          <div className='px-4 lg:px-6'>
-            <ChartAreaInteractive />
-          </div>
-          <DataTable data={data} />
-        </div>
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-2xl font-semibold">{t('common.home')}</h1>
+        <p className="mt-1 text-sm text-muted-foreground">Merchant Dashboard</p>
+      </div>
+
+      <div className="grid gap-4 md:grid-cols-3">
+        {links.map((link) => (
+          <Link key={link.href} href={link.href}>
+            <Card className="cursor-pointer transition-colors hover:bg-muted/50">
+              <CardContent>
+                <div className="flex items-center gap-3">
+                  <link.icon className="size-5 text-muted-foreground" />
+                  <span className="font-medium">{link.label}</span>
+                </div>
+              </CardContent>
+            </Card>
+          </Link>
+        ))}
       </div>
     </div>
   );

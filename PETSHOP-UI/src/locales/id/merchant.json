@@ -1,0 +1,92 @@
+{
+  "application": {
+    "title": "Daftar Menjadi Merchant",
+    "description": "Ajukan bisnis Anda untuk bergabung di marketplace Oyen",
+    "businessName": "Nama Bisnis",
+    "displayName": "Nama Tampilan",
+    "email": "Email Bisnis",
+    "phone": "Nomor Telepon",
+    "whatsapp": "WhatsApp",
+    "nib": "Nomor NIB",
+    "npwp": "Nomor NPWP",
+    "submit": "Kirim Pendaftaran",
+    "status": "Status Pendaftaran",
+    "myApplications": "Pendaftaran Saya",
+    "noApplications": "Belum ada pendaftaran",
+    "submitted": "Pendaftaran berhasil dikirim"
+  },
+  "profile": {
+    "title": "Profil Merchant",
+    "edit": "Edit Profil",
+    "save": "Simpan Profil"
+  },
+  "branch": {
+    "title": "Cabang",
+    "create": "Tambah Cabang",
+    "edit": "Edit Cabang",
+    "code": "Kode Cabang",
+    "name": "Nama Cabang",
+    "phone": "Telepon",
+    "email": "Email",
+    "address": "Alamat",
+    "hours": "Jam Operasional",
+    "noHours": "Jam belum dikonfigurasi",
+    "noBranches": "Belum ada cabang",
+    "closed": "Tutup"
+  },
+  "staff": {
+    "title": "Staff",
+    "add": "Tambah Staff",
+    "edit": "Edit Staff",
+    "userId": "ID Pengguna",
+    "email": "Email Staff",
+    "role": "Role",
+    "employeeCode": "Kode Karyawan",
+    "displayName": "Nama Tampilan",
+    "noStaff": "Belum ada staff",
+    "assignBranch": "Tugaskan ke Cabang",
+    "branches": "Penugasan Cabang",
+    "noBranches": "Belum ditugaskan ke cabang",
+    "deleteConfirm": "Hapus staff ini?"
+  },
+  "setup": {
+    "title": "Buat Cabang Pertama",
+    "description": "Buat cabang pertama untuk mulai mengelola bisnis Anda di Oyen.",
+    "namePlaceholder": "contoh: Cabang Utama",
+    "addressPlaceholder": "Alamat lengkap",
+    "city": "Kota",
+    "postalCode": "Kode Pos",
+    "submit": "Buat Cabang & Lanjut",
+    "success": "Cabang berhasil dibuat! Selamat datang di Oyen Mitra."
+  },
+  "verification": {
+    "title": "Verifikasi Merchant",
+    "approve": "Setujui",
+    "reject": "Tolak",
+    "notes": "Catatan",
+    "reason": "Alasan Penolakan",
+    "vetTitle": "Verifikasi Veterinarian",
+    "verify": "Verifikasi",
+    "decision": "Keputusan",
+    "noVets": "Belum ada veterinarian untuk diverifikasi.",
+    "selectDecision": "-- Pilih --",
+    "submit": "Kirim"
+  },
+  "status": {
+    "SUBMITTED": "Diajukan",
+    "UNDER_REVIEW": "Dalam Review",
+    "APPROVED": "Disetujui",
+    "REJECTED": "Ditolak",
+    "SUSPENDED": "Ditangguhkan",
+    "DRAFT": "Draft"
+  },
+  "days": {
+    "1": "Senin",
+    "2": "Selasa",
+    "3": "Rabu",
+    "4": "Kamis",
+    "5": "Jumat",
+    "6": "Sabtu",
+    "7": "Minggu"
+  }
+}

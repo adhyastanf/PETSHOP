@@ -1,26 +1,24 @@
-import { AppSidebar } from '@/components/app-sidebar';
+'use client';
+
+import { Home, Store, Stethoscope } from 'lucide-react';
 import ProtectedRoute from '@/components/Provider/ProtectedRoute';
-import { SiteHeader } from '@/components/site-header';
-import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
-import React from 'react';
+import DashboardLayout, { type NavItem } from '@/components/Layout/dashboard-layout';
+import { useI18n } from '@/lib/i18n';
 
 export default function LayoutAdmin({ children }: { children: React.ReactNode }) {
+  const { t } = useI18n();
+
+  const items: NavItem[] = [
+    { href: '/admin/home', label: t('common.home'), icon: Home },
+    { href: '/admin/merchants', label: t('merchant.verification.title'), icon: Store },
+    { href: '/admin/veterinarians', label: t('merchant.verification.vetTitle'), icon: Stethoscope },
+  ];
+
   return (
     <ProtectedRoute allowedRoles={['SUPER_ADMIN', 'ADMIN']}>
-      <SidebarProvider
-        style={
-          {
-            '--sidebar-width': 'calc(var(--spacing) * 72)',
-            '--header-height': 'calc(var(--spacing) * 12)',
-          } as React.CSSProperties
-        }
-      >
-        <AppSidebar variant='inset' />
-        <SidebarInset>
-          <SiteHeader />
-          {children}
-        </SidebarInset>
-      </SidebarProvider>
+      <DashboardLayout navItems={items} title="Oyen Admin">
+        {children}
+      </DashboardLayout>
     </ProtectedRoute>
   );
 }

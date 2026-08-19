@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { LogOut, User, ShoppingBag, Heart, PawPrint, Settings } from 'lucide-react';
+import { LogOut, User, ShoppingBag, Heart, PawPrint, Settings, Store } from 'lucide-react';
 import { useAuthStore } from '@/store/auth-store';
 import { useLogout } from '@/hooks/use-auth';
 import { useI18n } from '@/lib/i18n';
@@ -89,6 +89,21 @@ export default function UserNav() {
             <DropdownMenuItem>
               <Settings className='mr-2 size-4' />
               {t('customer.nav.settings')}
+            </DropdownMenuItem>
+          </Link>
+        </DropdownMenuGroup>
+        <DropdownMenuSeparator />
+        <DropdownMenuGroup>
+          <Link href='/customer/merchant-apply'>
+            <DropdownMenuItem>
+              <Store className='mr-2 size-4' />
+              {t('merchant.application.title')}
+            </DropdownMenuItem>
+          </Link>
+          <Link href='/customer/merchant-status'>
+            <DropdownMenuItem>
+              <Store className='mr-2 size-4' />
+              {t('merchant.application.status')}
             </DropdownMenuItem>
           </Link>
         </DropdownMenuGroup>
