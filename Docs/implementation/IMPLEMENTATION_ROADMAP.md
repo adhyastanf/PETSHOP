@@ -279,6 +279,12 @@ Payment-provider abstraction, payment attempts, authoritative payment status,
 webhooks, signature verification, idempotency, checkout finalization,
 retry, and reconciliation.
 
+Payment-method model must distinguish provider-collected payment-gateway
+payments (Xendit) from merchant-collected COD (cash on delivery). COD funds are
+collected by the merchant directly and are never received by Oyen; a COD order
+therefore does not represent a provider-collected payment. The provider
+abstraction remains the boundary for provider-collected payments only.
+
 **Exit Criteria**
 
 - Payment integration is behind the documented provider abstraction.
@@ -286,6 +292,9 @@ retry, and reconciliation.
 - Webhook replay creates no duplicate effects.
 - Amount/currency/transaction identity are reconciled before finalization.
 - Payment retries do not duplicate completed effects.
+- COD is represented as a merchant-collected payment method distinct from
+  provider-collected payment; COD does not trigger a provider settlement or
+  imply Oyen received funds.
 - Applicable security/integration tests and Definition of Done pass.
 
 ---
@@ -379,6 +388,25 @@ idempotency.
 Commission, immutable ledger, merchant balances, settlements, bank accounts,
 withdrawals, concurrency protection, and financial auditability.
 
+Includes the COD commission debt recovery model: for COD orders the customer
+pays the merchant directly and Oyen does not receive the funds, but the
+applicable 4% marketplace commission is still owed by the merchant and is
+accrued as an outstanding merchant commission payable in the merchant financial
+ledger. Future eligible Oyen-controlled payment-gateway settlements
+automatically recover outstanding COD commission debt as a separately traceable
+financial event, subject to partial recovery, no-negative-payout, and
+debt-carry-forward rules defined in `BUSINESS_RULES.md`.
+
+**Dependency / Boundary**
+
+This model depends on the merchant financial ledger, merchant balance, and
+settlement foundations established in this phase, and on the COD payment-method
+representation from Phase 9. Xendit marketplace settlement is the production
+mechanism through which Oyen-controlled settlement deductions (including COD
+debt recovery) are applied; provider-specific settlement mechanics remain behind
+the payment/provider abstraction (see `INTEGRATION_SPEC.md`). This is planned
+implementation and is not yet built.
+
 **Exit Criteria**
 
 - Commission calculations follow canonical rules.
@@ -386,6 +414,15 @@ withdrawals, concurrency protection, and financial auditability.
 - Merchant balances derive from canonical financial records.
 - Settlement cannot duplicate eligible earnings.
 - Withdrawal cannot exceed available balance.
+- COD orders accrue outstanding merchant commission payable in the ledger
+  without treating COD collection as an Oyen cash receipt.
+- Eligible payment-gateway settlements recover outstanding COD commission debt
+  as a separately auditable ledger event distinct from current-transaction
+  commission.
+- Debt recovery never exceeds the amount available for settlement and never
+  produces a negative merchant payout; unrecovered debt carries forward.
+- Debt recovery is idempotent; duplicate payment/settlement processing never
+  duplicates commission or recovery.
 - Financial concurrency/audit tests pass.
 - Definition of Done passes.
 
@@ -623,6 +660,23 @@ rollback, and production-readiness verification.
 12. Pet hotel: concurrent booking cannot exceed room capacity.
 
 ---
+
+## Cross-Cutting — Business Configuration Foundation
+
+A centralized Business Configuration foundation exists now (see
+`BACKEND_ARCHITECTURE.md` → Business Configuration and
+`PROJECT_PROGRESS.md`). It provides admin management of commission rules,
+payment-method availability, and system business settings, plus a canonical
+typed `BusinessConfigurationService` and a deterministic `CommissionRuleResolver`.
+
+Every later phase that needs a configurable business value (checkout expiration,
+slot-hold duration, minimum withdrawal, commission, payment-method availability,
+review window, etc.) MUST consume it through this foundation rather than
+hardcoding constants. Commission calculation in the Finance/Payment phases MUST
+snapshot the resolved rate onto the transaction so historical records are never
+retroactively changed. Consumption of these values by business flows is
+intentionally deferred to the phases that own those flows and is NOT implemented
+by the foundation.
 
 ## Roadmap Execution Rule
 

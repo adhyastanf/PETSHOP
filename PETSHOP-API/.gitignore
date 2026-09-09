@@ -7,8 +7,8 @@ target/
 .vscode/
 *.iml
 
-# Storage uploads
-storage/
+# Storage uploads (runtime upload directory at the module root only)
+/storage/
 
 # Local config
 application-local.yml

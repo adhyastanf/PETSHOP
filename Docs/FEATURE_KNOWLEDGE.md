@@ -474,6 +474,50 @@ Multiple payment attempts - Status history - Idempotent callbacks
 - Xendit webhook is source of truth for payment status.
 - Merchant commission (4%) deducted at settlement, not charged to customer.
 
+### Payment Method Model: Provider-Collected vs Merchant-Collected (COD)
+
+Oyen distinguishes two payment-collection models. The distinction matters because
+it determines whether Oyen ever controls the funds.
+
+- **Provider-collected (payment gateway, e.g. Xendit):** the customer pays through
+  the payment provider, Oyen controls the collected funds, and Oyen settles the
+  merchant's net amount through the settlement lifecycle.
+- **Merchant-collected (COD, cash on delivery):** the customer pays the merchant
+  directly. Oyen does not receive the COD funds. A COD order is therefore NOT
+  "payment successful → Oyen received funds". Oyen's applicable 4% marketplace
+  commission is still owed by the merchant and is accrued as an outstanding
+  merchant commission payable.
+
+COD conceptual lifecycle:
+
+``` text
+Customer pays merchant directly
+→ merchant confirms/fulfills COD
+→ order reaches applicable completion state
+→ 4% commission calculated (product/service subtotal only)
+→ commission payable accrued in merchant financial ledger
+→ merchant outstanding commission balance increases
+```
+
+Payment-gateway conceptual lifecycle:
+
+``` text
+Customer pays through payment provider
+→ payment confirmed (provider webhook)
+→ order follows normal lifecycle
+→ settlement eligibility determined (order completion, not merely payment success)
+→ current commission calculated
+→ outstanding COD commission debt recovered where applicable
+→ final merchant settlement calculated
+→ settlement/payout processed
+```
+
+*(COD payment flow, COD commission payable, and automatic recovery are planned
+future implementation — see Phase 9 and Phase 13 in the roadmap. The merchant
+commission concept, merchant wallet/balance, merchant financial ledger,
+settlement concept, and payment-provider abstraction are the current foundation
+on which they build.)*
+
 ## 36a. Pet Transport
 
 Pet transport is a separate domain from product delivery.
@@ -516,6 +560,13 @@ Trigger events/notifications.
 Commission may vary by transaction type, merchant, category,
 fixed/percentage calculation, effective dates, and priority.
 
+Oyen's baseline marketplace commission is 4% of the product/service subtotal,
+excluding shipping fee and payment/application fee. Commission is owed on both
+provider-collected (payment gateway) and merchant-collected (COD) transactions.
+For COD, because Oyen does not receive the funds, the commission becomes an
+outstanding merchant commission payable rather than a deduction from
+Oyen-held funds. *(COD commission accrual is planned — see Phase 13.)*
+
 ## 41. Merchant Wallet
 
 -   Pending balance
@@ -523,10 +574,24 @@ fixed/percentage calculation, effective dates, and priority.
 -   Funds move according to fulfillment/settlement rules
 -   Balance changes must correspond to ledger logic
 
+Outstanding merchant commission (including accrued COD commission payable) is an
+obligation the merchant owes Oyen. It is represented through the canonical
+financial ledger and merchant balance model — not through a separate parallel
+wallet or debt system. *(COD commission payable representation is planned — see
+Phase 13 and `DATABASE_KNOWLEDGE.md`.)*
+
 ## 42. Merchant Financial Ledger
 
 Immutable entries for sales, commission, refunds, settlements,
 withdrawals, and authorized adjustments.
+
+The ledger is the authoritative record of a merchant's financial obligations and
+of any recovery of those obligations. COD commission accrual and the later
+recovery of outstanding COD commission debt from an eligible settlement are
+recorded as separate, independently traceable ledger events so that
+current-transaction commission and historical debt recovery remain separately
+auditable. *(COD commission accrual and recovery ledger events are planned — see
+Phase 13.)*
 
 ## 43. Merchant Bank Accounts
 
@@ -552,6 +617,51 @@ withdrawals, and authorized adjustments.
 
 Settlement groups merchant earnings and calculates gross value minus
 commission/refunds/adjustments to obtain net merchant settlement.
+
+Settlement remains subject to the existing Oyen settlement lifecycle and is
+driven by order completion, not merely by payment success.
+
+### COD Commission Debt Recovery at Settlement
+
+When a merchant has an eligible Oyen-controlled payment-gateway settlement, that
+settlement can automatically recover previously accrued outstanding COD
+commission debt. The conceptual, deterministic calculation flow is:
+
+1.  Determine eligible gross merchant amount.
+2.  Calculate current-transaction commission (4% of subtotal; shipping and
+    payment fees excluded).
+3.  Apply existing documented deductions/refunds/adjustments per current rules.
+4.  Determine recoverable outstanding merchant commission debt.
+5.  Recover debt only up to the remaining settlement amount.
+6.  Calculate final merchant net settlement.
+7.  Record immutable ledger entries (current commission and debt recovery as
+    separate, independently auditable events).
+8.  Create/update settlement records.
+9.  Process the merchant payout/settlement for the final net amount.
+
+Worked example (current commission + prior COD debt):
+
+``` text
+Gross eligible merchant settlement   Rp200.000
+Current-transaction commission (4%)  Rp8.000
+Previous COD commission debt         Rp4.000
+Final merchant settlement            Rp188.000
+```
+
+Partial recovery example (available amount less than outstanding debt):
+
+``` text
+Outstanding COD commission debt              Rp50.000
+Eligible settlement after current deductions Rp30.000
+Recovered this settlement                    Rp30.000
+Remaining outstanding debt (carries forward) Rp20.000
+Merchant payout                              never negative
+```
+
+Recovery never exceeds the amount available for settlement, never produces a
+negative merchant payout, and is idempotent so duplicate payment/settlement
+processing never double-recovers. *(This recovery model is planned future
+implementation — see Phase 13.)*
 
 ## 46. Product Reviews
 
@@ -702,6 +812,18 @@ before/after values, IP, user agent, timestamp.
 Central configuration may contain checkout expiration, slot-hold
 duration, minimum withdrawal, default commission, review window, and
 similar values.
+
+Business configuration is admin-manageable (ADMIN/SUPER_ADMIN) through the Admin
+UI without code changes or redeploys, backed by the `system_configurations`,
+`commission_rules`, and `payment_methods` tables. `BusinessConfigurationService`
+is the canonical typed access point; commission rules are resolved
+deterministically (MERCHANT > CATEGORY > GLOBAL, then priority, then effective
+date) and are effective-dated so historical transactions keep their original
+rate once consuming phases snapshot it. Payment-method availability is
+backend-authoritative and served to clients, not hardcoded. All changes are
+validated, audited, and cache-invalidated. Technical/security settings (JWT,
+hashing, CORS, datasource, cryptography, idempotency, ledger immutability,
+transaction boundaries) are NOT admin-editable business configuration.
 
 ## 68. External Webhooks
 

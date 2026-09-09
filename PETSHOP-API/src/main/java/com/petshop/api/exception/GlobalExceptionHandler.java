@@ -10,11 +10,15 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.petshop.api.utils.ApiResponse;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+        private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
         @ExceptionHandler(ResourceNotFoundExeption.class)
         public ResponseEntity<ApiResponse<Void>> handleNotFound(
@@ -81,12 +85,15 @@ public class GlobalExceptionHandler {
         public ResponseEntity<ApiResponse<Void>> handleException(
                         Exception ex) {
 
+                // Log the full detail server-side; never leak internal messages/stack to the client.
+                log.error("Unhandled exception", ex);
+
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                                 .body(
                                                 ApiResponse.<Void>builder()
                                                                 .timestamp(Instant.now())
                                                                 .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
-                                                                .message(ex.getMessage())
+                                                                .message("An unexpected error occurred")
                                                                 .build());
         }
 

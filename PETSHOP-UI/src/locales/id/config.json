@@ -1,0 +1,71 @@
+{
+  "nav": {
+    "finance": "Keuangan",
+    "commissionRules": "Aturan Komisi",
+    "paymentMethods": "Metode Pembayaran",
+    "systemConfig": "Pengaturan Bisnis"
+  },
+  "common": {
+    "active": "Aktif",
+    "inactive": "Nonaktif",
+    "activate": "Aktifkan",
+    "deactivate": "Nonaktifkan",
+    "save": "Simpan",
+    "create": "Buat",
+    "cancel": "Batal",
+    "loading": "Memuat...",
+    "noData": "Tidak ada data",
+    "updated": "Berhasil diperbarui",
+    "created": "Berhasil dibuat"
+  },
+  "systemConfig": {
+    "title": "Pengaturan Bisnis",
+    "description": "Konfigurasi bisnis tingkat platform. Backend adalah otoritas; nilai ini digunakan oleh logika bisnis.",
+    "key": "Pengaturan",
+    "value": "Nilai",
+    "type": "Tipe",
+    "range": "Rentang yang diizinkan",
+    "updatedAt": "Terakhir diperbarui",
+    "editValue": "Nilai",
+    "updateSuccess": "Konfigurasi diperbarui",
+    "keys": {
+      "checkout_expiration_minutes": "Kedaluwarsa checkout belum dibayar (menit)",
+      "slot_hold_duration_minutes": "Durasi penahanan slot layanan (menit)",
+      "minimum_withdrawal_amount": "Jumlah penarikan minimum (IDR)",
+      "default_commission_percentage": "Persentase komisi default (cadangan)",
+      "review_window_days": "Periode ulasan (hari)"
+    }
+  },
+  "commission": {
+    "title": "Aturan Komisi",
+    "description": "Aturan komisi marketplace. Aturan yang berlaku ditentukan berdasarkan cakupan (merchant di atas kategori di atas global), prioritas, dan tanggal berlaku.",
+    "transactionType": "Tipe transaksi",
+    "scope": "Cakupan",
+    "commissionType": "Tipe",
+    "value": "Nilai",
+    "priority": "Prioritas",
+    "validFrom": "Berlaku dari",
+    "validUntil": "Berlaku sampai",
+    "status": "Status",
+    "actions": "Aksi",
+    "openEnded": "Terbuka",
+    "create": "Buat aturan",
+    "createTitle": "Aturan komisi baru",
+    "merchantId": "ID Merchant (opsional)",
+    "categoryId": "ID Kategori (opsional)",
+    "targetHint": "Kosongkan merchant dan kategori untuk aturan global. Isi salah satu saja.",
+    "createSuccess": "Aturan komisi dibuat",
+    "statusChanged": "Status aturan komisi diperbarui",
+    "historicalNote": "Perubahan aturan hanya memengaruhi transaksi berikutnya. Komisi historis disimpan per transaksi dan tidak pernah dihitung ulang."
+  },
+  "payment": {
+    "title": "Metode Pembayaran",
+    "description": "Aktifkan atau nonaktifkan metode pembayaran pelanggan. Ketersediaan disediakan oleh backend; aplikasi tidak pernah menetapkannya secara statis.",
+    "provider": "Penyedia",
+    "method": "Metode",
+    "name": "Nama",
+    "type": "Tipe",
+    "status": "Status",
+    "statusChanged": "Metode pembayaran diperbarui"
+  }
+}

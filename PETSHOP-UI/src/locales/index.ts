@@ -10,6 +10,7 @@ import enPet from './en/pet.json';
 import enAddress from './en/address.json';
 import enError from './en/error.json';
 import enMerchant from './en/merchant.json';
+import enConfig from './en/config.json';
 
 import idCommon from './id/common.json';
 import idAuth from './id/auth.json';
@@ -18,6 +19,7 @@ import idPet from './id/pet.json';
 import idAddress from './id/address.json';
 import idError from './id/error.json';
 import idMerchant from './id/merchant.json';
+import idConfig from './id/config.json';
 
 export type Locale = 'en' | 'id';
 
@@ -40,6 +42,7 @@ const messages: Record<Locale, Messages> = {
     address: enAddress,
     error: enError,
     merchant: enMerchant,
+    config: enConfig,
   },
   id: {
     common: idCommon,
@@ -49,6 +52,7 @@ const messages: Record<Locale, Messages> = {
     address: idAddress,
     error: idError,
     merchant: idMerchant,
+    config: idConfig,
   },
 };
 

@@ -440,6 +440,15 @@ Business state transitions must be validated server-side.
 
 External providers must be accessed through integration abstractions.
 
+Configurable business values (commission, checkout expiration, slot-hold
+duration, minimum withdrawal, review window, payment-method availability, etc.)
+must be read through `BusinessConfigurationService` / the `businessconfig`
+module — never hardcoded. Do not make technical/security invariants
+admin-editable. When consuming commission in future finance/order phases,
+snapshot the resolved rate onto the transaction so historical records are never
+retroactively changed. Xendit is the canonical payment provider. See
+`architecture/BACKEND_ARCHITECTURE.md` → Business Configuration.
+
 ---
 
 ## 14. Frontend Rules

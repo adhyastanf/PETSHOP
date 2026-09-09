@@ -18,12 +18,12 @@ import java.util.Optional;
 @Service
 public class LocalStorageService implements StorageService {
 
-    private static final Path BASE_DIR = Path.of("./storage");
+    private static final Path BASE_DIR = Path.of("./storage").toAbsolutePath().normalize();
 
     @Override
     public String store(String path, InputStream content, String contentType, long contentLength) {
+        Path target = resolveWithinBase(path);
         try {
-            Path target = BASE_DIR.resolve(path).normalize();
             Files.createDirectories(target.getParent());
             Files.copy(content, target, StandardCopyOption.REPLACE_EXISTING);
             log.info("Stored file: {} ({}, {} bytes)", path, contentType, contentLength);
@@ -35,8 +35,8 @@ public class LocalStorageService implements StorageService {
 
     @Override
     public Optional<byte[]> retrieve(String path) {
+        Path target = resolveWithinBase(path);
         try {
-            Path target = BASE_DIR.resolve(path).normalize();
             if (Files.exists(target)) {
                 return Optional.of(Files.readAllBytes(target));
             }
@@ -48,8 +48,8 @@ public class LocalStorageService implements StorageService {
 
     @Override
     public void delete(String path) {
+        Path target = resolveWithinBase(path);
         try {
-            Path target = BASE_DIR.resolve(path).normalize();
             Files.deleteIfExists(target);
             log.info("Deleted file: {}", path);
         } catch (IOException e) {
@@ -59,8 +59,23 @@ public class LocalStorageService implements StorageService {
 
     @Override
     public String getPublicUrl(String path) {
-        Path target = BASE_DIR.resolve(path).normalize().toAbsolutePath();
-        return target.toUri().toString();
+        return resolveWithinBase(path).toUri().toString();
+    }
+
+    /**
+     * Resolves a logical path against the storage base directory and guarantees
+     * the result stays inside it. Prevents path-traversal (e.g. {@code ../})
+     * and absolute-path escapes regardless of the caller-supplied value.
+     */
+    private Path resolveWithinBase(String path) {
+        if (path == null || path.isBlank()) {
+            throw new StorageException("Storage path must not be blank", null);
+        }
+        Path resolved = BASE_DIR.resolve(path).normalize().toAbsolutePath();
+        if (!resolved.startsWith(BASE_DIR)) {
+            throw new StorageException("Illegal storage path (outside storage root): " + path, null);
+        }
+        return resolved;
     }
 
     /**

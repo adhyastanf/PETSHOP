@@ -46,7 +46,7 @@
 │           │          │  • LocalStorageService              │ │
 │           │          │  • MockPaymentProvider              │ │
 │           │          │  • ConsoleEmailService              │ │
-│           │          │  • (future: S3, Midtrans, SES...)   │ │
+│           │          │  • (future: S3, Xendit, SES...)     │ │
 │           │          └────────────────────────────────────┘ │
 └───────────┼──────────────────────────────────────────────────┘
             │ JDBC/SSL
@@ -122,6 +122,18 @@ Modules communicate through explicit services/contracts, not arbitrary cross-mod
 - Booking represents service fulfillment.
 - Payment represents payment attempts for checkout.
 - Ledger represents immutable merchant financial movements.
+
+### Financial Obligations & Settlement Deductions
+
+Financial obligations and settlement deductions belong to the canonical financial
+domain and its ledger. Outstanding merchant commission — including COD (cash on
+delivery) commission that is owed even though Oyen never receives the COD funds —
+is an obligation tracked through the ledger, merchant balance, and settlement
+records. COD commission debt recovery must not introduce a separate parallel
+wallet or debt system; it reuses the canonical financial model. Provider-specific
+settlement mechanics (e.g. Xendit marketplace settlement) remain behind the
+payment/provider abstraction and must not leak into core financial business
+rules. *(COD debt recovery is planned — see Phase 13 in the roadmap.)*
 
 ## Transaction Boundaries
 Strong DB transactions are required around:

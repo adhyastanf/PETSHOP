@@ -18,8 +18,9 @@ PETSHOP-API/.jqwik-database
 .env.*
 !.env.example
 
-# Local storage
-storage/
+# Local storage (runtime upload directory only; not source paths named "storage")
+/storage/
+PETSHOP-API/storage/
 
 # Application local overrides
 **/application-local.yml

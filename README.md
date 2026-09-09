@@ -37,7 +37,7 @@ Spring Boot (Koyeb)
         ├── ImageService        (passthrough → imgproxy)
         ├── EmailService        (console → Resend/SES)
         ├── NotificationService (log → FCM)
-        ├── PaymentProvider     (mock → Midtrans/Xendit)
+        ├── PaymentProvider     (mock → Xendit)
         └── ShippingProvider    (mock → Biteship)
 
 Framework Infrastructure:

@@ -92,6 +92,29 @@ Xendit REST API
 - Support expiration, failure, and refund.
 - Never store Xendit API keys in frontend or logs.
 
+### Marketplace Settlement & COD Commission Debt Recovery
+
+*(Planned — see Phase 9 and Phase 13 in the roadmap. Documented behavior, not
+yet implemented.)*
+
+- Xendit is the canonical production payment provider and the production
+  mechanism for Oyen-controlled marketplace settlement, including any
+  settlement-side deductions.
+- Oyen must be able to account for marketplace settlement deductions when
+  computing the merchant's net settlement (current commission, refunds,
+  adjustments, and recovery of outstanding COD commission debt).
+- COD (cash on delivery) is merchant-collected: the customer pays the merchant
+  directly and these funds are never provider-collected. A COD order therefore
+  does not represent Oyen-received funds and does not trigger a provider
+  settlement.
+- Historical outstanding COD commission debt can be recovered from eligible
+  future Oyen-controlled settlements, as a financial event separate from
+  current-transaction commission, subject to no-negative-payout and
+  carry-forward rules in `BUSINESS_RULES.md`.
+- Provider-specific settlement mechanics (how Xendit applies marketplace
+  splits/deductions) remain behind the payment/provider abstraction; core
+  financial business rules must not depend on Xendit-specific behavior.
+
 ---
 
 ## Shipping Provider — Biteship

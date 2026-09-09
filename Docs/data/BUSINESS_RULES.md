@@ -94,6 +94,20 @@ Rule IDs are stable references for code, tests and tickets.
 - **BR-FIN-006:** Settlement items cannot be settled twice.
 - **BR-FIN-007:** Monetary calculations use decimal arithmetic, never floating point.
 
+## Business Configuration
+- **BR-CFG-001:** Admin-configurable business rules/parameters are database-backed and editable by internal admins (ADMIN/SUPER_ADMIN) without code changes or redeploys.
+- **BR-CFG-002:** `BusinessConfigurationService` is the canonical typed access point for system-level business configuration; business logic must not hardcode configurable values or query the configuration store directly everywhere.
+- **BR-CFG-003:** Only whitelisted business keys are editable; technical/security settings (JWT, password hashing, CORS, datasource, cryptography, idempotency, ledger immutability, transaction boundaries, state-machine integrity) are never admin-editable business configuration.
+- **BR-CFG-004:** All configuration changes are validated server-side (type, range, required fields, effective-date ordering, no ambiguous overlapping rules) and rejected if invalid; frontend validation is UX-only.
+- **BR-CFG-005:** Monetary/financial configuration uses decimal arithmetic, never floating point.
+- **BR-CFG-006:** Configuration changes are recorded in the audit log (actor, action, entity, old/new value, timestamp); secrets/tokens are never audited.
+- **BR-CFG-007:** Configuration reads may be cached; administrative changes must invalidate the relevant cache so subsequent business operations observe the new value.
+- **BR-CFG-008:** Commission is resolved deterministically by scope specificity (MERCHANT > CATEGORY > GLOBAL), then priority, then effective date; overlapping active rules with the same scope/priority/effective window are rejected.
+- **BR-CFG-009:** Commission percentage cannot be negative or exceed 100; fixed commission cannot be negative.
+- **BR-CFG-010:** The commission rate/rule applicable to a transaction MUST be snapshotted onto the transaction when future finance/order phases consume it. Changing a rule never retroactively alters historical orders, bookings, commission, ledger entries, COD commission accrual, or settlements.
+- **BR-CFG-011:** Payment-method availability is backend-authoritative configuration; the frontend must never hardcode payment-method availability.
+- **BR-CFG-012:** Xendit is the canonical production payment provider; provider configuration reflects Xendit, not Midtrans.
+
 ## Reviews
 - **BR-REV-001:** Product reviews require an eligible completed product transaction.
 - **BR-REV-002:** Service reviews require an eligible completed booking.
@@ -119,6 +133,42 @@ Rule IDs are stable references for code, tests and tickets.
 - **BR-PAY-013:** Payment webhook from Xendit is source of truth for payment status.
 - **BR-PAY-014:** Payment processing must be idempotent (no duplicate processing).
 - **BR-PAY-015:** Merchant is not entitled to settlement merely because payment succeeded — settlement follows order completion lifecycle.
+- **BR-PAY-016:** A payment method is either provider-collected (payment gateway, e.g. Xendit) or merchant-collected (COD). COD funds are collected by the merchant directly and are never an Oyen cash receipt.
+
+### COD Commission Debt Recovery
+
+These rules are deterministic and implementation-independent. They describe the
+canonical COD commission accrual and recovery model. *(Planned implementation —
+see Phase 13 in the roadmap; not yet built.)*
+
+- **BR-COD-001:** COD collection is not an Oyen cash receipt; Oyen does not receive COD funds.
+- **BR-COD-002:** Oyen's applicable marketplace commission (4% of product/service subtotal; shipping and payment fees excluded) is still owed by the merchant on COD orders.
+- **BR-COD-003:** COD commission is recorded as an accrued outstanding merchant commission payable, which increases the merchant's outstanding commission balance.
+- **BR-COD-004:** The merchant financial ledger is the authoritative record of the outstanding commission obligation and of its recovery.
+- **BR-COD-005:** A future eligible Oyen-controlled payment-gateway settlement can automatically recover outstanding COD commission debt.
+- **BR-COD-006:** Debt recovery in a settlement cannot exceed the amount available for settlement after current deductions.
+- **BR-COD-007:** Debt recovery cannot produce a negative merchant payout.
+- **BR-COD-008:** When available settlement is less than outstanding debt, only the available amount is recovered and the remaining debt carries forward to a future eligible settlement.
+- **BR-COD-009:** Current-transaction commission and recovery of previous COD commission debt are separate financial events and must remain separately traceable/auditable in the ledger.
+- **BR-COD-010:** COD commission accrual and debt recovery are immutable and idempotent; duplicate payment webhooks or settlement processing must never duplicate commission or debt recovery.
+- **BR-COD-011:** COD settlement recovery remains subject to the existing settlement lifecycle and is not triggered merely by payment success.
+- **BR-COD-012:** Backend is authoritative for all COD commission and debt-recovery calculations; the frontend must never calculate or determine commission or debt-recovery amounts.
+
+### Settlement Calculation Order
+
+The canonical deterministic settlement calculation is:
+
+```text
+1. Determine eligible gross merchant amount.
+2. Calculate current-transaction commission (4% of subtotal; shipping + payment fees excluded).
+3. Apply existing documented deductions/refunds/adjustments per current rules.
+4. Determine recoverable outstanding merchant commission debt.
+5. Recover debt up to the remaining settlement amount (never below zero payout).
+6. Calculate final merchant net settlement.
+7. Record immutable ledger entries (current commission and debt recovery separately).
+8. Create/update settlement records.
+9. Process merchant payout/settlement for the final net amount.
+```
 
 ### Checkout Calculation
 

@@ -619,6 +619,54 @@ order_id/booking_id.
 `booking_id UUID FK bookings nullable`, `gross_amount`,
 `commission_amount`, `net_amount` NUMERIC(19,2).
 
+### COD Commission Debt Recovery — Conceptual Data Requirements
+
+*(Planned — see Phase 13 in the roadmap. The behavior is documented; the schema
+below is not yet implemented. Do not assume these fields already exist.)*
+
+The COD commission accrual and recovery model is expressed through the existing
+finance tables wherever possible, without introducing a separate parallel
+wallet/debt subsystem:
+
+- **payment_methods / payments:** COD is represented as a merchant-collected
+  payment method distinct from provider-collected gateway methods. A COD payment
+  record represents merchant-collected funds and is never treated as an
+  Oyen-received amount. (Distinguishing COD may require a method/collection
+  classification — see future consideration below.)
+- **commission_rules:** the same 4% rule (subtotal only) applies to COD orders;
+  no new rule entity is required for the baseline rate.
+- **merchant_ledger_entries:** the authoritative record. COD commission accrual
+  and later debt recovery are posted as distinct immutable entries so current
+  commission and historical recovery remain separately auditable. This likely
+  requires additional `entry_type` values (e.g. a COD commission-payable accrual
+  type and a COD debt-recovery type) rather than new tables.
+- **merchant_wallets / balances:** outstanding commission payable is a merchant
+  obligation derived from ledger entries; it must reconcile with ledger logic and
+  must not be an independent mutable counter that bypasses the ledger.
+- **settlements / settlement_items:** an eligible settlement records the current
+  commission and any recovered COD debt as separate amounts, ensuring the final
+  net amount is never negative and that unrecovered debt carries forward.
+- **orders / bookings:** provide the transaction context (COD vs gateway,
+  subtotal snapshot) used to compute the accrued commission and to trace recovery
+  back to the originating COD transaction.
+
+Future implementation considerations (likely new fields/values, to be defined by
+a Phase 13 migration — documented here as future work, not as existing schema):
+
+- A COD/collection classification on `payment_methods` and/or `payments`
+  (e.g. a `collection_type` such as PROVIDER_COLLECTED / MERCHANT_COLLECTED).
+- Additional `merchant_ledger_entries.entry_type` values for COD commission
+  payable accrual and COD debt recovery.
+- A means to express current outstanding commission payable and per-settlement
+  recovered amount (derivable from ledger entries, or a dedicated
+  `settlement_items` amount/`entry_type`), preserving separate auditability of
+  current commission versus historical debt recovery.
+
+No new tables are assumed necessary at this time; the requirement is expressed
+through existing commission, ledger, balance, settlement, payment, and order
+concepts. Any concrete columns/enums are introduced only by a future Flyway
+migration.
+
 ## Reviews & Wishlist
 
 ### reviews

@@ -60,6 +60,32 @@ All configuration is environment-variable driven. No secrets in Git. Business mo
 28. Pet transport is NOT product delivery — separate domain/flow.
 29. Pet transport options: customer brings pet OR merchant-owned pet transport.
 30. Merchant settlement follows order lifecycle, not just payment success.
+31. COD is a merchant-collected payment method: the customer pays the merchant directly and Oyen does not receive COD funds.
+32. Oyen's 4% marketplace commission is still owed by the merchant on COD orders and is accrued as an outstanding merchant commission payable in the merchant financial ledger.
+33. Outstanding COD commission debt is automatically recovered from future eligible Oyen-controlled payment-gateway settlements, never exceeding the available settlement amount, never producing a negative payout, with unrecovered debt carrying forward; current commission and historical debt recovery remain separately auditable. (COD flow and recovery are planned — Phase 13.)
+
+## Business Configuration
+Admin-configurable business rules and parameters are stored in the database and
+managed by internal admins (ADMIN/SUPER_ADMIN) through the Admin UI — no code
+change or redeploy is required to adjust them.
+
+- `BusinessConfigurationService` is the canonical, typed, cached access point for
+  system-level business configuration (backed by `system_configurations`).
+  Business services must read configurable values through it, never as hardcoded
+  constants and never by querying the config table directly everywhere.
+- Commission is configured through `commission_rules` and resolved deterministically
+  by `CommissionRuleResolver` (scope precedence MERCHANT > CATEGORY > GLOBAL, then
+  priority, then effective date). The resolved rate MUST be snapshotted onto the
+  transaction when future finance/order phases consume it; changing a rule never
+  retroactively alters historical commission, ledger, COD accrual, or settlements.
+- Payment method availability is configured through `payment_methods` and served by
+  the backend; the frontend must not hardcode payment-method availability.
+- Business configuration is admin-editable. Technical/security configuration (JWT,
+  password hashing, CORS, datasource, cryptography, idempotency, ledger immutability,
+  transaction boundaries, state-machine integrity) is NOT admin-editable and lives in
+  `application.yml` / typed `@ConfigurationProperties`.
+- All business-configuration changes are validated server-side, audited in
+  `audit_logs`, and cache-invalidated on update.
 
 ## Architecture Direction
 Start as a modular monolith. Do not introduce microservices without a demonstrated scaling/organizational reason. Keep domain boundaries explicit so modules can later be extracted.
@@ -82,6 +108,7 @@ Flag unresolved contradictions rather than silently inventing behavior.
 - `FEATURE_KNOWLEDGE.md` — supported product features and user capabilities.
 - `DATABASE_KNOWLEDGE.md` — tables, columns, PK/FK and persistence model.
 - `ARCHITECTURE.md` — system boundaries and runtime architecture.
+- `ARCHITECTURE_DECISIONS.md` — canonical hardening decisions and future-phase requirements (multi-merchant orders, ledger invariants, commission snapshot, COD, money/rounding, timezone, events, idempotency, retention).
 - `BUSINESS_RULES.md` — invariants that implementation must preserve.
 - `STATE_MACHINES.md` — legal lifecycle transitions.
 - `BACKEND_ARCHITECTURE.md` — Spring Boot implementation conventions.

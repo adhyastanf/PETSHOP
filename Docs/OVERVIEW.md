@@ -108,6 +108,9 @@ Pet Profile → Purchase/Booking → Care History → Reminder → Rebook → Re
 | Product delivery | Instant via Biteship (GoSend, GrabExpress, Lalamove) |
 | Pet transport | Customer brings OR merchant-owned transport |
 | Merchant settlement | After order completion (not just payment success) |
+| COD (cash on delivery) | Merchant-collected; Oyen does not receive COD funds |
+| COD commission | 4% still owed by merchant, accrued as outstanding commission payable |
+| COD debt recovery | Recovered from future eligible payment-gateway settlements (planned, Phase 13) |
 
 ---
 
@@ -153,6 +156,7 @@ Pet Profile → Purchase/Booking → Care History → Reminder → Rebook → Re
 | Pet Hotel (boarding) | 11 |
 | Cancellation & refunds | 12 |
 | Commission, ledger, settlement, withdrawal | 13 |
+| COD commission debt recovery from settlements | 13 |
 | Reviews, favorites, chat, notifications | 14 |
 | Vouchers, campaigns, banners | 15 |
 | Admin & disputes | 16 |

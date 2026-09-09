@@ -57,6 +57,9 @@ Quick status overview. Agents should read this FIRST to avoid re-inspecting comp
 | Kiro Multi-Agent Setup | ✅ Done | 6 agents: orchestrator, database, backend, frontend, tester, reviewer |
 | Payment Architecture | ✅ Documented | Xendit, 4% commission, QRIS fee Rp0 |
 | Shipping Architecture | ✅ Documented | Biteship instant delivery, pet transport separate |
+| COD Commission Debt Recovery | 📝 Documented (planned) | Phase 9/13. COD accrues outstanding commission; recovered from future gateway settlements. Not implemented. |
+| Business Configuration Foundation | ✅ Done | `BusinessConfigurationService` (typed, cached, audited) + admin management of commission rules, payment-method availability, and system business settings. Deterministic `CommissionRuleResolver`. MIDTRANS→XENDIT alignment + COD method (V4). Admin UI at `(admin)/admin/{commission-rules,payment-methods,settings}`. Consumption by future phases deferred. |
+| Architecture Hardening Audit | ✅ Done | 15-area audit. FIX_NOW: path-traversal containment in `LocalStorageService` + 500 error info-disclosure in `GlobalExceptionHandler`. Canonical future-phase decisions recorded in `architecture/ARCHITECTURE_DECISIONS.md`. No future domains implemented. |
 
 ---
 
@@ -82,7 +85,8 @@ Quick status overview. Agents should read this FIRST to avoid re-inspecting comp
 
 | Item | Severity | Phase |
 |------|----------|-------|
-| Two error contracts coexist (ApiResponse + ErrorResponse) | Low | Consolidate during Phase 3 |
+| Two error contracts coexist (ApiResponse + ErrorResponse) | Low | Consolidate to one canonical error contract (see ARCHITECTURE_DECISIONS.md) |
+| `StaffServiceImpl.joinedAt` uses `LocalDate.now()` (JVM default zone) | Low | Align to `Asia/Jakarta` when staff area is next touched (timezone policy) |
 | Some empty packages exist (dto/, repository/, service/) | Low | Clean up organically |
 | Frontend lint has 3 pre-existing errors (chart/carousel/use-mobile) | Low | Fix when touching those files |
 | .next cache occasionally creates stale type errors | Low | Delete .next when it happens |

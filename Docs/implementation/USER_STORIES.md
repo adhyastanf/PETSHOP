@@ -195,6 +195,24 @@ User stories define observable behavior; detailed rules remain in their canonica
 - **US-FIN-007 Request Withdrawal:** merchant requests within available balance/limits.
 - **US-FIN-008 Process Withdrawal:** authorized payout processing is idempotent.
 - **US-FIN-009 Withdrawal History:** merchant views withdrawals within their scope.
+- **US-FIN-010 COD Commission Accrual:** when a COD order reaches its applicable completion state, backend calculates the 4% commission and accrues it as an outstanding merchant commission payable in the ledger, without recording COD collection as an Oyen cash receipt. *(Planned — Phase 13; depends on ledger/settlement foundations.)*
+- **US-FIN-011 Outstanding Commission Visibility:** merchant (and authorized admin) views current outstanding commission payable derived from canonical financial records. *(Planned — Phase 13.)*
+- **US-FIN-012 Automatic Debt Recovery:** an eligible Oyen-controlled payment-gateway settlement automatically recovers outstanding COD commission debt from the amount available after current deductions, recorded as a financial event separate from current-transaction commission. *(Planned — Phase 13.)*
+- **US-FIN-013 Partial Debt Recovery:** when the amount available for settlement is less than the outstanding COD commission debt, backend recovers only the available amount and reduces the outstanding debt accordingly. *(Planned — Phase 13.)*
+- **US-FIN-014 Debt Carry-Forward:** any COD commission debt not recovered in a settlement remains outstanding and carries forward to a future eligible settlement. *(Planned — Phase 13.)*
+- **US-FIN-015 No Negative Settlement:** debt recovery never exceeds the amount available for settlement and never produces a negative merchant payout. *(Planned — Phase 13.)*
+- **US-FIN-016 Auditable Recovery:** current-transaction commission and historical COD debt recovery are separately traceable in the immutable ledger, and recovery is idempotent so duplicate payment/settlement processing never duplicates commission or recovery. *(Planned — Phase 13.)*
+- **US-FIN-017 Settlement Deduction Visibility:** authorized merchant/admin can see settlement deductions including current commission and any COD debt recovered, plus remaining outstanding balance. *(Planned — Phase 13.)*
+
+## Business Configuration (Admin)
+- **US-CFG-001 View Business Settings:** an internal admin views managed platform business settings from backend-authoritative configuration.
+- **US-CFG-002 Update Business Setting:** an internal admin updates a whitelisted business setting; the value is validated server-side, audited, and cache-invalidated so subsequent operations use the new value.
+- **US-CFG-003 List Commission Rules:** an internal admin views commission rules with scope, value, priority, effective dates, and status.
+- **US-CFG-004 Create Commission Rule:** an internal admin creates a commission rule (transaction type, scope, percentage/fixed value, priority, effective dates); invalid or ambiguously overlapping rules are rejected.
+- **US-CFG-005 Activate/Deactivate Commission Rule:** an internal admin toggles a commission rule's active state.
+- **US-CFG-006 Manage Payment Method Availability:** an internal admin enables/disables payment methods; availability is served by the backend and never hardcoded in the frontend.
+- **US-CFG-007 Configuration Authorization:** only ADMIN/SUPER_ADMIN may modify platform business configuration; merchant and customer roles are rejected server-side.
+- **US-CFG-008 Configuration Audit:** every business-configuration change is recorded in the audit log with actor, action, entity, previous/new value, and timestamp.
 
 ## Reviews
 - **US-REV-001 Product Review:** eligible customer reviews a product from a qualifying transaction.

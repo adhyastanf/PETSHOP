@@ -19,13 +19,16 @@ Verify signatures; retain event IDs; enforce idempotency; reconcile provider amo
 BigDecimal; explicit permissions for refunds/adjustments/settlements/withdrawals; immutable audit/ledger semantics; protect/encrypt sensitive bank values and display masked forms.
 
 ## Files
-Validate type and size; randomized object keys; private storage for business documents/licenses/chat/dispute evidence; authorized signed access; never trust filename as path.
+Validate type and size; randomized object keys; private storage for business documents/licenses/chat/dispute evidence; authorized signed access; never trust filename as path. Storage implementations MUST contain resolved paths within the storage root and reject path traversal (`../`) and absolute-path escapes — enforced in `LocalStorageService` (see `architecture/ARCHITECTURE_DECISIONS.md`).
 
 ## Secrets
 DB credentials, signing keys, provider keys, OAuth secrets, storage credentials and messaging credentials belong in secret/environment management, never Git. `.env.example` contains names only.
 
 ## Logging
 Never log passwords, raw tokens, authorization headers, provider secrets, full bank data or private keys. Use sanitized trace IDs.
+
+## Error Responses
+Client error responses must not leak internal details (raw exception messages, stack traces, SQL). Unexpected errors return a generic message with a stable status; the full detail is logged server-side only. Enforced in `GlobalExceptionHandler` (see `architecture/ARCHITECTURE_DECISIONS.md`).
 
 ## Database
 Application account should not be PostgreSQL superuser. Use least privilege, network controls and protected/encrypted backups.

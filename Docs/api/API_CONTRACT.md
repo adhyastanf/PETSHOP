@@ -411,6 +411,54 @@ Internal (system-triggered, not public API):
 | POST | `/api/v1/merchant/withdrawals` | Request withdrawal | Yes | Merchant Admin+ |
 | GET | `/api/v1/merchant/withdrawals` | List withdrawals | Yes | Merchant Admin+ |
 
+**Planned — COD commission & debt recovery (Phase 13, not yet implemented).**
+The COD commission debt recovery model does not require new dedicated endpoints;
+it is exposed through the existing finance resources following current
+conventions:
+
+- `GET /api/v1/merchant/finance/summary` additionally reflects outstanding
+  merchant commission payable (including accrued COD commission) and remaining
+  outstanding balance.
+- `GET /api/v1/merchant/finance/ledger` includes the separate, independently
+  auditable COD commission accrual and COD debt-recovery entries.
+- `GET /api/v1/merchant/finance/settlements/{id}` reflects current-transaction
+  commission and any COD debt recovered within that settlement, distinct from
+  each other.
+- COD payment state is surfaced through the existing payment/order resources as
+  a merchant-collected payment method, not as an Oyen-received payment.
+
+Admin equivalents remain under `/api/v1/admin/finance/**`. All amounts are
+backend-authoritative; the frontend never calculates commission or debt-recovery
+values. These additions describe planned behavior, not implemented endpoints.
+
+---
+
+### Business Configuration (Admin)
+
+Implemented. Restricted to internal platform roles (`ROLE_ADMIN`,
+`ROLE_SUPER_ADMIN`). Backend is authoritative; all values are validated,
+audited (`audit_logs`), and cache-invalidated on update.
+
+| Method | URL | Purpose | Auth | Permission |
+|--------|-----|---------|------|------------|
+| GET | `/api/v1/admin/config` | List managed business settings | Yes | Admin/Super Admin |
+| GET | `/api/v1/admin/config/{key}` | Get a managed setting | Yes | Admin/Super Admin |
+| PUT | `/api/v1/admin/config/{key}` | Update a managed setting value | Yes | Admin/Super Admin |
+| GET | `/api/v1/admin/commission-rules` | List commission rules | Yes | Admin/Super Admin |
+| GET | `/api/v1/admin/commission-rules/{id}` | Get a commission rule | Yes | Admin/Super Admin |
+| POST | `/api/v1/admin/commission-rules` | Create a commission rule | Yes | Admin/Super Admin |
+| PATCH | `/api/v1/admin/commission-rules/{id}` | Update a commission rule | Yes | Admin/Super Admin |
+| POST | `/api/v1/admin/commission-rules/{id}/activate` | Activate a rule | Yes | Admin/Super Admin |
+| POST | `/api/v1/admin/commission-rules/{id}/deactivate` | Deactivate a rule | Yes | Admin/Super Admin |
+| GET | `/api/v1/admin/payment-methods` | List payment methods | Yes | Admin/Super Admin |
+| PATCH | `/api/v1/admin/payment-methods/{id}` | Enable/disable a payment method | Yes | Admin/Super Admin |
+
+Managed business-configuration keys: `checkout_expiration_minutes`,
+`slot_hold_duration_minutes`, `minimum_withdrawal_amount`,
+`default_commission_percentage` (fallback only; `commission_rules` is
+authoritative), `review_window_days`. Only these whitelisted keys are editable;
+technical/security settings are never exposed here.
+
 ---
 
 ### Reviews
