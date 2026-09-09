@@ -5,6 +5,8 @@ import com.petshop.api.entity.checkout.Checkout;
 import com.petshop.api.entity.merchant.MerchantBranch;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -56,6 +58,7 @@ public class ShippingRateQuote extends BaseEntity {
     @Column(name = "selected", nullable = false)
     private Boolean selected;
 
+    @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "raw_payload", columnDefinition = "jsonb")
     private String rawPayload;
 

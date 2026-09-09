@@ -22,6 +22,8 @@ import {
   useSetCommissionRuleActive,
 } from '@/features/config/query';
 import { ApiError } from '@/lib/api-client';
+import ConfirmDialog from '@/components/feedback/ConfirmDialog';
+import { formatEffectiveDate } from '@/features/config/format';
 import type {
   CommissionRule,
   CommissionTransactionType,
@@ -41,13 +43,8 @@ function StatusBadge({ active }: { active: boolean }) {
   );
 }
 
-function formatDate(value: string | null, openLabel: string): string {
-  if (!value) return openLabel;
-  return new Date(value).toLocaleDateString();
-}
-
 export default function AdminCommissionRulesPage() {
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
   const { data: rules, isLoading, isError, error } = useCommissionRules();
   const createMutation = useCreateCommissionRule();
   const toggleMutation = useSetCommissionRuleActive();
@@ -85,6 +82,11 @@ export default function AdminCommissionRulesPage() {
       toast.error(t('common.networkError'));
       return;
     }
+    // UX-only check; backend validation remains authoritative.
+    if (validFrom && validUntil && new Date(validUntil) <= new Date(validFrom)) {
+      toast.error(t('config.commission.invalidDateRange'));
+      return;
+    }
     createMutation.mutate(
       {
         transactionType,
@@ -113,7 +115,7 @@ export default function AdminCommissionRulesPage() {
     );
   }
 
-  function handleToggle(rule: CommissionRule) {
+  function performToggle(rule: CommissionRule) {
     toggleMutation.mutate(
       { id: rule.id, active: !rule.isActive },
       {
@@ -271,20 +273,37 @@ export default function AdminCommissionRulesPage() {
                         : rule.commissionValue}
                     </TableCell>
                     <TableCell>{rule.priority ?? 0}</TableCell>
-                    <TableCell>{formatDate(rule.validFrom, t('config.commission.openEnded'))}</TableCell>
-                    <TableCell>{formatDate(rule.validUntil, t('config.commission.openEnded'))}</TableCell>
+                    <TableCell>{formatEffectiveDate(rule.validFrom, locale, t('config.commission.unlimited'))}</TableCell>
+                    <TableCell>{formatEffectiveDate(rule.validUntil, locale, t('config.commission.unlimited'))}</TableCell>
                     <TableCell>
                       <StatusBadge active={rule.isActive} />
                     </TableCell>
                     <TableCell className="text-right">
-                      <Button
-                        variant={rule.isActive ? 'outline' : 'default'}
-                        size="sm"
-                        loading={toggleMutation.isPending && toggleMutation.variables?.id === rule.id}
-                        onClick={() => handleToggle(rule)}
-                      >
-                        {rule.isActive ? t('config.common.deactivate') : t('config.common.activate')}
-                      </Button>
+                      {rule.isActive ? (
+                        <ConfirmDialog
+                          title={t('config.commission.deactivateTitle')}
+                          description={t('config.commission.deactivateDescription')}
+                          confirmLabel={t('config.common.deactivate')}
+                          cancelLabel={t('config.common.cancel')}
+                          loading={toggleMutation.isPending && toggleMutation.variables?.id === rule.id}
+                          onConfirm={() => performToggle(rule)}
+                        >
+                          {(open) => (
+                            <Button variant="outline" size="sm" onClick={open}>
+                              {t('config.common.deactivate')}
+                            </Button>
+                          )}
+                        </ConfirmDialog>
+                      ) : (
+                        <Button
+                          variant="default"
+                          size="sm"
+                          loading={toggleMutation.isPending && toggleMutation.variables?.id === rule.id}
+                          onClick={() => performToggle(rule)}
+                        >
+                          {t('config.common.activate')}
+                        </Button>
+                      )}
                     </TableCell>
                   </TableRow>
                 ))}

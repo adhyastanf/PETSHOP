@@ -52,13 +52,15 @@ export default function ConfirmDialog({
           />
 
           {/* Dialog */}
-          <div className='relative z-10 w-full max-w-sm mx-4 rounded-xl bg-card p-6 shadow-xl animate-in fade-in-0 zoom-in-95 duration-200'>
-            <div className='flex flex-col items-center text-center gap-3'>
-              <div className='flex size-12 items-center justify-center rounded-full bg-destructive/10'>
+          {/* whitespace-normal resets any inherited `whitespace-nowrap` from an
+              ancestor (e.g. a table cell) so the text wraps within the card. */}
+          <div className='relative z-10 mx-4 w-full max-w-sm rounded-xl bg-card p-6 shadow-xl whitespace-normal animate-in fade-in-0 zoom-in-95 duration-200'>
+            <div className='flex w-full flex-col items-center gap-3 text-center'>
+              <div className='flex size-12 shrink-0 items-center justify-center rounded-full bg-destructive/10'>
                 <TriangleAlert className='size-6 text-destructive' />
               </div>
-              <h2 className='text-lg font-semibold'>{title}</h2>
-              <p className='text-sm text-muted-foreground'>{description}</p>
+              <h2 className='w-full text-lg font-semibold break-words'>{title}</h2>
+              <p className='w-full text-sm text-muted-foreground break-words'>{description}</p>
             </div>
 
             <div className='mt-6 flex gap-3 justify-end'>

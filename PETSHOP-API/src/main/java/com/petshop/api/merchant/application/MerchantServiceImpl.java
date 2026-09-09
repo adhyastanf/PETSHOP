@@ -146,8 +146,10 @@ public class MerchantServiceImpl implements MerchantService {
         }
 
         String decision = request.decision().toUpperCase();
-        if (!STATUS_APPROVED.equals(decision) && !STATUS_REJECTED.equals(decision)) {
-            throw new IllegalArgumentException("Decision must be APPROVED or REJECTED");
+        if (!STATUS_APPROVED.equals(decision)
+                && !STATUS_REJECTED.equals(decision)
+                && !STATUS_UNDER_REVIEW.equals(decision)) {
+            throw new IllegalArgumentException("Decision must be APPROVED, REJECTED, or UNDER_REVIEW");
         }
 
         User adminUser = userRepository.findById(adminUserId)

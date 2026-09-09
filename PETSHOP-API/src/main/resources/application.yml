@@ -2,11 +2,19 @@ spring:
   application:
     name: petshop-api
   datasource:
-    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/petshop}
+    # stringtype=unspecified lets PostgreSQL implicitly cast String-bound
+    # parameters to special column types (inet, jsonb, etc.) instead of
+    # rejecting varchar->inet / varchar->jsonb binds.
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/petshop?stringtype=unspecified}
     username: ${DATABASE_USERNAME:postgres}
     password: ${DATABASE_PASSWORD:Petshop@2026}
     hikari:
       maximum-pool-size: ${DB_POOL_SIZE:10}
+      # Applies regardless of the DATABASE_URL form: bind Strings as "unspecified"
+      # so PostgreSQL can cast to inet / jsonb columns (audit_logs.ip_address,
+      # system_configurations.config_value, etc.).
+      data-source-properties:
+        stringtype: unspecified
   jpa:
     hibernate:
       ddl-auto: none

@@ -28,12 +28,18 @@
     "updatedAt": "Terakhir diperbarui",
     "editValue": "Nilai",
     "updateSuccess": "Konfigurasi diperbarui",
+    "saveTitle": "Perbarui pengaturan ini?",
+    "saveDescription": "\"{label}\" akan diubah menjadi {value}. Perubahan ini berlaku untuk operasi berikutnya di seluruh platform.",
     "keys": {
-      "checkout_expiration_minutes": "Kedaluwarsa checkout belum dibayar (menit)",
+      "checkout_expiration_minutes": "Batas waktu pembayaran checkout (menit)",
       "slot_hold_duration_minutes": "Durasi penahanan slot layanan (menit)",
       "minimum_withdrawal_amount": "Jumlah penarikan minimum (IDR)",
-      "default_commission_percentage": "Persentase komisi default (cadangan)",
+      "default_commission_percentage": "Komisi fallback (%)",
       "review_window_days": "Periode ulasan (hari)"
+    },
+    "descriptions": {
+      "checkout_expiration_minutes": "Checkout akan kedaluwarsa jika pembayaran belum diterima dalam waktu yang ditentukan.",
+      "default_commission_percentage": "Digunakan hanya jika tidak ada aturan komisi yang berlaku. Aturan komisi adalah mekanisme komisi yang otoritatif."
     }
   },
   "commission": {
@@ -49,6 +55,7 @@
     "status": "Status",
     "actions": "Aksi",
     "openEnded": "Terbuka",
+    "unlimited": "Tidak terbatas",
     "create": "Buat aturan",
     "createTitle": "Aturan komisi baru",
     "merchantId": "ID Merchant (opsional)",
@@ -56,6 +63,9 @@
     "targetHint": "Kosongkan merchant dan kategori untuk aturan global. Isi salah satu saja.",
     "createSuccess": "Aturan komisi dibuat",
     "statusChanged": "Status aturan komisi diperbarui",
+    "invalidDateRange": "Berlaku sampai harus setelah Berlaku dari.",
+    "deactivateTitle": "Nonaktifkan aturan komisi ini?",
+    "deactivateDescription": "Aturan ini berhenti berlaku untuk transaksi baru sampai diaktifkan kembali. Transaksi historis tidak terpengaruh.",
     "historicalNote": "Perubahan aturan hanya memengaruhi transaksi berikutnya. Komisi historis disimpan per transaksi dan tidak pernah dihitung ulang."
   },
   "payment": {
@@ -66,6 +76,15 @@
     "name": "Nama",
     "type": "Tipe",
     "status": "Status",
-    "statusChanged": "Metode pembayaran diperbarui"
+    "statusChanged": "Metode pembayaran diperbarui",
+    "deactivateTitle": "Nonaktifkan metode pembayaran ini?",
+    "deactivateDescription": "Pelanggan tidak akan bisa memakai \"{name}\" saat checkout sampai diaktifkan kembali.",
+    "types": {
+      "EWALLET": "Dompet Digital",
+      "VIRTUAL_ACCOUNT": "Virtual Account",
+      "COD": "Cash on Delivery",
+      "QRIS": "QRIS",
+      "CARD": "Kartu"
+    }
   }
 }

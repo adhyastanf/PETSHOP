@@ -28,12 +28,18 @@
     "updatedAt": "Last updated",
     "editValue": "Value",
     "updateSuccess": "Configuration updated",
+    "saveTitle": "Update this setting?",
+    "saveDescription": "\"{label}\" will be set to {value}. This applies to future operations across the platform.",
     "keys": {
-      "checkout_expiration_minutes": "Unpaid checkout expiration (minutes)",
+      "checkout_expiration_minutes": "Checkout payment deadline (minutes)",
       "slot_hold_duration_minutes": "Service slot hold duration (minutes)",
       "minimum_withdrawal_amount": "Minimum withdrawal amount (IDR)",
-      "default_commission_percentage": "Default commission percentage (fallback)",
+      "default_commission_percentage": "Fallback commission (%)",
       "review_window_days": "Review window (days)"
+    },
+    "descriptions": {
+      "checkout_expiration_minutes": "Checkout expires if payment is not received within the specified time.",
+      "default_commission_percentage": "Used only when no applicable commission rule exists. Commission rules are the authoritative commission mechanism."
     }
   },
   "commission": {
@@ -44,11 +50,12 @@
     "commissionType": "Type",
     "value": "Value",
     "priority": "Priority",
-    "validFrom": "Effective from",
-    "validUntil": "Effective until",
+    "validFrom": "Effective From",
+    "validUntil": "Effective Until",
     "status": "Status",
     "actions": "Actions",
     "openEnded": "Open",
+    "unlimited": "Unlimited",
     "create": "Create rule",
     "createTitle": "New commission rule",
     "merchantId": "Merchant ID (optional)",
@@ -56,6 +63,9 @@
     "targetHint": "Leave merchant and category empty for a global rule. Provide only one.",
     "createSuccess": "Commission rule created",
     "statusChanged": "Commission rule status updated",
+    "invalidDateRange": "Effective Until must be after Effective From.",
+    "deactivateTitle": "Deactivate this commission rule?",
+    "deactivateDescription": "This rule will stop applying to new transactions until it is reactivated. Historical transactions are unaffected.",
     "historicalNote": "Changing a rule affects future transactions only. Historical commission is snapshotted per transaction and is never recalculated."
   },
   "payment": {
@@ -66,6 +76,15 @@
     "name": "Name",
     "type": "Type",
     "status": "Status",
-    "statusChanged": "Payment method updated"
+    "statusChanged": "Payment method updated",
+    "deactivateTitle": "Disable this payment method?",
+    "deactivateDescription": "Customers will no longer be able to use \"{name}\" at checkout until it is re-enabled.",
+    "types": {
+      "EWALLET": "Digital Wallet",
+      "VIRTUAL_ACCOUNT": "Virtual Account",
+      "COD": "Cash on Delivery",
+      "QRIS": "QRIS",
+      "CARD": "Card"
+    }
   }
 }

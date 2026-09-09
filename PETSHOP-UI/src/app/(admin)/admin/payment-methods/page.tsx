@@ -12,6 +12,7 @@ import {
   TableHead,
   TableCell,
 } from '@/components/ui/table';
+import ConfirmDialog from '@/components/feedback/ConfirmDialog';
 import { usePaymentMethods, useSetPaymentMethodActive } from '@/features/config/query';
 import { ApiError } from '@/lib/api-client';
 import type { PaymentMethod } from '@/features/config/types';
@@ -34,7 +35,16 @@ export default function AdminPaymentMethodsPage() {
   const { data: methods, isLoading, isError, error } = usePaymentMethods();
   const toggleMutation = useSetPaymentMethodActive();
 
-  function handleToggle(method: PaymentMethod) {
+  // Presentation-only mapping of backend enum types to human-readable labels.
+  // Falls back to the raw backend value when no translation exists. The backend
+  // value / API contract is never changed.
+  function typeLabel(type: string): string {
+    const key = `config.payment.types.${type}`;
+    const label = t(key);
+    return label === key ? type : label;
+  }
+
+  function performToggle(method: PaymentMethod) {
     toggleMutation.mutate(
       { id: method.id, isActive: !method.isActive },
       {
@@ -93,19 +103,36 @@ export default function AdminPaymentMethodsPage() {
                     <TableCell className="font-medium">{m.providerCode}</TableCell>
                     <TableCell>{m.methodCode}</TableCell>
                     <TableCell>{m.name}</TableCell>
-                    <TableCell>{m.type}</TableCell>
+                    <TableCell>{typeLabel(m.type)}</TableCell>
                     <TableCell>
                       <StatusBadge active={m.isActive} />
                     </TableCell>
                     <TableCell className="text-right">
-                      <Button
-                        variant={m.isActive ? 'outline' : 'default'}
-                        size="sm"
-                        loading={toggleMutation.isPending && toggleMutation.variables?.id === m.id}
-                        onClick={() => handleToggle(m)}
-                      >
-                        {m.isActive ? t('config.common.deactivate') : t('config.common.activate')}
-                      </Button>
+                      {m.isActive ? (
+                        <ConfirmDialog
+                          title={t('config.payment.deactivateTitle')}
+                          description={t('config.payment.deactivateDescription', { name: m.name })}
+                          confirmLabel={t('config.common.deactivate')}
+                          cancelLabel={t('config.common.cancel')}
+                          loading={toggleMutation.isPending && toggleMutation.variables?.id === m.id}
+                          onConfirm={() => performToggle(m)}
+                        >
+                          {(open) => (
+                            <Button variant="outline" size="sm" onClick={open}>
+                              {t('config.common.deactivate')}
+                            </Button>
+                          )}
+                        </ConfirmDialog>
+                      ) : (
+                        <Button
+                          variant="default"
+                          size="sm"
+                          loading={toggleMutation.isPending && toggleMutation.variables?.id === m.id}
+                          onClick={() => performToggle(m)}
+                        >
+                          {t('config.common.activate')}
+                        </Button>
+                      )}
                     </TableCell>
                   </TableRow>
                 ))}

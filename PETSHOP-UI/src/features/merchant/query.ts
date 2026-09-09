@@ -159,12 +159,19 @@ export function useVerifyMerchant() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: ({ merchantId, data }: { merchantId: string; data: VerifyMerchantRequest }) => merchantService.verifyMerchant(merchantId, data),
-    onSuccess: () => qc.invalidateQueries({ queryKey: MERCHANT_KEYS.applications }),
+    // Admin list uses the ['admin','applications'] query key; invalidate it so the
+    // table reflects the new status instantly. Also refresh the merchant-scoped key.
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['admin', 'applications'] });
+      qc.invalidateQueries({ queryKey: MERCHANT_KEYS.applications });
+    },
   });
 }
 
 export function useVerifyVet() {
+  const qc = useQueryClient();
   return useMutation({
     mutationFn: ({ staffId, data }: { staffId: string; data: VerifyVetRequest }) => merchantService.verifyVet(staffId, data),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ['admin', 'veterinarians'] }),
   });
 }
