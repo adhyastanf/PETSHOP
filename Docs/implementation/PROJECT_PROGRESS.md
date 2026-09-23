@@ -63,21 +63,23 @@ Quick status overview. Agents should read this FIRST to avoid re-inspecting comp
 
 ---
 
-## Phase 3 Readiness
+## Phase 3 Completion (Merchant)
 
 | Requirement | Status |
 |-------------|--------|
-| DB schema exists (merchants, branches, staff, hours) | ✅ |
+| DB schema (merchants, branches, staff, hours) | ✅ |
 | Roles seeded (PETSHOP_OWNER, ADMIN, STAFF, GROOMER, VET) | ✅ |
 | Permissions seeded (merchants module) | ✅ |
 | RBAC service loads authorities | ✅ |
 | SecurityConfig enforces auth | ✅ |
 | Platform abstractions ready | ✅ |
-| Merchant authorization (ownership check) | ❌ Needs implementation |
-| Merchant business logic | ❌ Needs implementation |
-| Merchant frontend | ❌ Needs implementation |
+| Merchant authorization (ownership check) | ✅ Implemented |
+| Merchant business logic (application, verification, profile, branches, hours, staff, branch assignment, vet verification) | ✅ Implemented |
+| Merchant frontend | ✅ Implemented |
 
-**Verdict: Ready to start Phase 3.** The schema foundation exists. Business logic and ownership enforcement will be built as part of Phase 3 implementation.
+**Verdict: Phase 3 complete.** Merchant onboarding/verification, profile, branches, business hours, staff, branch assignment, and veterinarian verification are implemented end-to-end (backend + frontend).
+
+Post-completion fixes applied since: merchant verification now accepts the `UNDER_REVIEW` decision, and the admin verification list refreshes instantly after approve/reject (query-cache invalidation fix).
 
 ---
 
@@ -95,4 +97,4 @@ Quick status overview. Agents should read this FIRST to avoid re-inspecting comp
 
 ## Last Updated
 
-2026-08-18
+2026-09-09

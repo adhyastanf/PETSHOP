@@ -134,6 +134,10 @@ Pet Profile → Purchase/Booking → Care History → Reminder → Rebook → Re
 | Design system (Oyen orange palette) | Cross-cutting |
 | Platform service abstractions | 2.5 |
 | GitHub Actions CI/CD | Cross-cutting |
+| Merchant registration & verification | 3 |
+| Multi-branch merchant | 3 |
+| Staff & vet management | 3 |
+| Business configuration (commission/payment/settings admin) | Cross-cutting |
 
 ### Planned ⏳
 
@@ -142,9 +146,6 @@ Pet Profile → Purchase/Booking → Care History → Reminder → Rebook → Re
 | Remember Me | 1 (pending) |
 | Delete Account | 1 (pending) |
 | Pet Ownership Transfer | 2 (pending) |
-| Merchant registration & verification | 3 |
-| Multi-branch merchant | 3 |
-| Staff & vet management | 3 |
 | Product catalog & variants | 4 |
 | Branch inventory & stock movements | 5 |
 | Services, scheduling, slot holds | 6 |
@@ -206,7 +207,8 @@ Phase 0   ✅ Foundation
 Phase 1   ✅ Identity & RBAC (Remember Me + Delete Account pending)
 Phase 2   ✅ Customer & Pets (Ownership Transfer pending)
 Phase 2.5 ✅ Platform Foundation
-Phase 3   ⏳ Merchant (next)
+Phase 3   ✅ Merchant
+Phase 4   ⏳ Catalog (next)
 ```
 
 ---
