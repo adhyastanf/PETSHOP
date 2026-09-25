@@ -208,7 +208,7 @@ Phase 1   ✅ Identity & RBAC (Remember Me + Delete Account pending)
 Phase 2   ✅ Customer & Pets (Ownership Transfer pending)
 Phase 2.5 ✅ Platform Foundation
 Phase 3   ✅ Merchant
-Phase 4   ⏳ Catalog (next)
+Phase 4   ⏳ Catalog (current)
 ```
 
 ---

@@ -2,12 +2,15 @@
 
 Build in dependency order.
 
-Each phase maps to user stories in `docs/implementation/USER_STORIES.md`.
+Each phase maps to user stories in `Docs/implementation/USER_STORIES.md`.
 Detailed behavior remains defined by the canonical product, business-rule,
 database, API, authorization, architecture, security, acceptance-criteria,
 and Definition-of-Done documentation.
 
 A phase is complete only when its applicable stories and exit criteria pass.
+
+A phase may be marked core-scope complete when explicitly deferred, non-blocking
+stories are documented in PROJECT_PROGRESS.md and do not block the remaining roadmap.
 
 ---
 
@@ -683,7 +686,7 @@ by the foundation.
 Phase references must be resolved from this roadmap.
 
 Story details must be resolved from
-`docs/implementation/USER_STORIES.md` and the relevant canonical
+`Docs/implementation/USER_STORIES.md` and the relevant canonical
 documentation.
 
 When asked to complete a phase, the agent must:

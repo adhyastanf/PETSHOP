@@ -12,6 +12,8 @@ The project follows an AI-first development workflow with comprehensive canonica
 - **RBAC** — Role-based access control (Customer, Merchant, Admin, Super Admin)
 - **Customer Profiles** — Profile management, delivery addresses
 - **Pet Management** — CRUD, pet types, breeds, vaccination history
+- **Merchant Management** — Onboarding, verification, branches, staff, veterinarian verification
+- **Business Configuration** — Admin-managed commission rules, payment method availability, and business settings
 - **Internationalization** — English + Bahasa Indonesia, language switcher
 - **Platform Foundation** — Storage, Image, Email, Notification, Payment, Shipping abstractions
 - **Design System** — Oyen orange palette, consistent component library
@@ -32,17 +34,17 @@ Spring Boot (Koyeb)
   │
   ├── Controller → Service → Repository → PostgreSQL (Supabase)
   │
-  └── Platform Services (abstractions)
-        ├── StorageService      (local → S3/R2)
+  └── Platform Services (abstractions — current dev → intended production)
+        ├── StorageService      (local filesystem → S3-compatible object storage)
         ├── ImageService        (passthrough → imgproxy)
         ├── EmailService        (console → Resend/SES)
         ├── NotificationService (log → FCM)
         ├── PaymentProvider     (mock → Xendit)
         └── ShippingProvider    (mock → Biteship)
 
-Framework Infrastructure:
-  • Spring Cache (@Cacheable → Redis)
-  • Spring Scheduling (@Scheduled → Quartz)
+Framework Infrastructure (current → production target):
+  • Spring Cache (@Cacheable — ConcurrentMap → Redis)
+  • Spring Scheduling (@Scheduled — built-in → Quartz)
   • Flyway (database migrations)
   • Spring Security (JWT authentication)
 ```

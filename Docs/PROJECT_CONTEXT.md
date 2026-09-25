@@ -48,7 +48,7 @@ All configuration is environment-variable driven. No secrets in Git. Business mo
 16. Oyen is pet-centric: care reminders drive repeat transactions.
 17. Pet species supported: CAT, DOG (expandable).
 18. Recommendations are initially rule-based and deterministic (no ML in MVP).
-19. Nearby merchant discovery uses PostgreSQL/PostGIS spatial queries.
+19. Nearby merchant discovery will use PostgreSQL/PostGIS spatial queries (Phase 16.5, not yet implemented).
 20. Merchant QR attribution is an offline acquisition channel.
 21. Free core for customer and merchant during initial growth phase.
 22. Payment gateway: Xendit.

@@ -2,7 +2,7 @@
 
 This file defines how AI coding agents must work in this repository.
 
-Read `docs/PROJECT_CONTEXT.md` before any implementation.
+Read `Docs/PROJECT_CONTEXT.md` before any implementation.
 
 ---
 
@@ -53,10 +53,10 @@ Do not silently invent business rules.
 When a request references a phase, milestone, or user-story ID:
 
 - Phase or milestone → resolve from
-  `docs/implementation/IMPLEMENTATION_ROADMAP.md`
+  `Docs/implementation/IMPLEMENTATION_ROADMAP.md`
 
 - User-story ID (for example `US-PET-001`) → resolve from
-  `docs/implementation/USER_STORIES.md`
+  `Docs/implementation/USER_STORIES.md`
 
 After resolving it, read only the canonical documentation relevant
 to that scope and inspect existing code to determine what is already
@@ -72,7 +72,7 @@ Do not read every project document for every task.
 
 Always understand:
 - `AGENTS.md`
-- `docs/PROJECT_CONTEXT.md`
+- `Docs/PROJECT_CONTEXT.md`
 
 Then load only documentation relevant to the affected domain.
 
@@ -487,11 +487,11 @@ Prevent duplicate submissions.
 ## 15. Definition of Done
 
 Before declaring a task complete, verify
-`docs/implementation/DEFINITION_OF_DONE.md`.
+`Docs/implementation/DEFINITION_OF_DONE.md`.
 
 Also apply:
 
-`docs/implementation/ACCEPTANCE_CRITERIA.md`
+`Docs/implementation/ACCEPTANCE_CRITERIA.md`
 
 A task that fails applicable Definition of Done requirements must be
 reported as PARTIAL or BLOCKED, not DONE.
@@ -554,12 +554,15 @@ that story according to the canonical documentation.
 
 When implementing frontend features:
 
-- Read `docs/design/DESIGN_SYSTEM.md`.
-- Read `docs/design/UI_PATTERNS.md`.
+- Read `Docs/design/DESIGN_SYSTEM.md`.
+- Read `Docs/design/UI_PATTERNS.md`.
 - Reuse existing components.
 - Do not redesign existing UI.
 - Extend the design system only when necessary.
 - Maintain one consistent visual language.
 - Prefer component reuse over creating new variants.
-- Use English for all user-facing text.
+- All user-facing text must use the i18n/translation system. English is the
+  source/default locale; Bahasa Indonesia is a supported locale. Do not
+  hardcode user-facing strings directly in components. New strings must be
+  added to the appropriate translation resources.
 - Always show toast notification for API errors using Sonner.

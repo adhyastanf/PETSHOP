@@ -9,8 +9,8 @@ Quick status overview. Agents should read this FIRST to avoid re-inspecting comp
 | Phase | Name | Status | Notes |
 |-------|------|--------|-------|
 | 0 | Foundation | ✅ Done | DB migrations, seed data, JPA, Flyway, project skeleton |
-| 1 | Identity & RBAC | ✅ Done | Register, login, logout, JWT, refresh, role-based frontend routing, tests |
-| 2 | Customer & Pets | ✅ Done | Profile, addresses, pet CRUD, types/breeds, vaccinations, frontend wired |
+| 1 | Identity & RBAC | ✅ Done (core scope) | Register, login, logout, JWT, refresh, role-based frontend routing, tests. Remember Me + Delete Account pending (non-blocking). |
+| 2 | Customer & Pets | ✅ Done (core scope) | Profile, addresses, pet CRUD, types/breeds, vaccinations, frontend wired. Pet Ownership Transfer pending (non-blocking). |
 | 2.5 | Platform Foundation | ✅ Done | Storage, Image, Email, Notification, Payment, Shipping abstractions + Spring Cache + Spring Scheduling |
 | 3 | Merchant | ✅ Done | Backend + Frontend complete. Application, verification, profile, branches, hours, staff, branch assignment, vet verification. |
 | 4 | Catalog | ⏳ | |
@@ -36,8 +36,8 @@ Quick status overview. Agents should read this FIRST to avoid re-inspecting comp
 
 ## Pending Items (from completed phases)
 
-| Story | Phase | Status | Priority | Blocks Phase 3? |
-|-------|-------|--------|----------|-----------------|
+| Story | Phase | Status | Priority | Blocking? |
+|-------|-------|--------|----------|-----------|
 | US-AUTH-006 Remember Me | 1 | ❌ Not started | Low | No |
 | US-AUTH-007 Delete Account | 1 | ❌ Not started | Low | No |
 | US-PET-TRANSFER-* | 2 | ❌ Not started | Medium | No |
@@ -60,6 +60,8 @@ Quick status overview. Agents should read this FIRST to avoid re-inspecting comp
 | COD Commission Debt Recovery | 📝 Documented (planned) | Phase 9/13. COD accrues outstanding commission; recovered from future gateway settlements. Not implemented. |
 | Business Configuration Foundation | ✅ Done | `BusinessConfigurationService` (typed, cached, audited) + admin management of commission rules, payment-method availability, and system business settings. Deterministic `CommissionRuleResolver`. MIDTRANS→XENDIT alignment + COD method (V4). Admin UI at `(admin)/admin/{commission-rules,payment-methods,settings}`. Consumption by future phases deferred. |
 | Architecture Hardening Audit | ✅ Done | 15-area audit. FIX_NOW: path-traversal containment in `LocalStorageService` + 500 error info-disclosure in `GlobalExceptionHandler`. Canonical future-phase decisions recorded in `architecture/ARCHITECTURE_DECISIONS.md`. No future domains implemented. |
+| Veterinary Medical Master | 📝 Designed; foundation implemented | 5 canonical documents in `Docs/domain/veterinary/`. VetSCT/WSAVA/AAHA/Merck researched. Three-layer model, procedure taxonomy, multilingual terminology, historical integrity, data sources/licensing. Master/reference schema implemented in V5/V6 (see row below). Concept authoring, clinical workflows, and patient medical-record workflow remain future. |
+| Veterinary Medical Master Foundation | ✅ Done | Migration V5: 13 master/reference tables, seed provenance data (OYEN-VET-INITIAL version + 4 sources). 15 JPA entities, 10 repositories in `entity/veterinary` + `veterinary/persistence`. Species via existing `pet_types`. DOG+CAT first-class. Concept lifecycle + deprecation. External mapping optional. `vet_concept` and `vet_procedure` separate. No patient medical-record tables. No APIs. `VETERINARY_OPEN_DECISIONS.md` documents 9 open decisions (none block foundation). V6: fixes external-mapping partial unique index; `VetConceptKnowledge`+`VetVaccineConcept` use correct Oyen `@MapsId` shared-PK pattern; `VETERINARY_TERMINOLOGY.md §5` aligned to MEDICAL_MASTER concept_type list. |
 
 ---
 
@@ -97,4 +99,4 @@ Post-completion fixes applied since: merchant verification now accepts the `UNDE
 
 ## Last Updated
 
-2026-09-09
+2026-09-25
