@@ -145,14 +145,14 @@ src/
 | English | `en` | Source language (canonical) |
 | Bahasa Indonesia | `id` | First localization |
 
-### Translation Library Strategy
+### Translation Foundation
 
-Use `next-intl` or equivalent Next.js-compatible i18n library. The library must support:
-- Static and dynamic route segments
-- Server and client components
-- Namespace-based organization
-- Interpolation and pluralization
-- Lazy loading of locale bundles
+Oyen uses an established custom lightweight i18n foundation:
+- **Provider & Hooks**: React Context via `I18nProvider` (`src/components/Provider/I18nProvider.tsx`) with `useI18n` and `createTranslator` (`src/lib/i18n.ts`).
+- **Translation Resources**: Static JSON translation resources organized by locale and namespace under `src/locales/{locale}/{namespace}.json` and aggregated via `src/locales/index.ts`.
+- **Supported Locales**: English (`en`) is the canonical source/default locale; Bahasa Indonesia (`id`) is the supported localization.
+- **String Externalization**: All new user-facing strings must use translation resources (never hardcode user-facing text in UI components).
+- **Library Policy**: Do not introduce `next-intl` or any other external i18n library unless explicitly approved.
 
 ### Translation Key Naming Convention
 

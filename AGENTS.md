@@ -108,6 +108,57 @@ Prefer targeted context over loading the entire documentation tree.
 
 Choose the smallest mode that safely completes the task.
 
+Mode selection order (smallest to largest):
+
+- **DOC-FAST** → documentation-only changes (no code, schema, API, or behavioral change)
+- **FAST** → small, localised code changes
+- **STANDARD** → normal feature development
+- **DEEP** → high-risk or architecture-heavy work
+
+If a documentation task also requires application-code, database, API, security,
+or behavioral changes, DOC-FAST does not apply; use the smallest appropriate
+implementation mode instead.
+
+### DOC-FAST MODE
+
+Use for documentation-only tasks such as:
+- Markdown wording fixes
+- typo/grammar fixes
+- documentation path corrections
+- status/date updates
+- small documentation consistency fixes
+- formatting fixes
+- updating an existing canonical document with explicitly requested information
+
+DOC-FAST applies only when the task does not change application behavior,
+architecture, business rules, database schema, API behavior, or source code.
+
+Process:
+
+inspect requested document/section
+→ make requested documentation changes
+→ focused diff/status check
+→ report
+
+Rules:
+
+- Read only the explicitly requested files and the directly relevant sections.
+- Do not inspect application source code unless explicitly required to verify
+  the documentation change.
+- Do not load the entire documentation tree.
+- Do not resolve unrelated user stories, phases, or domains.
+- Do not create planning/specification files.
+- Do not run backend/frontend builds, tests, lint, or type-check for
+  documentation-only changes unless the user explicitly requests them or the
+  documentation change directly affects executable/generated artifacts.
+- Do not perform broad repository searches unrelated to the requested change.
+- Verify that only intended documentation files changed.
+- Stop after the focused validation and report.
+
+Documentation-only tasks must not be treated as full implementation tasks.
+
+---
+
 ### FAST MODE
 
 Use for:
@@ -220,6 +271,13 @@ Examples:
 - API contract → update existing API documentation
 - user story → update `USER_STORIES.md`
 - roadmap/scope → update `IMPLEMENTATION_ROADMAP.md`
+
+### Cross-Document Consistency
+
+When permanent project knowledge changes, check for stale or contradictory
+references in directly affected canonical documents and update those references
+when necessary. Use targeted searches and relevant-domain context only; do not
+load or inspect unrelated documentation.
 
 ### Documentation Creation Exception
 
@@ -525,7 +583,8 @@ already known.
 
 Unless the user says otherwise:
 
-- use STANDARD MODE;
+- use DOC-FAST for documentation-only tasks;
+- use STANDARD MODE for normal implementation work;
 - work autonomously;
 - read only relevant documentation;
 - do not create temporary planning documents;

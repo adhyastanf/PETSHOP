@@ -13,7 +13,7 @@ Quick status overview. Agents should read this FIRST to avoid re-inspecting comp
 | 2 | Customer & Pets | ✅ Done (core scope) | Profile, addresses, pet CRUD, types/breeds, vaccinations, frontend wired. Pet Ownership Transfer pending (non-blocking). |
 | 2.5 | Platform Foundation | ✅ Done | Storage, Image, Email, Notification, Payment, Shipping abstractions + Spring Cache + Spring Scheduling |
 | 3 | Merchant | ✅ Done | Backend + Frontend complete. Application, verification, profile, branches, hours, staff, branch assignment, vet verification. |
-| 4 | Catalog | ⏳ | |
+| 4 | Catalog | ⏳ | Current phase (not started) |
 | 5 | Inventory | ⏳ | |
 | 6 | Services & Scheduling | ⏳ | |
 | 7 | Cart | ⏳ | |
@@ -49,7 +49,7 @@ Quick status overview. Agents should read this FIRST to avoid re-inspecting comp
 | Area | Status | Notes |
 |------|--------|-------|
 | Design System | ✅ Done | DESIGN_SYSTEM.md + UI_PATTERNS.md, Oyen orange palette |
-| Internationalization (i18n) | ✅ Done | EN + ID, all Phase 1+2 pages use t() keys |
+| Internationalization (i18n) | ✅ Done | Custom React Context foundation (I18nProvider, JSON bundles), EN + ID supported, all user-facing pages use t() keys |
 | UI Redesign (Phase 1+2) | ✅ Done | Oyen branding, consistent tokens |
 | Test Infrastructure | ✅ Done | Vitest + Testing Library (28 tests) |
 | Docs Reorganization | ✅ Done | Clean folder structure, merged API docs |
@@ -99,4 +99,4 @@ Post-completion fixes applied since: merchant verification now accepts the `UNDE
 
 ## Last Updated
 
-2026-09-25
+2026-09-28

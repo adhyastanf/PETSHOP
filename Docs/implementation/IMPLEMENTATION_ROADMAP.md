@@ -87,6 +87,8 @@ history, pet ownership transfer, and pet/customer media foundation.
 
 Pet care events foundation and pet care reminder infrastructure.
 
+Pet ownership transfer (`US-PET-TRANSFER-*`) is part of Phase 2 scope; core customer and pet management is complete, with ownership transfer execution deferred as a non-blocking pending item (documented in `PROJECT_PROGRESS.md`).
+
 **Exit Criteria**
 
 - Customers can manage only their own permitted profile/address/pet data.
@@ -157,6 +159,11 @@ hours/closures, staff, branch assignments, and veterinarian verification.
 
 Categories, brands, products, options, variants, images/media, merchant catalog
 management, and public product discovery.
+
+Categories and brands serve as the reference foundation and taxonomy for merchant
+product creation/management and public product discovery/filtering in this phase;
+advanced/platform-wide admin catalog administration and broader moderation belong
+to Phase 16 (Admin & Disputes, US-ADM-003).
 
 **Exit Criteria**
 

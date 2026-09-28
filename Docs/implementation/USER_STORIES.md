@@ -78,6 +78,8 @@ User stories define observable behavior; detailed rules remain in their canonica
 - **US-MER-010 Veterinarian Verification:** authorized admin verifies/rejects veterinarian credentials.
 
 ## Product Catalog
+Categories and brands serve as the reference foundation and taxonomy for merchant product creation and public discovery/filtering in Phase 4. Dedicated admin catalog administration (platform-wide category/brand lifecycle management and catalog moderation) belongs to US-ADM-003 in Phase 16.
+
 - **US-PROD-001 Create Product:** merchant creates a product under their catalog.
 - **US-PROD-002 View Merchant Products:** merchant views products within authorized scope.
 - **US-PROD-003 Update Product:** merchant updates an owned product.
