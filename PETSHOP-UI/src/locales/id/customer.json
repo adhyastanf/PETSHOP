@@ -1,0 +1,32 @@
+{
+  "home": {
+    "welcome": "Selamat Datang di Oyen",
+    "description": "Temukan produk dan layanan untuk hewan peliharaan Anda.",
+    "productsComingSoon": "Produk, layanan, dan petshop terdekat akan muncul di sini."
+  },
+  "profile": {
+    "title": "Profil Saya",
+    "description": "Profil dan alamat pengiriman"
+  },
+  "orders": {
+    "title": "Pesanan Saya",
+    "empty": "Belum ada pesanan",
+    "emptyDescription": "Pesanan Anda akan muncul di sini setelah checkout."
+  },
+  "wishlist": {
+    "title": "Wishlist",
+    "empty": "Wishlist kosong",
+    "emptyDescription": "Simpan produk favorit Anda di sini."
+  },
+  "settings": {
+    "title": "Pengaturan",
+    "comingSoon": "Pengaturan akun, notifikasi, dan preferensi akan tersedia di sini."
+  },
+  "nav": {
+    "myProfile": "Profil Saya",
+    "myPets": "Hewan Saya",
+    "myOrders": "Pesanan Saya",
+    "wishlist": "Wishlist",
+    "settings": "Pengaturan"
+  }
+}

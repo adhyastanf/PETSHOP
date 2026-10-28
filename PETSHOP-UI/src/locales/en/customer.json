@@ -1,0 +1,32 @@
+{
+  "home": {
+    "welcome": "Welcome to Oyen",
+    "description": "Find products and services for your pets.",
+    "productsComingSoon": "Products, services, and nearby pet shops will appear here."
+  },
+  "profile": {
+    "title": "My Profile",
+    "description": "Profile and delivery addresses"
+  },
+  "orders": {
+    "title": "My Orders",
+    "empty": "No orders yet",
+    "emptyDescription": "Your orders will appear here after checkout."
+  },
+  "wishlist": {
+    "title": "Wishlist",
+    "empty": "Wishlist is empty",
+    "emptyDescription": "Save your favorite products here."
+  },
+  "settings": {
+    "title": "Settings",
+    "comingSoon": "Account settings, notifications, and preferences will be available here."
+  },
+  "nav": {
+    "myProfile": "My Profile",
+    "myPets": "My Pets",
+    "myOrders": "My Orders",
+    "wishlist": "Wishlist",
+    "settings": "Settings"
+  }
+}

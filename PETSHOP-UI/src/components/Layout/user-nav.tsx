@@ -1,13 +1,15 @@
 'use client';
 
 import { useLogout, useMe } from '@/hooks/use-auth';
-import { Heart, LogOut, Settings, ShoppingBag, User } from 'lucide-react';
+import { Heart, LogOut, PawPrint, Settings, ShoppingBag, User } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '../ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '../ui/dropdown-menu';
 import { Skeleton } from '../ui/skeleton';
+import { useTranslations } from 'next-intl';
 
 export default function UserNav() {
+  const t = useTranslations();
   const { data: user, isLoading } = useMe();
 
   const { mutate: logout } = useLogout();
@@ -29,7 +31,7 @@ export default function UserNav() {
       <div className='flex gap-2'>
         <Link href='/login'>
           <Button variant='outline' size='sm'>
-            Masuk
+            {t('common.signIn')}
           </Button>
         </Link>
         <Link href='/register'>
@@ -60,27 +62,41 @@ export default function UserNav() {
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem>
-            <User className='mr-2 size-4' />
-            Profil Saya
-          </DropdownMenuItem>
-          <DropdownMenuItem>
-            <ShoppingBag className='mr-2 size-4' />
-            Pesanan Saya
-          </DropdownMenuItem>
-          <DropdownMenuItem>
-            <Heart className='mr-2 size-4' />
-            Wishlist
-          </DropdownMenuItem>
-          <DropdownMenuItem>
-            <Settings className='mr-2 size-4' />
-            Pengaturan
-          </DropdownMenuItem>
+          <Link href='/customer/profile'>
+            <DropdownMenuItem>
+              <User className='mr-2 size-4' />
+              {t('customer.nav.myProfile')}
+            </DropdownMenuItem>
+          </Link>
+          <Link href='/customer/pets'>
+            <DropdownMenuItem>
+              <PawPrint className='mr-2 size-4' />
+              {t('customer.nav.myPets')}
+            </DropdownMenuItem>
+          </Link>
+          <Link href='/customer/orders'>
+            <DropdownMenuItem>
+              <ShoppingBag className='mr-2 size-4' />
+              {t('customer.nav.myOrders')}
+            </DropdownMenuItem>
+          </Link>
+          <Link href='/customer/wishlist'>
+            <DropdownMenuItem>
+              <Heart className='mr-2 size-4' />
+              {t('customer.nav.wishlist')}
+            </DropdownMenuItem>
+          </Link>
+          <Link href='/customer/settings'>
+            <DropdownMenuItem>
+              <Settings className='mr-2 size-4' />
+              {t('customer.nav.settings')}
+            </DropdownMenuItem>
+          </Link>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={handleLogout} disabled={false}>
           <LogOut className='mr-2 size-4' />
-          Keluar
+          {t('common.signOut')}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

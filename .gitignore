@@ -12,3 +12,14 @@ PETSHOP-API/.jqwik-database
 
 # Logs
 *.log
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Local storage
+storage/
+
+# Application local overrides
+**/application-local.yml

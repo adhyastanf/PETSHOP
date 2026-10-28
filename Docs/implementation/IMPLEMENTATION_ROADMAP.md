@@ -1,4 +1,4 @@
-# Pet Marketplace — Implementation Roadmap
+# Oyen — Implementation Roadmap
 
 Build in dependency order.
 
@@ -40,12 +40,15 @@ foundation verification.
 - US-AUTH-003 Sessions
 - US-AUTH-004 Logout
 - US-AUTH-005 Current User
+- US-AUTH-006 Remember Me
+- US-AUTH-007 Delete Account
 
 **Scope**
 
 Registration, login, logout, JWT access tokens, refresh sessions, current-user
-context, roles, permissions, security/ownership helpers, and complete frontend
-authentication/session handling.
+context, roles, permissions, security/ownership helpers, complete frontend
+authentication/session handling, remember me (extended session), and
+self-service account deletion.
 
 OAuth, password reset, email verification, and phone verification are deferred
 unless explicitly introduced by a later approved requirement.
@@ -85,6 +88,36 @@ history, and pet/customer media foundation.
 - Pet reference data and validation behave according to canonical rules.
 - Basic vaccination history is accessible only within authorized scope.
 - Applicable tests and Definition of Done pass.
+
+---
+
+## Phase 2.5 — Platform Foundation
+
+**Stories**
+
+- US-PLT-001 through US-PLT-009
+
+**Scope**
+
+Platform service abstractions: storage, image processing, email, notifications,
+payment provider interface, shipping provider interface, and standard API error
+contract. Spring Cache and Spring Scheduling as framework infrastructure.
+
+Local/minimal implementations for development. Production providers are swapped
+without changing business logic. Search is deferred until requirements justify it.
+
+**Exit Criteria**
+
+- Platform service interfaces are defined (Storage, Image, Email, Notification, Payment, Shipping).
+- Local/minimal implementations exist for each platform service.
+- Spring Cache (@Cacheable/@CachePut/@CacheEvict) is enabled.
+- Spring Scheduling (@Scheduled) is enabled.
+- Search is intentionally deferred.
+- No business module depends directly on third-party vendor SDKs.
+- Payment and shipping provider abstractions support future provider swaps.
+- Standard API error contract is applied consistently.
+- Build and applicable tests pass.
+- Definition of Done passes.
 
 ---
 
@@ -212,7 +245,7 @@ Checkout must be capable of consuming and validating applicable voucher or
 promotion rules needed for checkout.
 
 Full voucher, promotion, campaign, and banner administration belongs to
-Phase 14 and must not be pulled into Phase 8 unless explicitly required.
+Phase 15 and must not be pulled into Phase 8 unless explicitly required.
 
 **Exit Criteria**
 
@@ -275,12 +308,42 @@ generation.
 
 ---
 
-## Phase 11 — Cancellation & Refund
+## Phase 11 — Pet Hotel (Boarding)
+
+**Stories**
+
+- US-HTL-*
+
+**Scope**
+
+Room types and capacity management per branch, multi-night booking flow,
+room availability search, check-in/check-out, daily activity updates,
+stay extension, early checkout, boarding-specific pricing and cancellation
+policy, and staff assignment for boarding guests.
+
+Pet hotel reuses the service/booking/payment infrastructure from earlier phases
+and extends it with multi-day duration, room inventory, and daily activity
+tracking.
+
+**Exit Criteria**
+
+- Room types and capacity are branch-scoped and managed by merchant.
+- Multi-night availability is computed correctly.
+- Booking flow supports date-range selection and room type.
+- Check-in/check-out lifecycle transitions are valid and authorized.
+- Daily updates are visible only to pet owner and authorized staff.
+- Extension and early checkout handle availability and refunds correctly.
+- Concurrent bookings cannot exceed room capacity.
+- Applicable tests and Definition of Done pass.
+
+---
+
+## Phase 12 — Cancellation & Refund
 
 **Stories**
 
 - US-REF-*
-- Applicable cancellation stories from US-ORD-* and US-BKG-*
+- Applicable cancellation stories from US-ORD-*, US-BKG-*, and US-HTL-*
 
 **Scope**
 
@@ -297,7 +360,7 @@ idempotency.
 
 ---
 
-## Phase 12 — Finance
+## Phase 13 — Finance
 
 **Stories**
 
@@ -320,7 +383,7 @@ withdrawals, concurrency protection, and financial auditability.
 
 ---
 
-## Phase 13 — Engagement
+## Phase 14 — Engagement
 
 **Stories**
 
@@ -344,7 +407,7 @@ and notification delivery behavior.
 
 ---
 
-## Phase 14 — Marketing
+## Phase 15 — Marketing
 
 **Stories**
 
@@ -359,7 +422,7 @@ banners, scheduling, and customer-facing marketing discovery.
 **Boundary**
 
 Phase 8 may consume already-defined voucher/promotion rules during checkout.
-Phase 14 owns the full management lifecycle and administration of those
+Phase 15 owns the full management lifecycle and administration of those
 marketing capabilities.
 
 **Exit Criteria**
@@ -372,7 +435,7 @@ marketing capabilities.
 
 ---
 
-## Phase 15 — Admin & Disputes
+## Phase 16 — Admin & Disputes
 
 **Stories**
 
@@ -394,7 +457,47 @@ marketplace configuration, and explicit permission enforcement.
 
 ---
 
-## Phase 16 — Production Hardening
+## Phase 17 — Legal & Store Compliance
+
+**Stories**
+
+- US-LEGAL-001 Terms of Service
+- US-LEGAL-002 Privacy Policy
+- US-LEGAL-003 Consent & Agreement
+- US-LEGAL-004 Cookie/Tracking Disclosure
+- US-LEGAL-005 Data Export
+- US-LEGAL-006 Content Guidelines
+- US-LEGAL-007 App Store Metadata
+
+**Scope**
+
+Terms of service, privacy policy, acceptable use policy, refund/cancellation
+policy summary, user consent tracking, GDPR/local data protection compliance
+pages, cookie/tracking disclosure, user data export (right to access),
+content/community guidelines, app store metadata (descriptions, screenshots,
+age rating, category, contact info), and required legal links in app/footer.
+
+This phase satisfies Google Play and Apple App Store publishing requirements
+for legal compliance, user safety, and content policies.
+
+**Exit Criteria**
+
+- Terms of Service page is accessible without authentication.
+- Privacy Policy page is accessible without authentication.
+- User must accept ToS/Privacy Policy during registration (consent recorded with timestamp).
+- Privacy Policy includes data collection, usage, sharing, retention, and deletion disclosures.
+- Account deletion flow references data retention/deletion policy.
+- Data export endpoint/UI allows user to download their personal data.
+- Content/community guidelines page exists.
+- App store listing metadata (description, screenshots, category, age rating, contact) is prepared.
+- Required legal links are present in app footer/settings and app store listings.
+- Cookie/tracking disclosure is shown where applicable.
+- All legal pages support versioning (date/version header).
+- Applicable tests and Definition of Done pass.
+
+---
+
+## Phase 18 — Production Hardening
 
 **Scope**
 
@@ -429,6 +532,8 @@ rollback, and production-readiness verification.
 8. Cancellation/refund.
 9. Earnings → settlement → withdrawal.
 10. Cross-merchant IDOR attempt is rejected.
+11. Pet hotel: book multi-night stay → check-in → daily updates → check-out → settlement.
+12. Pet hotel: concurrent booking cannot exceed room capacity.
 
 ---
 

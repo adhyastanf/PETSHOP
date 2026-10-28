@@ -1,4 +1,4 @@
-# Pet Marketplace — Project Context
+# Oyen — Project Context
 
 **Status:** Canonical agent entry point  
 **Read this file before implementing any feature.**
@@ -15,6 +15,19 @@ A multi-vendor pet marketplace for physical pet products and bookable pet servic
 - Client/UI shared state: Zustand, only when needed
 - File storage: S3-compatible object storage / MinIO abstraction
 - API style: REST JSON, versioned under `/api/v1`
+
+## Development Environment
+
+| Service | Provider |
+|---------|----------|
+| Repository | GitHub |
+| Frontend Hosting | Vercel (Free) |
+| Backend Hosting | Koyeb (Free) |
+| Database | Supabase PostgreSQL (Free) |
+| Storage | Local filesystem → S3/R2 (production) |
+| CI/CD | GitHub Actions |
+
+All configuration is environment-variable driven. No secrets in Git. Business modules are provider-independent.
 
 ## Hard Product Rules
 1. One merchant can have multiple branches.
@@ -63,6 +76,21 @@ Flag unresolved contradictions rather than silently inventing behavior.
 - `INTEGRATION_SPEC.md` — payment/shipping/storage/OAuth/webhook boundaries.
 - `CODING_STANDARDS.md` — engineering conventions.
 
+## Platform Service Architecture
+
+All external services must be accessed through platform abstractions (interfaces). Business modules must never depend directly on vendor SDKs.
+
+Dependency direction:
+```text
+Business Module → Platform Service Interface → Infrastructure Implementation → Vendor
+```
+
+This enables provider swaps (e.g., changing payment gateway, storage provider, email sender) without touching business logic.
+
+Platform services: Storage, Image, Email, Notification, Payment Provider, Shipping Provider.
+
+Framework infrastructure (Spring Cache, Spring Scheduling) is used directly via annotations — not wrapped in custom interfaces. Search uses PostgreSQL until dedicated search infrastructure is justified.
+
 ## Agent Working Rules
 Before coding:
 1. Identify the domain/module.
@@ -73,3 +101,14 @@ Before coding:
 6. Reuse existing conventions instead of creating a parallel pattern.
 
 Do not create generic CRUD endpoints simply because a table exists.
+
+
+---
+
+## Internationalization
+
+English is the canonical language for development and the source language for all translations. The application architecture supports multiple languages through externalized translation resources.
+
+Bahasa Indonesia is the first supported localization.
+
+All future frontend work must follow the internationalization architecture defined in `architecture/FRONTEND_ARCHITECTURE.md`. Hardcoded user-facing strings are prohibited in new code.

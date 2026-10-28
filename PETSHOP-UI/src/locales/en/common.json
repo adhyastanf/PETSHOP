@@ -1,0 +1,19 @@
+{
+  "appName": "Oyen",
+  "tagline": "All Your Pet Needs, Closer to You.",
+  "save": "Save",
+  "cancel": "Cancel",
+  "delete": "Delete",
+  "edit": "Edit",
+  "back": "Go Back",
+  "home": "Home",
+  "loading": "Loading...",
+  "retry": "Try Again",
+  "comingSoon": "Coming soon",
+  "signIn": "Sign In",
+  "signUp": "Sign Up",
+  "signOut": "Sign Out",
+  "networkError": "Network error. Please try again.",
+  "unknownError": "Something went wrong. Please try again.",
+  "searchPlaceholder": "Search..."
+}

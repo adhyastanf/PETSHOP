@@ -1,0 +1,19 @@
+{
+  "appName": "Oyen",
+  "tagline": "Semua Kebutuhan Hewan Peliharaan, Lebih Dekat.",
+  "save": "Simpan",
+  "cancel": "Batal",
+  "delete": "Hapus",
+  "edit": "Ubah",
+  "back": "Kembali",
+  "home": "Beranda",
+  "loading": "Memuat...",
+  "retry": "Coba Lagi",
+  "comingSoon": "Segera hadir",
+  "signIn": "Masuk",
+  "signUp": "Daftar",
+  "signOut": "Keluar",
+  "networkError": "Kesalahan jaringan. Silakan coba lagi.",
+  "unknownError": "Terjadi kesalahan. Silakan coba lagi.",
+  "searchPlaceholder": "Cari..."
+}

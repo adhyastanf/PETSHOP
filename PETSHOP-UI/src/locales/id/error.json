@@ -1,0 +1,17 @@
+{
+  "forbidden": {
+    "title": "Akses Ditolak",
+    "description": "Anda tidak memiliki izin untuk mengakses halaman ini."
+  },
+  "notFound": {
+    "title": "Halaman tidak ditemukan",
+    "description": "Halaman yang Anda cari tidak tersedia."
+  },
+  "server": {
+    "title": "Terjadi kesalahan",
+    "description": "Terjadi kesalahan yang tidak terduga. Silakan coba lagi."
+  },
+  "sessionExpired": "Sesi Anda telah berakhir. Silakan masuk kembali.",
+  "noPermission": "Halaman ini hanya tersedia untuk akun customer atau super admin.",
+  "apiUnavailable": "Tidak dapat terhubung ke server API. Pastikan backend berjalan."
+}

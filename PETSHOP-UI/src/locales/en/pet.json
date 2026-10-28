@@ -1,0 +1,38 @@
+{
+  "title": "Pets",
+  "description": "Pet profiles and vaccination history",
+  "register": "Register Pet",
+  "editPet": "Edit Pet",
+  "deletePet": "Delete pet?",
+  "deleteConfirm": "\"{name}\" will be permanently deleted.",
+  "failedCreate": "Failed to register pet.",
+  "failedUpdate": "Failed to update pet.",
+  "failedDelete": "Failed to delete pet.",
+  "noPets": "No pets registered yet.",
+  "form": {
+    "name": "Name",
+    "petType": "Pet type",
+    "breed": "Breed",
+    "breedUnknown": "Unknown",
+    "gender": "Gender",
+    "male": "Male",
+    "female": "Female",
+    "birthDate": "Birth date",
+    "birthDateEstimated": "Birth date is estimated",
+    "weight": "Weight kg",
+    "color": "Color",
+    "sterilized": "Sterilized",
+    "hasMicrochip": "Has microchip",
+    "microchipNumber": "Microchip Number",
+    "hasAllergies": "Has allergies",
+    "allergies": "Allergies",
+    "hasSpecialNotes": "Has special notes",
+    "specialNotes": "Special Notes"
+  },
+  "vaccination": {
+    "title": "Vaccination History",
+    "selectPet": "Select a pet to view vaccination history.",
+    "loading": "Loading vaccination history...",
+    "noRecords": "No vaccination records yet."
+  }
+}
