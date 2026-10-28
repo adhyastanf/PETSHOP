@@ -11,7 +11,7 @@ export default async function NavbarComponent() {
   return (
     <header className='h-16 border-b border-border sticky top-0 z-50 bg-card'>
       <div className='h-full px-4 lg:px-8 flex gap-4 items-center justify-between max-w-7xl mx-auto'>
-        <Link href='/customer/home' className='flex items-center gap-2 shrink-0'>
+        <Link href='/' className='flex items-center gap-2 shrink-0'>
           <PawPrint className='size-7 text-primary' />
           <span className='text-lg font-bold text-foreground hidden sm:inline'>Oyen</span>
         </Link>

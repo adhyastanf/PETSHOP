@@ -12,3 +12,19 @@ export const AUTH_ERROR_MESSAGES = {
   FORBIDDEN: 'Anda tidak memiliki akses.',
   DUPLICATE_EMAIL: 'Email sudah terdaftar',
 } as const;
+
+export const getAuthErrorMessages = (t: (key: string) => string) =>
+  ({
+    INVALID_CREDENTIALS: t('auth.login.invalidCredentials'),
+    UNAUTHENTICATED: t('auth.login.invalidCredentials'),
+    ACCOUNT_BLOCKED: t('auth.login.accountBlocked'),
+    ACCOUNT_INACTIVE: t('auth.login.accountInactive'),
+    ACCOUNT_SUSPENDED: t('auth.login.accountSuspended'),
+    TOKEN_EXPIRED: t('error.sessionExpired'),
+    INVALID_TOKEN: t('error.sessionExpired'),
+    REFRESH_TOKEN_EXPIRED: t('error.sessionExpired'),
+    INVALID_REFRESH_TOKEN: t('error.sessionExpired'),
+    UNAUTHORIZED: 'Silakan login untuk melanjutkan.',
+    FORBIDDEN: 'Anda tidak memiliki akses.',
+    DUPLICATE_EMAIL: 'Email sudah terdaftar',
+  }) as const;

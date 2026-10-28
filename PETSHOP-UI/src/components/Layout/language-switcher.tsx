@@ -1,46 +1,46 @@
 'use client';
 
 import { Globe } from 'lucide-react';
-import { useI18n } from '@/lib/i18n';
+import { useLocale } from 'next-intl';
 import { SUPPORTED_LOCALES, LOCALE_LABELS, type Locale } from '@/locales';
 import { Button } from '@/components/ui/button';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { usePathname, useRouter } from '@/lib/i18n/navigation';
 
-/**
- * Language switcher dropdown.
- * Shows current language with globe icon, allows switching.
- */
 export default function LanguageSwitcher() {
-  const { locale, setLocale } = useI18n();
+  const locale = useLocale() as Locale;
+  const pathname = usePathname();
+  const router = useRouter();
+
+  function handleLocaleChange(nextLocale: Locale) {
+    if (nextLocale === locale) return;
+
+    router.replace(pathname, {
+      locale: nextLocale,
+    });
+  }
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
         render={
-          <button
-            className='inline-flex items-center gap-1.5 rounded-md px-2 py-1.5 text-sm text-muted-foreground hover:text-foreground cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-ring'
-            aria-label='Change language'
-          >
+          <Button variant='ghost' className='inline-flex cursor-pointer items-center gap-1.5 rounded-md px-2 py-1.5 text-sm text-muted-foreground hover:text-foreground' aria-label='Change language'>
             <Globe className='size-4' />
             <span className='hidden sm:inline'>{LOCALE_LABELS[locale]}</span>
-          </button>
+          </Button>
         }
       />
+
       <DropdownMenuContent align='end' className='w-40'>
         <DropdownMenuGroup>
           {SUPPORTED_LOCALES.map((loc) => (
-            <DropdownMenuItem
-              key={loc}
-              onClick={() => setLocale(loc)}
-              className={locale === loc ? 'font-medium text-primary' : ''}
-            >
+            <DropdownMenuItem key={loc} onClick={() => handleLocaleChange(loc)} className={locale === loc ? 'font-medium text-primary' : ''}>
               {LOCALE_LABELS[loc]}
+              {locale === loc && (
+                <span className='ml-auto' aria-label='Current language'>
+                  ✓
+                </span>
+              )}
             </DropdownMenuItem>
           ))}
         </DropdownMenuGroup>

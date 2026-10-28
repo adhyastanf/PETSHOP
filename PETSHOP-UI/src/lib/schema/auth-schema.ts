@@ -1,7 +1,3 @@
-/**
- * Zod validation schemas for auth forms.
- */
-
 import { z } from 'zod';
 
 export const loginSchema = z.object({

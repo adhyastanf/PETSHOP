@@ -1,10 +1,13 @@
-// middleware.ts
-import type { NextRequest } from 'next/server';
-import { NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
+import createMiddleware from 'next-intl/middleware';
+import { routing } from '@/lib/i18n/routing'; // Sesuaikan path routing Anda
 import { jwtDecodeUtils } from './utils/format';
 import { JWTPayload } from './types/auth';
 
-// Aturan rute yang butuh role/permission khusus
+// 1. Buat instance middleware dari next-intl
+const handleIntlRouting = createMiddleware(routing);
+
+// Atur rute yang butuh role/permission khusus
 const routePermissions: RouteConfig[] = [
   {
     path: '/admin',
@@ -16,10 +19,7 @@ const routePermissions: RouteConfig[] = [
   },
 ];
 
-// Daftar rute privat umum (hanya butuh login)
 const protectedRoutes = ['/profile', '/settings', '/dashboard'];
-
-// Daftar rute khusus tamu (tidak boleh dibuka kalau sudah login)
 const authRoutes = ['/login', '/register'];
 
 export function proxy(request: NextRequest) {
@@ -45,9 +45,13 @@ export function proxy(request: NextRequest) {
     }
   }
 
-  const matchedRouteConfig = routePermissions.find((route) => pathname.startsWith(route.path));
-  const isProtectedRoute = protectedRoutes.some((route) => pathname.startsWith(route));
-  const isAuthRoute = authRoutes.some((route) => pathname.startsWith(route));
+  // Handle pengecekan prefix bahasa jika ada (misal: /en/admin -> /admin untuk pengecekan route)
+  // next-intl kadang menyisipkan locale di awal path, kita bisa abaikan sementara untuk pengecekan auth
+  const pathnameWithoutLocale = pathname.replace(/^\/(en|id)/, '') || '/';
+
+  const matchedRouteConfig = routePermissions.find((route) => pathnameWithoutLocale.startsWith(route.path));
+  const isProtectedRoute = protectedRoutes.some((route) => pathnameWithoutLocale.startsWith(route));
+  const isAuthRoute = authRoutes.some((route) => pathnameWithoutLocale.startsWith(route));
 
   // 1. Belum login mencoba buka halaman privat
   if ((matchedRouteConfig || isProtectedRoute) && !isTokenValid && !refreshToken) {
@@ -79,12 +83,14 @@ export function proxy(request: NextRequest) {
       }
     }
   }
-  
-  return NextResponse.next();
+
+  // 4. Lolos pengecekan Auth, teruskan ke middleware next-intl untuk menangani bahasa/cookie/locale
+  return handleIntlRouting(request);
 }
 
 export const config = {
-  matcher: ['/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)'],
+  // Matcher digabung agar next-intl dan auth berjalan di path yang sama
+  matcher: ['/', '/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)'],
 };
 
 interface RouteConfig {

@@ -1,7 +1,7 @@
-import { AUTH_ERROR_MESSAGES } from './auth-errors';
-import { COMMON_ERROR_MESSAGES } from './common-errors';
+import { getAuthErrorMessages } from './auth-errors';
+import { getCommonErrorMessages } from './common-errors'; // Contoh file common error
 
-export const ERROR_MESSAGES = {
-  ...AUTH_ERROR_MESSAGES,
-  ...COMMON_ERROR_MESSAGES,
-} as const;
+export const getTranslatedErrorMessages = (t: (key: string) => string) => ({
+  ...getAuthErrorMessages(t),
+  ...getCommonErrorMessages(t),
+});

@@ -14,24 +14,6 @@ const api = axios.create({
   withCredentials: true,
 });
 
-// --- INTERCEPTOR UNTUK MENANGKAP COOKIE DI SSR ---
-// api.interceptors.request.use(async (config) => {
-//   if (typeof window === 'undefined') {
-//     try {
-//       const { cookies } = await import('next/headers');
-//       const cookieStore = await cookies();
-//       const cookieHeader = cookieStore.toString();
-
-//       if (cookieHeader) {
-//         config.headers.Cookie = cookieHeader;
-//       }
-//     } catch (error) {
-//       console.error('Gagal mengambil cookie di interceptor SSR:', error);
-//     }
-//   }
-//   return config;
-// });
-
 // --- INTERCEPTOR RESPONSE UNTUK MENGEMBALIKAN APIError ---
 api.interceptors.response.use(
   (response) => response,

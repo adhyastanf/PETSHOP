@@ -4,7 +4,7 @@ spring:
   datasource:
     url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/petshop}
     username: ${DATABASE_USERNAME:postgres}
-    password: ${DATABASE_PASSWORD:Petshop@2026}
+    password: ${DATABASE_PASSWORD:adhyastanf}
     hikari:
       maximum-pool-size: ${DB_POOL_SIZE:10}
   jpa:

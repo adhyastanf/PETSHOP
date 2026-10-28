@@ -94,6 +94,10 @@ async function handler(request: NextRequest): Promise<NextResponse> {
       }
     }
 
+    if (response.status === 204) {
+      return new NextResponse(null, { status: response.status });
+    }
+
     // Mengembalikan response sukses maupun error business logic 1:1 dari Spring Boot
     return NextResponse.json(response.data, { status: response.status });
   } catch (error) {

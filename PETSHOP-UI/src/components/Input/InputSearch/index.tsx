@@ -1,14 +1,14 @@
 'use client'
 
-import { Search } from "lucide-react";
 import {
   InputGroup,
   InputGroupAddon,
   InputGroupInput,
 } from "@/components/ui/input-group";
 import { cn } from "@/lib/utils";
+import { Search } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { ComponentProps } from "react";
-import { useI18n } from "@/lib/i18n";
 
 type InputProps = {
   icon ?: React.ReactNode;
@@ -24,7 +24,7 @@ export default function InputSearch({
   placeholder,
   ...props
 }: InputSearchProps) {
-  const { t } = useI18n();
+  const t = useTranslations();
 
   return (
     <InputGroup className={cn("w-full", className)}>
