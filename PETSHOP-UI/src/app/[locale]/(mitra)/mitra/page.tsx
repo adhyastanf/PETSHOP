@@ -2,11 +2,11 @@
 
 import Link from 'next/link';
 import { Building2, Store, Users } from 'lucide-react';
-import { useI18n } from '@/lib/i18n';
+import { useTranslations } from 'next-intl';
 import { Card, CardContent } from '@/components/ui/card';
 
 export default function MitraHomePage() {
-  const { t } = useI18n();
+  const t = useTranslations();
 
   const links = [
     { href: '/mitra/profile', icon: Store, label: t('merchant.profile.title') },

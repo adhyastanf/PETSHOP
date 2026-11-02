@@ -1,7 +1,7 @@
 'use client';
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useAuthStore } from '@/store/auth-store';
+import { useMe } from '@/hooks/use-auth';
 import { merchantService } from './merchant-service';
 import type {
   ApplyMerchantRequest,
@@ -28,8 +28,8 @@ export const MERCHANT_KEYS = {
 
 // Application
 export function useMyApplications() {
-  const { isAuthenticated } = useAuthStore();
-  return useQuery({ queryKey: MERCHANT_KEYS.applications, queryFn: merchantService.getMyApplications, enabled: isAuthenticated });
+  const { data: me } = useMe();
+  return useQuery({ queryKey: MERCHANT_KEYS.applications, queryFn: merchantService.getMyApplications, enabled: !!me });
 }
 
 export function useApplyMerchant() {
@@ -42,8 +42,8 @@ export function useApplyMerchant() {
 
 // Profile
 export function useMerchantProfile() {
-  const { isAuthenticated } = useAuthStore();
-  return useQuery({ queryKey: MERCHANT_KEYS.profile, queryFn: merchantService.getProfile, enabled: isAuthenticated });
+  const { data: me } = useMe();
+  return useQuery({ queryKey: MERCHANT_KEYS.profile, queryFn: merchantService.getProfile, enabled: !!me });
 }
 
 export function useUpdateMerchantProfile() {
@@ -56,8 +56,8 @@ export function useUpdateMerchantProfile() {
 
 // Branches
 export function useBranches() {
-  const { isAuthenticated } = useAuthStore();
-  return useQuery({ queryKey: MERCHANT_KEYS.branches, queryFn: merchantService.getBranches, enabled: isAuthenticated });
+  const { data: me } = useMe();
+  return useQuery({ queryKey: MERCHANT_KEYS.branches, queryFn: merchantService.getBranches, enabled: !!me });
 }
 
 export function useBranch(id: string) {
@@ -95,8 +95,8 @@ export function useSetBranchHours() {
 
 // Staff
 export function useStaff() {
-  const { isAuthenticated } = useAuthStore();
-  return useQuery({ queryKey: MERCHANT_KEYS.staff, queryFn: merchantService.getStaff, enabled: isAuthenticated });
+  const { data: me } = useMe();
+  return useQuery({ queryKey: MERCHANT_KEYS.staff, queryFn: merchantService.getStaff, enabled: !!me });
 }
 
 export function useAddStaff() {
@@ -146,13 +146,13 @@ export function useRemoveStaffBranch() {
 
 // Admin
 export function useAllApplications() {
-  const { isAuthenticated } = useAuthStore();
-  return useQuery({ queryKey: ['admin', 'applications'], queryFn: merchantService.getAllApplications, enabled: isAuthenticated });
+  const { data: me } = useMe();
+  return useQuery({ queryKey: ['admin', 'applications'], queryFn: merchantService.getAllApplications, enabled: !!me });
 }
 
 export function useAllVeterinarians() {
-  const { isAuthenticated } = useAuthStore();
-  return useQuery({ queryKey: ['admin', 'veterinarians'], queryFn: merchantService.getAllVeterinarians, enabled: isAuthenticated });
+  const { data: me } = useMe();
+  return useQuery({ queryKey: ['admin', 'veterinarians'], queryFn: merchantService.getAllVeterinarians, enabled: !!me });
 }
 
 export function useVerifyMerchant() {

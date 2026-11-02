@@ -11,12 +11,9 @@ vi.mock('@/features/merchant/merchant-service', () => ({
   },
 }));
 
-// Authenticated store so `enabled` gating in other hooks is harmless here.
-vi.mock('@/store/auth-store', () => ({
-  useAuthStore: Object.assign(
-    () => ({ isAuthenticated: true }),
-    { getState: () => ({ isAuthenticated: true }) }
-  ),
+// Authenticated session so `enabled` gating in query hooks is harmless here.
+vi.mock('@/hooks/use-auth', () => ({
+  useMe: () => ({ data: { id: 'u-1', roles: ['ROLE_ADMIN'] } }),
 }));
 
 import { useVerifyMerchant, useVerifyVet } from '@/features/merchant/query';

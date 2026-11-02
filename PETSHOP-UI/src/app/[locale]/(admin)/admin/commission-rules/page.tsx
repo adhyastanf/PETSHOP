@@ -3,7 +3,7 @@
 import { FormEvent, useState } from 'react';
 import { toast } from 'sonner';
 import { Plus } from 'lucide-react';
-import { useI18n } from '@/lib/i18n';
+import { useTranslations, useLocale } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -21,7 +21,8 @@ import {
   useCreateCommissionRule,
   useSetCommissionRuleActive,
 } from '@/features/config/query';
-import { ApiError } from '@/lib/api-client';
+import { ApiError } from '@/lib/api-error';
+import type { Locale } from '@/locales';
 import ConfirmDialog from '@/components/feedback/ConfirmDialog';
 import { formatEffectiveDate } from '@/features/config/format';
 import type {
@@ -31,7 +32,7 @@ import type {
 } from '@/features/config/types';
 
 function StatusBadge({ active }: { active: boolean }) {
-  const { t } = useI18n();
+  const t = useTranslations();
   return (
     <span
       className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
@@ -44,7 +45,8 @@ function StatusBadge({ active }: { active: boolean }) {
 }
 
 export default function AdminCommissionRulesPage() {
-  const { t, locale } = useI18n();
+  const t = useTranslations();
+  const locale = useLocale() as Locale;
   const { data: rules, isLoading, isError, error } = useCommissionRules();
   const createMutation = useCreateCommissionRule();
   const toggleMutation = useSetCommissionRuleActive();

@@ -2,11 +2,11 @@
 
 import { Store, Stethoscope } from 'lucide-react';
 import Link from 'next/link';
-import { useI18n } from '@/lib/i18n';
+import { useTranslations } from 'next-intl';
 import { Card, CardContent } from '@/components/ui/card';
 
 export default function AdminHomePage() {
-  const { t } = useI18n();
+  const t = useTranslations();
 
   const links = [
     { href: '/admin/merchants', icon: Store, label: t('merchant.verification.title') },

@@ -2,17 +2,17 @@
 
 import { useState } from 'react';
 import { toast } from 'sonner';
-import { useI18n } from '@/lib/i18n';
+import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import ConfirmDialog from '@/components/feedback/ConfirmDialog';
 import { useSystemConfig, useUpdateSystemConfig } from '@/features/config/query';
-import { ApiError } from '@/lib/api-client';
+import { ApiError } from '@/lib/api-error';
 import type { SystemConfig } from '@/features/config/types';
 
 function ConfigRow({ config }: { config: SystemConfig }) {
-  const { t } = useI18n();
+  const t = useTranslations();
   const updateMutation = useUpdateSystemConfig();
   const [value, setValue] = useState(config.value ?? '');
 
@@ -98,7 +98,7 @@ function ConfigRow({ config }: { config: SystemConfig }) {
 }
 
 export default function AdminSettingsPage() {
-  const { t } = useI18n();
+  const t = useTranslations();
   const { data: configs, isLoading, isError, error } = useSystemConfig();
 
   if (isLoading) {

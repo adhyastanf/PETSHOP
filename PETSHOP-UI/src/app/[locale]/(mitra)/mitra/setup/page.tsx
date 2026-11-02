@@ -4,17 +4,17 @@ import { FormEvent, useState } from 'react';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 import { Store } from 'lucide-react';
-import { useI18n } from '@/lib/i18n';
+import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { useCreateBranch } from '@/features/merchant/query';
-import { ApiError } from '@/lib/api-client';
+import { ApiError } from '@/lib/api-error';
 import type { CreateBranchRequest } from '@/features/merchant/types';
 
 export default function MitraSetupPage() {
-  const { t } = useI18n();
+  const t = useTranslations();
   const router = useRouter();
   const createMutation = useCreateBranch();
   const [form, setForm] = useState<CreateBranchRequest>({

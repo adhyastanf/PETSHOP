@@ -2,16 +2,16 @@
 
 import { useState } from 'react';
 import { toast } from 'sonner';
-import { useI18n } from '@/lib/i18n';
+import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent } from '@/components/ui/card';
 import { useAllVeterinarians, useVerifyVet } from '@/features/merchant/query';
-import { ApiError } from '@/lib/api-client';
+import { ApiError } from '@/lib/api-error';
 
 export default function AdminVeterinariansPage() {
-  const { t } = useI18n();
+  const t = useTranslations();
   const { data: staff, isLoading, isError, error } = useAllVeterinarians();
   const verifyMutation = useVerifyVet();
   const [actionId, setActionId] = useState<string | null>(null);

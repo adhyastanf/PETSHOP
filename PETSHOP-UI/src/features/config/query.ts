@@ -1,7 +1,7 @@
 'use client';
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useAuthStore } from '@/store/auth-store';
+import { useMe } from '@/hooks/use-auth';
 import { configService } from './config-service';
 import type { CreateCommissionRuleRequest } from './types';
 
@@ -14,11 +14,11 @@ export const CONFIG_KEYS = {
 // ===== System business configuration =====
 
 export function useSystemConfig() {
-  const { isAuthenticated } = useAuthStore();
+  const { data: me } = useMe();
   return useQuery({
     queryKey: CONFIG_KEYS.systemConfig,
     queryFn: configService.listConfig,
-    enabled: isAuthenticated,
+    enabled: !!me,
   });
 }
 
@@ -34,11 +34,11 @@ export function useUpdateSystemConfig() {
 // ===== Commission rules =====
 
 export function useCommissionRules() {
-  const { isAuthenticated } = useAuthStore();
+  const { data: me } = useMe();
   return useQuery({
     queryKey: CONFIG_KEYS.commissionRules,
     queryFn: configService.listCommissionRules,
-    enabled: isAuthenticated,
+    enabled: !!me,
   });
 }
 
@@ -64,11 +64,11 @@ export function useSetCommissionRuleActive() {
 // ===== Payment methods =====
 
 export function usePaymentMethods() {
-  const { isAuthenticated } = useAuthStore();
+  const { data: me } = useMe();
   return useQuery({
     queryKey: CONFIG_KEYS.paymentMethods,
     queryFn: configService.listPaymentMethods,
-    enabled: isAuthenticated,
+    enabled: !!me,
   });
 }
 

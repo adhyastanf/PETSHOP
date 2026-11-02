@@ -1,4 +1,4 @@
-import { apiClient } from '@/lib/api-client';
+import api from '@/lib/api';
 import type {
   ApplyMerchantRequest,
   MerchantApplicationResponse,
@@ -18,81 +18,87 @@ import type {
   VerifyVetRequest,
 } from './types';
 
+/**
+ * Service layer for the merchant/mitra APIs. All requests go through the
+ * axios instance in `@/lib/api`, which targets the same-origin Next.js API
+ * proxy (`/api/...`) and relies on the proxy for httpOnly-cookie auth.
+ * Endpoints are relative to the backend API base (e.g. `/merchant/profile`).
+ */
 export const merchantService = {
   // Application
-  apply(data: ApplyMerchantRequest): Promise<MerchantApplicationResponse> {
-    return apiClient<MerchantApplicationResponse>('/merchant/applications', { method: 'POST', body: data });
+  async apply(data: ApplyMerchantRequest): Promise<MerchantApplicationResponse> {
+    return (await api.post<MerchantApplicationResponse>('/merchant/applications', data)).data;
   },
-  getMyApplications(): Promise<MerchantApplicationResponse[]> {
-    return apiClient<MerchantApplicationResponse[]>('/merchant/applications/mine');
+  async getMyApplications(): Promise<MerchantApplicationResponse[]> {
+    return (await api.get<MerchantApplicationResponse[]>('/merchant/applications/mine')).data;
   },
 
   // Profile
-  getProfile(): Promise<MerchantProfile> {
-    return apiClient<MerchantProfile>('/merchant/profile');
+  async getProfile(): Promise<MerchantProfile> {
+    return (await api.get<MerchantProfile>('/merchant/profile')).data;
   },
-  updateProfile(data: UpdateMerchantProfileRequest): Promise<MerchantProfile> {
-    return apiClient<MerchantProfile>('/merchant/profile', { method: 'PATCH', body: data });
+  async updateProfile(data: UpdateMerchantProfileRequest): Promise<MerchantProfile> {
+    return (await api.patch<MerchantProfile>('/merchant/profile', data)).data;
   },
 
   // Branches
-  getBranches(): Promise<Branch[]> {
-    return apiClient<Branch[]>('/merchant/branches');
+  async getBranches(): Promise<Branch[]> {
+    return (await api.get<Branch[]>('/merchant/branches')).data;
   },
-  getBranch(id: string): Promise<Branch> {
-    return apiClient<Branch>(`/merchant/branches/${id}`);
+  async getBranch(id: string): Promise<Branch> {
+    return (await api.get<Branch>(`/merchant/branches/${id}`)).data;
   },
-  createBranch(data: CreateBranchRequest): Promise<Branch> {
-    return apiClient<Branch>('/merchant/branches', { method: 'POST', body: data });
+  async createBranch(data: CreateBranchRequest): Promise<Branch> {
+    return (await api.post<Branch>('/merchant/branches', data)).data;
   },
-  updateBranch(id: string, data: UpdateBranchRequest): Promise<Branch> {
-    return apiClient<Branch>(`/merchant/branches/${id}`, { method: 'PATCH', body: data });
+  async updateBranch(id: string, data: UpdateBranchRequest): Promise<Branch> {
+    return (await api.patch<Branch>(`/merchant/branches/${id}`, data)).data;
   },
 
   // Branch Hours
-  getBranchHours(branchId: string): Promise<BranchHours> {
-    return apiClient<BranchHours>(`/merchant/branches/${branchId}/hours`);
+  async getBranchHours(branchId: string): Promise<BranchHours> {
+    return (await api.get<BranchHours>(`/merchant/branches/${branchId}/hours`)).data;
   },
-  setBranchHours(branchId: string, hours: DayHours[]): Promise<BranchHours> {
-    return apiClient<BranchHours>(`/merchant/branches/${branchId}/hours`, { method: 'PUT', body: { hours } });
+  async setBranchHours(branchId: string, hours: DayHours[]): Promise<BranchHours> {
+    return (await api.put<BranchHours>(`/merchant/branches/${branchId}/hours`, { hours })).data;
   },
 
   // Staff
-  getStaff(): Promise<Staff[]> {
-    return apiClient<Staff[]>('/merchant/staff');
+  async getStaff(): Promise<Staff[]> {
+    return (await api.get<Staff[]>('/merchant/staff')).data;
   },
-  addStaff(data: AddStaffRequest): Promise<Staff> {
-    return apiClient<Staff>('/merchant/staff', { method: 'POST', body: data });
+  async addStaff(data: AddStaffRequest): Promise<Staff> {
+    return (await api.post<Staff>('/merchant/staff', data)).data;
   },
-  updateStaff(id: string, data: UpdateStaffRequest): Promise<Staff> {
-    return apiClient<Staff>(`/merchant/staff/${id}`, { method: 'PATCH', body: data });
+  async updateStaff(id: string, data: UpdateStaffRequest): Promise<Staff> {
+    return (await api.patch<Staff>(`/merchant/staff/${id}`, data)).data;
   },
-  deleteStaff(id: string): Promise<void> {
-    return apiClient<void>(`/merchant/staff/${id}`, { method: 'DELETE' });
+  async deleteStaff(id: string): Promise<void> {
+    await api.delete(`/merchant/staff/${id}`);
   },
 
   // Staff Branches
-  getStaffBranches(staffId: string): Promise<StaffBranch[]> {
-    return apiClient<StaffBranch[]>(`/merchant/staff/${staffId}/branches`);
+  async getStaffBranches(staffId: string): Promise<StaffBranch[]> {
+    return (await api.get<StaffBranch[]>(`/merchant/staff/${staffId}/branches`)).data;
   },
-  assignStaffBranch(staffId: string, data: AssignBranchRequest): Promise<StaffBranch> {
-    return apiClient<StaffBranch>(`/merchant/staff/${staffId}/branches`, { method: 'POST', body: data });
+  async assignStaffBranch(staffId: string, data: AssignBranchRequest): Promise<StaffBranch> {
+    return (await api.post<StaffBranch>(`/merchant/staff/${staffId}/branches`, data)).data;
   },
-  removeStaffBranch(staffId: string, branchId: string): Promise<void> {
-    return apiClient<void>(`/merchant/staff/${staffId}/branches/${branchId}`, { method: 'DELETE' });
+  async removeStaffBranch(staffId: string, branchId: string): Promise<void> {
+    await api.delete(`/merchant/staff/${staffId}/branches/${branchId}`);
   },
 
   // Admin
-  getAllApplications(): Promise<MerchantApplicationResponse[]> {
-    return apiClient<MerchantApplicationResponse[]>('/admin/merchants/applications');
+  async getAllApplications(): Promise<MerchantApplicationResponse[]> {
+    return (await api.get<MerchantApplicationResponse[]>('/admin/merchants/applications')).data;
   },
-  verifyMerchant(merchantId: string, data: VerifyMerchantRequest): Promise<MerchantProfile> {
-    return apiClient<MerchantProfile>(`/admin/merchants/${merchantId}/verify`, { method: 'POST', body: data });
+  async verifyMerchant(merchantId: string, data: VerifyMerchantRequest): Promise<MerchantProfile> {
+    return (await api.post<MerchantProfile>(`/admin/merchants/${merchantId}/verify`, data)).data;
   },
-  getAllVeterinarians(): Promise<Staff[]> {
-    return apiClient<Staff[]>('/admin/veterinarians');
+  async getAllVeterinarians(): Promise<Staff[]> {
+    return (await api.get<Staff[]>('/admin/veterinarians')).data;
   },
-  verifyVet(staffId: string, data: VerifyVetRequest): Promise<void> {
-    return apiClient<void>(`/admin/veterinarians/${staffId}/verify`, { method: 'POST', body: data });
+  async verifyVet(staffId: string, data: VerifyVetRequest): Promise<void> {
+    await api.post(`/admin/veterinarians/${staffId}/verify`, data);
   },
 };

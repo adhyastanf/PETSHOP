@@ -3,16 +3,16 @@
 import { FormEvent, useState } from 'react';
 import { toast } from 'sonner';
 import { ChevronDown } from 'lucide-react';
-import { useI18n } from '@/lib/i18n';
+import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent } from '@/components/ui/card';
 import { useAllApplications, useVerifyMerchant } from '@/features/merchant/query';
-import { ApiError } from '@/lib/api-client';
+import { ApiError } from '@/lib/api-error';
 
 function StatusBadge({ status }: { status: string }) {
-  const { t } = useI18n();
+  const t = useTranslations();
   const colors: Record<string, string> = {
     SUBMITTED: 'bg-blue-100 text-blue-800',
     UNDER_REVIEW: 'bg-yellow-100 text-yellow-800',
@@ -28,7 +28,7 @@ function StatusBadge({ status }: { status: string }) {
 }
 
 export default function AdminMerchantsPage() {
-  const { t } = useI18n();
+  const t = useTranslations();
   const { data: applications, isLoading, isError, error } = useAllApplications();
   const verifyMutation = useVerifyMerchant();
   const [expandedId, setExpandedId] = useState<string | null>(null);

@@ -2,20 +2,20 @@
 
 import { FormEvent, useEffect, useState } from 'react';
 import { toast } from 'sonner';
-import { useI18n } from '@/lib/i18n';
-import { useAuthStore } from '@/store/auth-store';
+import { useTranslations } from 'next-intl';
+import { useMe } from '@/hooks/use-auth';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useMerchantProfile, useUpdateMerchantProfile } from '@/features/merchant/query';
-import { ApiError } from '@/lib/api-client';
+import { ApiError } from '@/lib/api-error';
 import type { UpdateMerchantProfileRequest } from '@/features/merchant/types';
 
 export default function MitraProfilePage() {
-  const { t } = useI18n();
-  const { user } = useAuthStore();
+  const t = useTranslations();
+  const { data: user } = useMe();
   const { data: profile, isLoading, isError, error } = useMerchantProfile();
   const updateMutation = useUpdateMerchantProfile();
   const [form, setForm] = useState<UpdateMerchantProfileRequest>({

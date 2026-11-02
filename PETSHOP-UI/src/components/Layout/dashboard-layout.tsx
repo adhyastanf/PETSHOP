@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { PawPrint, Menu, X, LogOut } from 'lucide-react';
-import { useI18n } from '@/lib/i18n';
+import { useTranslations } from 'next-intl';
 import { useLogout, useMe } from '@/hooks/use-auth';
 import LanguageSwitcher from './language-switcher';
 
@@ -21,7 +21,7 @@ interface DashboardLayoutProps {
 }
 
 export default function DashboardLayout({ children, navItems, title }: DashboardLayoutProps) {
-  const { t } = useI18n();
+  const t = useTranslations();
   const pathname = usePathname();
   const { data: user } = useMe();
   const logoutMutation = useLogout();

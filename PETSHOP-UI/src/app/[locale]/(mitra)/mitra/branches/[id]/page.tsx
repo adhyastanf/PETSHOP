@@ -3,13 +3,13 @@
 import { FormEvent, useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import { toast } from 'sonner';
-import { useI18n } from '@/lib/i18n';
+import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useBranch, useUpdateBranch, useBranchHours, useSetBranchHours } from '@/features/merchant/query';
-import { ApiError } from '@/lib/api-client';
+import { ApiError } from '@/lib/api-error';
 import type { UpdateBranchRequest, DayHours } from '@/features/merchant/types';
 
 const DEFAULT_HOURS: DayHours[] = Array.from({ length: 7 }, (_, i) => ({
@@ -20,7 +20,7 @@ const DEFAULT_HOURS: DayHours[] = Array.from({ length: 7 }, (_, i) => ({
 }));
 
 export default function MitraBranchDetailPage() {
-  const { t } = useI18n();
+  const t = useTranslations();
   const params = useParams();
   const branchId = params.id as string;
   const { data: branch, isLoading, isError, error } = useBranch(branchId);

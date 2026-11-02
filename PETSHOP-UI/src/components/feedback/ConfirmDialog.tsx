@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { TriangleAlert } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useI18n } from '@/lib/i18n';
+import { useTranslations } from 'next-intl';
 
 interface ConfirmDialogProps {
   title: string;
@@ -28,7 +28,7 @@ export default function ConfirmDialog({
   loading = false,
   children,
 }: ConfirmDialogProps) {
-  const { t } = useI18n();
+  const t = useTranslations();
   const [isOpen, setIsOpen] = useState(false);
 
   const resolvedConfirmLabel = confirmLabel ?? t('common.delete');

@@ -4,14 +4,14 @@ import { FormEvent, useState } from 'react';
 import { toast } from 'sonner';
 import Link from 'next/link';
 import { Plus } from 'lucide-react';
-import { useI18n } from '@/lib/i18n';
-import { useAuthStore } from '@/store/auth-store';
+import { useTranslations } from 'next-intl';
+import { useMe } from '@/hooks/use-auth';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useBranches, useCreateBranch } from '@/features/merchant/query';
-import { ApiError } from '@/lib/api-client';
+import { ApiError } from '@/lib/api-error';
 import type { CreateBranchRequest } from '@/features/merchant/types';
 
 const emptyBranch: CreateBranchRequest = {
@@ -22,8 +22,8 @@ const emptyBranch: CreateBranchRequest = {
 };
 
 export default function MitraBranchesPage() {
-  const { t } = useI18n();
-  const { user } = useAuthStore();
+  const t = useTranslations();
+  const { data: user } = useMe();
   const { data: branches, isLoading, isError, error } = useBranches();
   const createMutation = useCreateBranch();
   const [showForm, setShowForm] = useState(false);

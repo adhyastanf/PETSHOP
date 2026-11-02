@@ -1,4 +1,4 @@
-import { apiClient } from '@/lib/api-client';
+import api from '@/lib/api';
 import type {
   SystemConfig,
   CommissionRule,
@@ -10,36 +10,38 @@ import type {
  * Service layer for the admin Business Configuration APIs.
  * All values are backend-authoritative; the frontend never computes business
  * or financial values — it only reads and edits configuration through these
- * endpoints.
+ * endpoints. Requests go through the axios instance in `@/lib/api` (same-origin
+ * Next.js proxy + httpOnly-cookie auth). Endpoints are relative to the backend
+ * API base (e.g. `/admin/config`).
  */
 export const configService = {
   // System business configuration
-  listConfig(): Promise<SystemConfig[]> {
-    return apiClient<SystemConfig[]>('/admin/config');
+  async listConfig(): Promise<SystemConfig[]> {
+    return (await api.get<SystemConfig[]>('/admin/config')).data;
   },
-  updateConfig(key: string, value: string): Promise<SystemConfig> {
-    return apiClient<SystemConfig>(`/admin/config/${key}`, { method: 'PUT', body: { value } });
+  async updateConfig(key: string, value: string): Promise<SystemConfig> {
+    return (await api.put<SystemConfig>(`/admin/config/${key}`, { value })).data;
   },
 
   // Commission rules
-  listCommissionRules(): Promise<CommissionRule[]> {
-    return apiClient<CommissionRule[]>('/admin/commission-rules');
+  async listCommissionRules(): Promise<CommissionRule[]> {
+    return (await api.get<CommissionRule[]>('/admin/commission-rules')).data;
   },
-  createCommissionRule(data: CreateCommissionRuleRequest): Promise<CommissionRule> {
-    return apiClient<CommissionRule>('/admin/commission-rules', { method: 'POST', body: data });
+  async createCommissionRule(data: CreateCommissionRuleRequest): Promise<CommissionRule> {
+    return (await api.post<CommissionRule>('/admin/commission-rules', data)).data;
   },
-  activateCommissionRule(id: string): Promise<CommissionRule> {
-    return apiClient<CommissionRule>(`/admin/commission-rules/${id}/activate`, { method: 'POST' });
+  async activateCommissionRule(id: string): Promise<CommissionRule> {
+    return (await api.post<CommissionRule>(`/admin/commission-rules/${id}/activate`)).data;
   },
-  deactivateCommissionRule(id: string): Promise<CommissionRule> {
-    return apiClient<CommissionRule>(`/admin/commission-rules/${id}/deactivate`, { method: 'POST' });
+  async deactivateCommissionRule(id: string): Promise<CommissionRule> {
+    return (await api.post<CommissionRule>(`/admin/commission-rules/${id}/deactivate`)).data;
   },
 
   // Payment methods
-  listPaymentMethods(): Promise<PaymentMethod[]> {
-    return apiClient<PaymentMethod[]>('/admin/payment-methods');
+  async listPaymentMethods(): Promise<PaymentMethod[]> {
+    return (await api.get<PaymentMethod[]>('/admin/payment-methods')).data;
   },
-  setPaymentMethodActive(id: string, isActive: boolean): Promise<PaymentMethod> {
-    return apiClient<PaymentMethod>(`/admin/payment-methods/${id}`, { method: 'PATCH', body: { isActive } });
+  async setPaymentMethodActive(id: string, isActive: boolean): Promise<PaymentMethod> {
+    return (await api.patch<PaymentMethod>(`/admin/payment-methods/${id}`, { isActive })).data;
   },
 };

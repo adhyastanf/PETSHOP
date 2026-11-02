@@ -5,17 +5,17 @@ import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Store } from 'lucide-react';
-import { useI18n } from '@/lib/i18n';
+import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent } from '@/components/ui/card';
 import { useApplyMerchant, useMyApplications } from '@/features/merchant/query';
-import { ApiError } from '@/lib/api-client';
+import { ApiError } from '@/lib/api-error';
 
 export default function MerchantApplyPage() {
-  const { t } = useI18n();
+  const t = useTranslations();
   const router = useRouter();
   const applyMutation = useApplyMerchant();
   const { data: applications, isLoading } = useMyApplications();

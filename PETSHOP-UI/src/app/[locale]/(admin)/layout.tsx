@@ -2,10 +2,10 @@
 
 import { Home, Store, Stethoscope, Percent, CreditCard, SlidersHorizontal } from 'lucide-react';
 import DashboardLayout, { type NavItem } from '@/components/Layout/dashboard-layout';
-import { useI18n } from '@/lib/i18n';
+import { useTranslations } from 'next-intl';
 
 export default function LayoutAdmin({ children }: { children: React.ReactNode }) {
-  const { t } = useI18n();
+  const t = useTranslations();
 
   const items: NavItem[] = [
     { href: '/admin', label: t('common.home'), icon: Home },

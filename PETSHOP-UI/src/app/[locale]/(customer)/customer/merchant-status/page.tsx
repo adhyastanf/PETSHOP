@@ -1,11 +1,11 @@
 'use client';
 
-import { useI18n } from '@/lib/i18n';
+import { useTranslations } from 'next-intl';
 import { Card, CardContent } from '@/components/ui/card';
 import { useMyApplications } from '@/features/merchant/query';
 
 function StatusBadge({ status }: { status: string }) {
-  const { t } = useI18n();
+  const t = useTranslations();
   const colors: Record<string, string> = {
     SUBMITTED: 'bg-blue-100 text-blue-800',
     UNDER_REVIEW: 'bg-yellow-100 text-yellow-800',
@@ -22,7 +22,7 @@ function StatusBadge({ status }: { status: string }) {
 }
 
 export default function MerchantStatusPage() {
-  const { t } = useI18n();
+  const t = useTranslations();
   const { data: applications, isLoading, isError, error } = useMyApplications();
 
   if (isLoading) {

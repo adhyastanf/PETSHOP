@@ -1,7 +1,8 @@
 import { render, screen, fireEvent, within } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import React from 'react';
-import { I18nContext, createTranslator } from '@/lib/i18n';
+import { NextIntlClientProvider } from 'next-intl';
+import { getMessages } from '@/locales';
 
 // ---- Mock the config query hooks used by the pages ----
 const mockSetPaymentActive = vi.fn();
@@ -45,12 +46,22 @@ import AdminCommissionRulesPage from '@/app/[locale]/(admin)/admin/commission-ru
 import AdminSettingsPage from '@/app/[locale]/(admin)/admin/settings/page';
 
 function renderWithI18n(ui: React.ReactElement) {
-  const t = createTranslator('en');
   return render(
-    <I18nContext.Provider value={{ locale: 'en', setLocale: () => {}, t }}>
+    <NextIntlClientProvider locale='en' messages={getMessages('en')}>
       {ui}
-    </I18nContext.Provider>
+    </NextIntlClientProvider>
   );
+}
+
+/** Resolve a dotted message key from the loaded locale bundle (test helper). */
+function translate(locale: 'en' | 'id', key: string): string {
+  const parts = key.split('.');
+  let current: unknown = getMessages(locale);
+  for (const part of parts) {
+    if (current === null || typeof current !== 'object') return key;
+    current = (current as Record<string, unknown>)[part];
+  }
+  return typeof current === 'string' ? current : key;
 }
 
 describe('Business Configuration admin pages', () => {
@@ -147,7 +158,7 @@ describe('Business Configuration admin pages', () => {
     // Re-mock system config to include the fallback commission key for this assertion
     renderWithI18n(<AdminSettingsPage />);
     // The default mock only has checkout; assert the i18n keys resolve for fallback commission.
-    const t = createTranslator('en');
+    const t = (key: string) => translate('en', key);
     expect(t('config.systemConfig.keys.default_commission_percentage')).toBe('Fallback commission (%)');
     expect(t('config.systemConfig.descriptions.default_commission_percentage')).toBe(
       'Used only when no applicable commission rule exists. Commission rules are the authoritative commission mechanism.'
@@ -187,7 +198,7 @@ describe('Business Configuration admin pages', () => {
   });
 
   it('resolves Indonesian i18n strings correctly (§6)', () => {
-    const t = createTranslator('id');
+    const t = (key: string) => translate('id', key);
     expect(t('config.systemConfig.keys.checkout_expiration_minutes')).toBe('Batas waktu pembayaran checkout (menit)');
     expect(t('config.systemConfig.keys.default_commission_percentage')).toBe('Komisi fallback (%)');
     expect(t('config.commission.unlimited')).toBe('Tidak terbatas');

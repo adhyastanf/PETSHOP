@@ -1,7 +1,7 @@
 'use client';
 
 import { toast } from 'sonner';
-import { useI18n } from '@/lib/i18n';
+import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import {
@@ -14,11 +14,11 @@ import {
 } from '@/components/ui/table';
 import ConfirmDialog from '@/components/feedback/ConfirmDialog';
 import { usePaymentMethods, useSetPaymentMethodActive } from '@/features/config/query';
-import { ApiError } from '@/lib/api-client';
+import { ApiError } from '@/lib/api-error';
 import type { PaymentMethod } from '@/features/config/types';
 
 function StatusBadge({ active }: { active: boolean }) {
-  const { t } = useI18n();
+  const t = useTranslations();
   return (
     <span
       className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
@@ -31,7 +31,7 @@ function StatusBadge({ active }: { active: boolean }) {
 }
 
 export default function AdminPaymentMethodsPage() {
-  const { t } = useI18n();
+  const t = useTranslations();
   const { data: methods, isLoading, isError, error } = usePaymentMethods();
   const toggleMutation = useSetPaymentMethodActive();
 

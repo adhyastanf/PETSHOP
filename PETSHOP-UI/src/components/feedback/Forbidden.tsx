@@ -3,13 +3,13 @@
 import { ShieldX } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { useI18n } from '@/lib/i18n';
+import { useTranslations } from 'next-intl';
 
 /**
- * 403 Forbidden ΓÇö canonical empty/error state pattern.
+ * 403 Forbidden — canonical empty/error state pattern.
  */
 export default function Forbidden() {
-  const { t } = useI18n();
+  const t = useTranslations();
   const router = useRouter();
 
   return (
