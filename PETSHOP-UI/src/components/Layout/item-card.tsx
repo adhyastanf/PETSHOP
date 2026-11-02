@@ -2,10 +2,11 @@ import Link from 'next/link';
 import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
 import { Card, CardAction, CardDescription, CardFooter, CardHeader, CardTitle } from '../ui/card';
+import { cn } from '@/lib/utils';
 
-export default function CardProduct({ title, description, textButton = 'Check it Out' }: CardProductTypes) {
+export default function CardProduct({ title, description, textButton = 'Check it Out', className }: CardProductTypes) {
   return (
-    <Card className='relative w-full pt-0'>
+    <Card className={cn('relative pt-0', className)}>
       <div className='absolute inset-0 z-30 aspect-video bg-black/35' />
       <img src='https://avatar.vercel.sh/shadcn1' alt='Event cover' className='relative z-20 aspect-video w-full object-cover brightness-60 grayscale dark:brightness-40' />
       <CardHeader>
@@ -28,4 +29,5 @@ type CardProductTypes = {
   title: string;
   description: string;
   textButton?: string;
+  className?: string;
 };

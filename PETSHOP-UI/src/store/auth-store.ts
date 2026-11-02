@@ -1,13 +1,31 @@
 /**
- * Auth store (Zustand) — manages access/refresh tokens and user state.
+ * COMPATIBILITY SHIM (transitional).
  *
- * Access token is kept in memory only. Refresh token is persisted to
- * sessionStorage for session restoration across page reloads.
- * This avoids exposing long-lived tokens in localStorage.
+ * The frontend refactor on `feature-login` removed the token-in-browser auth
+ * model (this Zustand store) in favor of httpOnly cookies managed by the
+ * Next.js API route handlers + proxy, with the current user exposed via the
+ * `useMe()` React Query hook (`@/hooks/use-auth`).
+ *
+ * Several Phase-3 modules still import `useAuthStore` to read `user` /
+ * `isAuthenticated`:
+ *   - features/config/query.ts, features/merchant/query.ts  (gate `enabled:`)
+ *   - [locale]/(mitra)/* pages                              (read `user`)
+ * and the legacy tests use `useAuthStore.getState()/.setState()`.
+ *
+ * To land the merge without rewriting those modules yet, this shim keeps the
+ * old import surface but derives `user` / `isAuthenticated` from the React
+ * Query `me` cache at call time, so runtime behaviour stays correct under the
+ * new cookie-based auth. Token fields/actions are retained as inert no-ops for
+ * source/test compatibility.
+ *
+ * TODO (follow-up migration): replace `useAuthStore` usages with `useMe()` and
+ * delete this shim together with the old auth-store tests.
  */
+'use client';
 
-import type { MeResponse } from '@/types/auth';
 import { create } from 'zustand';
+import type { MeResponse } from '@/types/auth';
+import { useMe } from '@/hooks/use-auth';
 
 interface AuthState {
   accessToken: string | null;
@@ -26,52 +44,44 @@ interface AuthActions {
 
 type AuthStore = AuthState & AuthActions;
 
-const REFRESH_TOKEN_KEY = 'petshop_rt';
-
-export const useAuthStore = create<AuthStore>((set) => ({
+/**
+ * Internal plain Zustand store retained ONLY so legacy call sites using
+ * `useAuthStore.getState()` / `.setState()` (currently just tests) keep working.
+ * It is NOT the source of truth for authentication anymore.
+ */
+const internalStore = create<AuthStore>((set) => ({
   accessToken: null,
   refreshToken: null,
   user: null,
   isAuthenticated: false,
-  isHydrated: false,
-
-  setTokens: (accessToken, refreshToken) => {
-    try {
-      sessionStorage.setItem(REFRESH_TOKEN_KEY, refreshToken);
-    } catch {
-      // SSR or storage unavailable — continue with in-memory only
-    }
-    set({ accessToken, refreshToken, isAuthenticated: true });
-  },
-
-  setUser: (user) => {
-    set({ user });
-  },
-
-  clearAuth: () => {
-    try {
-      sessionStorage.removeItem(REFRESH_TOKEN_KEY);
-    } catch {
-      // ignore
-    }
-    set({
-      accessToken: null,
-      refreshToken: null,
-      user: null,
-      isAuthenticated: false,
-    });
-  },
-
-  hydrate: () => {
-    try {
-      const rt = sessionStorage.getItem(REFRESH_TOKEN_KEY);
-      if (rt) {
-        set({ refreshToken: rt, isHydrated: true });
-      } else {
-        set({ isHydrated: true });
-      }
-    } catch {
-      set({ isHydrated: true });
-    }
-  },
+  isHydrated: true,
+  setTokens: (accessToken, refreshToken) =>
+    set({ accessToken, refreshToken, isAuthenticated: Boolean(accessToken) }),
+  setUser: (user) => set({ user, isAuthenticated: true }),
+  clearAuth: () =>
+    set({ accessToken: null, refreshToken: null, user: null, isAuthenticated: false }),
+  hydrate: () => set({ isHydrated: true }),
 }));
+
+/**
+ * Hook form: `const { user, isAuthenticated } = useAuthStore();`
+ *
+ * `user` / `isAuthenticated` reflect the current session via `useMe()`.
+ * Token fields and actions are inert (auth is cookie-based now).
+ */
+function useAuthStore(): AuthStore {
+  const { data: me } = useMe();
+  const base = internalStore();
+  return {
+    ...base,
+    user: me ?? null,
+    isAuthenticated: Boolean(me),
+  };
+}
+
+// Preserve Zustand static accessors for legacy `.getState()/.setState()` usage.
+useAuthStore.getState = internalStore.getState;
+useAuthStore.setState = internalStore.setState;
+useAuthStore.subscribe = internalStore.subscribe;
+
+export { useAuthStore };

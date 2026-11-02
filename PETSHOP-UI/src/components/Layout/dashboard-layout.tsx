@@ -5,8 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { PawPrint, Menu, X, LogOut } from 'lucide-react';
 import { useI18n } from '@/lib/i18n';
-import { useLogout } from '@/hooks/use-auth';
-import { useAuthStore } from '@/store/auth-store';
+import { useLogout, useMe } from '@/hooks/use-auth';
 import LanguageSwitcher from './language-switcher';
 
 export interface NavItem {
@@ -24,7 +23,7 @@ interface DashboardLayoutProps {
 export default function DashboardLayout({ children, navItems, title }: DashboardLayoutProps) {
   const { t } = useI18n();
   const pathname = usePathname();
-  const { user } = useAuthStore();
+  const { data: user } = useMe();
   const logoutMutation = useLogout();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 

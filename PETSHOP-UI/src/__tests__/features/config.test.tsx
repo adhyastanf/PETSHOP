@@ -40,9 +40,9 @@ vi.mock('@/features/config/query', () => ({
   useUpdateSystemConfig: () => ({ mutate: mockUpdateConfig, isPending: false }),
 }));
 
-import AdminPaymentMethodsPage from '@/app/(admin)/admin/payment-methods/page';
-import AdminCommissionRulesPage from '@/app/(admin)/admin/commission-rules/page';
-import AdminSettingsPage from '@/app/(admin)/admin/settings/page';
+import AdminPaymentMethodsPage from '@/app/[locale]/(admin)/admin/payment-methods/page';
+import AdminCommissionRulesPage from '@/app/[locale]/(admin)/admin/commission-rules/page';
+import AdminSettingsPage from '@/app/[locale]/(admin)/admin/settings/page';
 
 function renderWithI18n(ui: React.ReactElement) {
   const t = createTranslator('en');

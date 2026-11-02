@@ -6,7 +6,11 @@
   },
   "profile": {
     "title": "My Profile",
-    "description": "Profile and delivery addresses"
+    "description": "Profile delivery"
+  },
+  "address": {
+    "title": "My Address",
+    "description": "Delivery addresses"
   },
   "orders": {
     "title": "My Orders",

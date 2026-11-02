@@ -1,10 +1,10 @@
 'use client';
 
 import { PawPrint } from 'lucide-react';
-import { useI18n } from '@/lib/i18n';
+import { useTranslations } from 'next-intl';
 
 export default function FooterComponent() {
-  const { t } = useI18n();
+  const t = useTranslations();
 
   return (
     <footer className='border-t border-border bg-card'>

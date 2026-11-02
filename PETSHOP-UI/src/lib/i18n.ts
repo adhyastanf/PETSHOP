@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Internationalization utilities.
  * Provides the translation hook and locale management.
  */

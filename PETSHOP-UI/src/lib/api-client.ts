@@ -1,128 +1,63 @@
 /**
- * Centralized API client with auth header injection and token refresh.
+ * COMPATIBILITY SHIM (transitional).
+ *
+ * The frontend refactor on `feature-login` replaced the old fetch-based
+ * `apiClient` + browser-held Bearer tokens with an axios instance (`@/lib/api`)
+ * that talks to same-origin Next.js route handlers (`/api/...`), which proxy to
+ * the backend and manage httpOnly auth cookies + refresh.
+ *
+ * Phase-3 service layers (`features/config`, `features/merchant`) and several
+ * admin/mitra pages still import `{ apiClient }` and `{ ApiError }` from
+ * `@/lib/api-client`. To land the merge without rewriting those modules yet,
+ * this shim preserves the old import surface but routes every call through the
+ * new axios `api` instance (and therefore the new proxy/cookie auth).
+ *
+ * TODO (follow-up migration): migrate Phase-3 services to call `@/lib/api`
+ * directly (or dedicated service modules) and delete this shim.
  */
-
-import { useAuthStore } from '@/store/auth-store';
+import api from './api';
+import { ApiError } from './api-error';
 import type { ApiErrorResponse } from '@/types/auth';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api/v1';
+export { ApiError };
 
-export class ApiError extends Error {
-  public status: number;
-  public code: string;
-  public details: string[];
-  public traceId?: string;
-
-  constructor(status: number, body: ApiErrorResponse) {
-    super(body.message ?? `Request failed with status ${status}`);
-    this.name = 'ApiError';
-    this.status = status;
-    this.code = body.code ?? `HTTP_${status}`;
-    this.details = body.details ?? [];
-    this.traceId = body.traceId;
-  }
-}
-
-interface RequestOptions extends Omit<RequestInit, 'body'> {
+interface RequestOptions {
+  method?: string;
   body?: unknown;
-  /** Skip auth header injection (for public endpoints like login/register) */
+  headers?: Record<string, string>;
+  /** Retained for source compatibility; auth is handled by the proxy/cookies. */
   skipAuth?: boolean;
 }
 
-let refreshPromise: Promise<boolean> | null = null;
-
-async function attemptTokenRefresh(): Promise<boolean> {
-  const { refreshToken, setTokens, clearAuth } = useAuthStore.getState();
-
-  if (!refreshToken) {
-    clearAuth();
-    return false;
-  }
+/**
+ * Transitional wrapper preserving the legacy `apiClient<T>(endpoint, options)`
+ * signature. `endpoint` is relative to the backend API base (e.g.
+ * `/admin/config`); the axios instance prefixes `/api` and the Next proxy
+ * forwards to `${BACKEND_URL}${endpoint}`.
+ */
+export async function apiClient<T>(endpoint: string, options: RequestOptions = {}): Promise<T> {
+  const { method = 'GET', body, headers } = options;
 
   try {
-    const res = await fetch(`${API_URL}/auth/refresh`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ refreshToken }),
+    const response = await api.request<T>({
+      url: endpoint,
+      method,
+      ...(body !== undefined ? { data: body } : {}),
+      ...(headers ? { headers } : {}),
     });
-
-    if (!res.ok) {
-      clearAuth();
-      return false;
+    // 204 No Content → axios data is '' ; normalize to undefined like the old client.
+    return (response.data === '' ? undefined : response.data) as T;
+  } catch (error) {
+    // The axios interceptor in `@/lib/api` already rejects with ApiError.
+    if (error instanceof ApiError) {
+      throw error;
     }
-
-    const data = await res.json();
-    setTokens(data.accessToken, data.refreshToken);
-    return true;
-  } catch {
-    clearAuth();
-    return false;
+    const body: ApiErrorResponse = {
+      code: 'UNKNOWN_ERROR',
+      message: error instanceof Error ? error.message : 'Request failed.',
+      details: [],
+      timestamp: new Date().toISOString(),
+    };
+    throw new ApiError(0, body);
   }
-}
-
-export async function apiClient<T>(endpoint: string, options: RequestOptions = {}): Promise<T> {
-  const { skipAuth = false, body, headers: customHeaders, ...restOptions } = options;
-
-  const headers: Record<string, string> = {
-    'Content-Type': 'application/json',
-    ...(customHeaders as Record<string, string>),
-  };
-
-  if (!skipAuth) {
-    const { accessToken } = useAuthStore.getState();
-    if (accessToken) {
-      headers['Authorization'] = `Bearer ${accessToken}`;
-    }
-  }
-
-  const config: RequestInit = {
-    ...restOptions,
-    headers,
-    ...(body !== undefined ? { body: JSON.stringify(body) } : {}),
-  };
-
-  let res = await fetch(`${API_URL}${endpoint}`, config);
-
-  // If 401 and we have a refresh token, attempt refresh and retry once
-  if (res.status === 401 && !skipAuth) {
-    // Deduplicate concurrent refresh attempts
-    if (!refreshPromise) {
-      refreshPromise = attemptTokenRefresh().finally(() => {
-        refreshPromise = null;
-      });
-    }
-
-    const refreshed = await refreshPromise;
-
-    if (refreshed) {
-      const { accessToken } = useAuthStore.getState();
-      if (accessToken) {
-        headers['Authorization'] = `Bearer ${accessToken}`;
-      }
-      res = await fetch(`${API_URL}${endpoint}`, { ...config, headers });
-    }
-  }
-
-  // 204 No Content
-  if (res.status === 204) {
-    return undefined as T;
-  }
-
-  if (!res.ok) {
-    let errorBody: ApiErrorResponse;
-    try {
-      errorBody = await res.json();
-    } catch {
-      errorBody = {
-        code: 'UNKNOWN_ERROR',
-        message: `Request failed with status ${res.status}`,
-        details: [],
-        timestamp: new Date().toISOString(),
-      };
-    }
-    throw new ApiError(res.status, errorBody);
-  }
-
-  const json = await res.json();
-  return json as T;
 }

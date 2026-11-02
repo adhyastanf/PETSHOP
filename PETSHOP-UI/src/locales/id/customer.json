@@ -6,7 +6,11 @@
   },
   "profile": {
     "title": "Profil Saya",
-    "description": "Profil dan alamat pengiriman"
+    "description": "Profil pengiriman"
+  },
+  "address": {
+    "title": "Alamat Saya",
+    "description": "Alamat pengiriman"
   },
   "orders": {
     "title": "Pesanan Saya",
