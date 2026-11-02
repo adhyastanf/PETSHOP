@@ -4,15 +4,15 @@ import { useEffect } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { Building2, Home, Store, Users } from 'lucide-react';
 import DashboardLayout, { type NavItem } from '@/components/Layout/dashboard-layout';
-import { useI18n } from '@/lib/i18n';
-import { useAuthStore } from '@/store/auth-store';
+import { useTranslations } from 'next-intl';
+import { useMe } from '@/hooks/use-auth';
 import { useBranches } from '@/features/merchant/query';
 
 function MitraContent({ children }: { children: React.ReactNode }) {
-  const { t } = useI18n();
+  const t = useTranslations();
   const pathname = usePathname();
   const router = useRouter();
-  const { user } = useAuthStore();
+  const { data: user } = useMe();
   const { data: branches, isLoading } = useBranches();
 
   const isSetupPage = pathname === '/mitra/setup';
@@ -59,10 +59,8 @@ function MitraContent({ children }: { children: React.ReactNode }) {
 }
 
 export default function LayoutMitra({ children }: { children: React.ReactNode }) {
-  // NOTE: the old <ProtectedRoute> role guard was removed in the frontend
-  // refactor in favour of middleware-based protection (src/proxy.ts). The
-  // middleware currently guards /admin and /finance but NOT /mitra — adding a
-  // /mitra rule (PETSHOP_OWNER/ADMIN/STAFF/GROOMER/VETERINARIAN) is a required
-  // follow-up to restore the previous authorization coverage.
+  // Route-level role protection for /mitra is enforced by the Next.js
+  // middleware in src/proxy.ts (ROLE_PETSHOP_OWNER / ADMIN / STAFF / GROOMER /
+  // VETERINARIAN), mirroring the backend @PreAuthorize on /api/v1/merchant/**.
   return <MitraContent>{children}</MitraContent>;
 }

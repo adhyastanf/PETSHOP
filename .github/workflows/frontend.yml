@@ -46,4 +46,7 @@ jobs:
           NEXT_PUBLIC_DEFAULT_LOCALE: en
           NEXT_PUBLIC_SUPPORTED_LOCALES: en,id
           NEXT_PUBLIC_ENVIRONMENT: ci
+          # Server-side vars for the Next.js API route handlers / proxy.
+          BACKEND_URL: https://api.example.com/api/v1
+          INTERNAL_APP_URL: http://localhost:3000
         run: npm run build

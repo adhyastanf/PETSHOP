@@ -14,6 +14,18 @@ const routePermissions: RouteConfig[] = [
     requiredRoles: ['ROLE_SUPER_ADMIN', 'ROLE_ADMIN'],
   },
   {
+    // Mitra (merchant) workspace. Mirrors the backend @PreAuthorize on the
+    // /api/v1/merchant/** controllers so the UI enforces the same role set.
+    path: '/mitra',
+    requiredRoles: [
+      'ROLE_PETSHOP_OWNER',
+      'ROLE_PETSHOP_ADMIN',
+      'ROLE_PETSHOP_STAFF',
+      'ROLE_GROOMER',
+      'ROLE_VETERINARIAN',
+    ],
+  },
+  {
     path: '/finance',
     requiredPermissions: ['PERM_finance.view'],
   },
