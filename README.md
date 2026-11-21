@@ -61,8 +61,10 @@ Framework Infrastructure (current → production target):
 | ORM | Spring Data JPA / Hibernate | 6.6.x |
 | Migrations | Flyway | auto |
 | UI Library | shadcn/ui + Tailwind CSS | 4.x |
-| Server State | TanStack Query | 5.x |
+| Server State | TanStack Query + Axios | 5.x + 1.x |
 | Client State | Zustand | 5.x |
+| i18n | next-intl (`[locale]` routing, `en` / `id`) | 4.x |
+| Forms | React Hook Form + Zod resolvers | 7.x |
 | Validation | Zod (frontend) + Jakarta (backend) | — |
 | Testing | Vitest + JUnit 5 + Testcontainers | — |
 | CI/CD | GitHub Actions | — |
@@ -74,15 +76,16 @@ Framework Infrastructure (current → production target):
 ```
 /
 ├── PETSHOP-API/          Spring Boot backend
+│   └── docs/             API docs (see docs/README.md)
+│       ├── architecture/   System architecture, state machines, decisions
+│       ├── data/           Database and business rules
+│       ├── domain/         Domain designs (veterinary)
+│       ├── engineering/    Coding standards, security, tests
+│       ├── integration/    External service integrations
+│       └── implementation/ Roadmap, stories, progress, acceptance criteria
 ├── PETSHOP-UI/           Next.js frontend
-├── Docs/                 Canonical documentation
-│   ├── architecture/     System and backend/frontend architecture
-│   ├── api/              API contract and authorization
-│   ├── data/             Database and business rules
-│   ├── design/           Design system and UI patterns
-│   ├── engineering/      Coding standards, security, tests
-│   ├── integration/      External service integrations
-│   └── implementation/   Roadmap, stories, progress
+│   └── docs/             UI docs: frontend architecture, design system, UI patterns,
+│                         coding standards, development guide
 ├── .github/workflows/    CI/CD pipelines
 ├── AGENTS.md             AI agent operating manual
 └── README.md             This file
@@ -151,18 +154,20 @@ All configuration is environment-variable driven. See `.env.example` files for r
 | Document | Purpose |
 |----------|---------|
 | [AGENTS.md](AGENTS.md) | AI agent operating rules |
-| [PROJECT_CONTEXT.md](Docs/PROJECT_CONTEXT.md) | Canonical project context |
-| [ARCHITECTURE.md](Docs/architecture/ARCHITECTURE.md) | System architecture |
-| [BACKEND_ARCHITECTURE.md](Docs/architecture/BACKEND_ARCHITECTURE.md) | Spring Boot conventions |
-| [FRONTEND_ARCHITECTURE.md](Docs/architecture/FRONTEND_ARCHITECTURE.md) | Next.js architecture |
-| [API_CONTRACT.md](Docs/api/API_CONTRACT.md) | API standards + endpoint catalog |
-| [DESIGN_SYSTEM.md](Docs/design/DESIGN_SYSTEM.md) | Visual design system |
-| [UI_PATTERNS.md](Docs/design/UI_PATTERNS.md) | Page composition patterns |
-| [IMPLEMENTATION_ROADMAP.md](Docs/implementation/IMPLEMENTATION_ROADMAP.md) | Development phases |
-| [USER_STORIES.md](Docs/implementation/USER_STORIES.md) | Feature stories |
-| [PROJECT_PROGRESS.md](Docs/implementation/PROJECT_PROGRESS.md) | Current phase status |
-| [DEVELOPMENT_GUIDE.md](Docs/DEVELOPMENT_GUIDE.md) | Developer step-by-step guide |
-| [DOTNET_TO_SPRINGBOOT.md](Docs/DOTNET_TO_SPRINGBOOT.md) | .NET developer reference |
+| [PROJECT_CONTEXT.md](PETSHOP-API/docs/PROJECT_CONTEXT.md) | Canonical project context |
+| [ARCHITECTURE.md](PETSHOP-API/docs/architecture/ARCHITECTURE.md) | System architecture |
+| [BACKEND_ARCHITECTURE.md](PETSHOP-API/docs/BACKEND_ARCHITECTURE.md) | Spring Boot conventions (API) |
+| [API_CONTRACT.md](PETSHOP-API/docs/API_CONTRACT.md) | API standards + endpoint catalog (API) |
+| [AUTHORIZATION_MATRIX.md](PETSHOP-API/docs/AUTHORIZATION_MATRIX.md) | Actor capabilities and ownership (API) |
+| [FRONTEND_ARCHITECTURE.md](PETSHOP-UI/docs/FRONTEND_ARCHITECTURE.md) | Next.js architecture, auth proxy, i18n (UI) |
+| [DESIGN_SYSTEM.md](PETSHOP-UI/docs/DESIGN_SYSTEM.md) | Visual design system (UI) |
+| [UI_PATTERNS.md](PETSHOP-UI/docs/UI_PATTERNS.md) | Page composition patterns (UI) |
+| [CODING_STANDARDS.md (UI)](PETSHOP-UI/docs/CODING_STANDARDS.md) | TypeScript, structure, and i18n standards |
+| [IMPLEMENTATION_ROADMAP.md](PETSHOP-API/docs/implementation/IMPLEMENTATION_ROADMAP.md) | Development phases |
+| [USER_STORIES.md](PETSHOP-API/docs/implementation/USER_STORIES.md) | Feature stories |
+| [PROJECT_PROGRESS.md](PETSHOP-API/docs/implementation/PROJECT_PROGRESS.md) | Current phase status |
+| [DEVELOPMENT_GUIDE.md (API)](PETSHOP-API/docs/DEVELOPMENT_GUIDE.md) | Backend step-by-step guide |
+| [DEVELOPMENT_GUIDE.md (UI)](PETSHOP-UI/docs/DEVELOPMENT_GUIDE.md) | Frontend step-by-step guide |
 
 AI agents start with `AGENTS.md`. Human developers start with this README.
 

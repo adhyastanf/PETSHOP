@@ -10,6 +10,8 @@ All public application APIs use base path `/api/v1`.
 
 Authentication: Bearer token in `Authorization` header. Never in query strings.
 
+The web frontend does not call this API directly from the browser. It goes through the Next.js proxy, which keeps the tokens in httpOnly cookies and adds the `Authorization` header server-side (see `FRONTEND_ARCHITECTURE.md` in the UI project, `PETSHOP-UI/docs/`). Other clients call the API directly with the Bearer token.
+
 Public IDs: UUID strings. Money: decimal numbers. Dates: ISO-8601.
 
 ---
@@ -544,7 +546,7 @@ All admin endpoints under `/api/v1/admin/**`. Require `ADMIN` or `SUPER_ADMIN` r
 |--------|-----|---------|
 | GET/PATCH | `/api/v1/admin/users/**` | User management |
 | GET/POST | `/api/v1/admin/merchants/**` | Merchant applications, verification |
-| POST | `/api/v1/admin/veterinarians/{id}/verify` | Verify/reject vet |
+| POST | `/api/v1/admin/veterinarians/{id}/verify` | Verify/reject vet. Body `{ "decision": "VERIFIED" \| "REJECTED", "notes"? }`; other values return 400 |
 | — | `/api/v1/admin/catalog/**` | Category, brand, product/service moderation |
 | — | `/api/v1/admin/transactions/**` | Checkouts, orders, bookings, payments inspection |
 | — | `/api/v1/admin/refunds/**` | Refund review, approve/reject |

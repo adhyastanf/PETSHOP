@@ -114,7 +114,9 @@ Flag unresolved contradictions rather than silently inventing behavior.
 - `BACKEND_ARCHITECTURE.md` — Spring Boot implementation conventions.
 - `API_CONTRACT.md` — HTTP/API conventions.
 - `AUTHORIZATION_MATRIX.md` — actor capabilities and ownership.
-- `FRONTEND_ARCHITECTURE.md` — Next.js architecture and state strategy.
+- `PETSHOP-UI/docs/FRONTEND_ARCHITECTURE.md` — Next.js architecture, auth proxy, i18n, and state strategy.
+- `PETSHOP-UI/docs/DESIGN_SYSTEM.md` — visual design system.
+- `PETSHOP-UI/docs/UI_PATTERNS.md` — page composition patterns.
 - `INTEGRATION_SPEC.md` — payment/shipping/storage/OAuth/webhook boundaries.
 - `CODING_STANDARDS.md` — engineering conventions.
 
@@ -153,4 +155,4 @@ English is the canonical language for development and the source language for al
 
 Bahasa Indonesia is the first supported localization.
 
-All future frontend work must follow the internationalization architecture defined in `architecture/FRONTEND_ARCHITECTURE.md`. Hardcoded user-facing strings are prohibited in new code.
+All future frontend work must follow the internationalization architecture defined in `PETSHOP-UI/docs/FRONTEND_ARCHITECTURE.md`. Hardcoded user-facing strings are prohibited in new code.

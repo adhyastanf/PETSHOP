@@ -2,7 +2,7 @@
 
 Build in dependency order.
 
-Each phase maps to user stories in `Docs/implementation/USER_STORIES.md`.
+Each phase maps to user stories in `implementation/USER_STORIES.md`.
 Detailed behavior remains defined by the canonical product, business-rule,
 database, API, authorization, architecture, security, acceptance-criteria,
 and Definition-of-Done documentation.
@@ -693,7 +693,7 @@ by the foundation.
 Phase references must be resolved from this roadmap.
 
 Story details must be resolved from
-`Docs/implementation/USER_STORIES.md` and the relevant canonical
+`implementation/USER_STORIES.md` and the relevant canonical
 documentation.
 
 When asked to complete a phase, the agent must:

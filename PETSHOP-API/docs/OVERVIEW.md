@@ -218,19 +218,20 @@ Phase 4   ⏳ Catalog (current)
 | Document | Location |
 |----------|----------|
 | Agent Rules | `AGENTS.md` |
-| This Overview | `Docs/OVERVIEW.md` |
-| Project Context | `Docs/PROJECT_CONTEXT.md` |
-| Architecture | `Docs/architecture/ARCHITECTURE.md` |
-| Backend Architecture | `Docs/architecture/BACKEND_ARCHITECTURE.md` |
-| Frontend Architecture | `Docs/architecture/FRONTEND_ARCHITECTURE.md` |
-| API Contract | `Docs/api/API_CONTRACT.md` |
-| Business Rules | `Docs/data/BUSINESS_RULES.md` |
-| Database Knowledge | `Docs/data/DATABASE_KNOWLEDGE.md` |
-| Design System | `Docs/design/DESIGN_SYSTEM.md` |
-| UI Patterns | `Docs/design/UI_PATTERNS.md` |
-| Integration Spec | `Docs/integration/INTEGRATION_SPEC.md` |
-| Feature Knowledge | `Docs/FEATURE_KNOWLEDGE.md` |
-| Implementation Roadmap | `Docs/implementation/IMPLEMENTATION_ROADMAP.md` |
-| User Stories | `Docs/implementation/USER_STORIES.md` |
-| Project Progress | `Docs/implementation/PROJECT_PROGRESS.md` |
-| Development Guide | `Docs/DEVELOPMENT_GUIDE.md` |
+| This Overview | `OVERVIEW.md` |
+| Project Context | `PROJECT_CONTEXT.md` |
+| Architecture | `architecture/ARCHITECTURE.md` |
+| Backend Architecture (API) | `BACKEND_ARCHITECTURE.md` |
+| API Contract (API) | `API_CONTRACT.md` |
+| Authorization Matrix (API) | `AUTHORIZATION_MATRIX.md` |
+| Frontend Architecture (UI) | `PETSHOP-UI/docs/FRONTEND_ARCHITECTURE.md` |
+| Business Rules | `data/BUSINESS_RULES.md` |
+| Database Knowledge | `data/DATABASE_KNOWLEDGE.md` |
+| Design System (UI) | `PETSHOP-UI/docs/DESIGN_SYSTEM.md` |
+| UI Patterns (UI) | `PETSHOP-UI/docs/UI_PATTERNS.md` |
+| Integration Spec | `integration/INTEGRATION_SPEC.md` |
+| Feature Knowledge | `FEATURE_KNOWLEDGE.md` |
+| Implementation Roadmap | `implementation/IMPLEMENTATION_ROADMAP.md` |
+| User Stories | `implementation/USER_STORIES.md` |
+| Project Progress | `implementation/PROJECT_PROGRESS.md` |
+| Development Guide | `DEVELOPMENT_GUIDE.md` |

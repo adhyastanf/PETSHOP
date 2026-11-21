@@ -2,7 +2,7 @@
 
 This file defines how AI coding agents must work in this repository.
 
-Read `Docs/PROJECT_CONTEXT.md` before any implementation.
+Read `PETSHOP-API/docs/PROJECT_CONTEXT.md` before any implementation.
 
 ---
 
@@ -53,10 +53,10 @@ Do not silently invent business rules.
 When a request references a phase, milestone, or user-story ID:
 
 - Phase or milestone → resolve from
-  `Docs/implementation/IMPLEMENTATION_ROADMAP.md`
+  `PETSHOP-API/docs/implementation/IMPLEMENTATION_ROADMAP.md`
 
 - User-story ID (for example `US-PET-001`) → resolve from
-  `Docs/implementation/USER_STORIES.md`
+  `PETSHOP-API/docs/implementation/USER_STORIES.md`
 
 After resolving it, read only the canonical documentation relevant
 to that scope and inspect existing code to determine what is already
@@ -72,7 +72,7 @@ Do not read every project document for every task.
 
 Always understand:
 - `AGENTS.md`
-- `Docs/PROJECT_CONTEXT.md`
+- `PETSHOP-API/docs/PROJECT_CONTEXT.md`
 
 Then load only documentation relevant to the affected domain.
 
@@ -481,8 +481,8 @@ migration
 
 ## 13. Backend Rules
 
-Follow `architecture/BACKEND_ARCHITECTURE.md`, `api/API_CONTRACT.md`,
-`api/AUTHORIZATION_MATRIX.md`, and `engineering/CODING_STANDARDS.md`.
+Follow `PETSHOP-API/docs/BACKEND_ARCHITECTURE.md`, `PETSHOP-API/docs/API_CONTRACT.md`,
+`PETSHOP-API/docs/AUTHORIZATION_MATRIX.md`, and `PETSHOP-API/docs/engineering/CODING_STANDARDS.md`.
 
 Prefer intent-based business operations such as:
 
@@ -505,13 +505,14 @@ module — never hardcoded. Do not make technical/security invariants
 admin-editable. When consuming commission in future finance/order phases,
 snapshot the resolved rate onto the transaction so historical records are never
 retroactively changed. Xendit is the canonical payment provider. See
-`architecture/BACKEND_ARCHITECTURE.md` → Business Configuration.
+`PETSHOP-API/docs/BACKEND_ARCHITECTURE.md` → Business Configuration.
 
 ---
 
 ## 14. Frontend Rules
 
-Follow `architecture/FRONTEND_ARCHITECTURE.md`.
+Follow `PETSHOP-UI/docs/FRONTEND_ARCHITECTURE.md` and
+`PETSHOP-UI/docs/CODING_STANDARDS.md`.
 
 Use TanStack Query for server state.
 
@@ -545,11 +546,11 @@ Prevent duplicate submissions.
 ## 15. Definition of Done
 
 Before declaring a task complete, verify
-`Docs/implementation/DEFINITION_OF_DONE.md`.
+`PETSHOP-API/docs/implementation/DEFINITION_OF_DONE.md`.
 
 Also apply:
 
-`Docs/implementation/ACCEPTANCE_CRITERIA.md`
+`PETSHOP-API/docs/implementation/ACCEPTANCE_CRITERIA.md`
 
 A task that fails applicable Definition of Done requirements must be
 reported as PARTIAL or BLOCKED, not DONE.
@@ -613,8 +614,8 @@ that story according to the canonical documentation.
 
 When implementing frontend features:
 
-- Read `Docs/design/DESIGN_SYSTEM.md`.
-- Read `Docs/design/UI_PATTERNS.md`.
+- Read `PETSHOP-UI/docs/DESIGN_SYSTEM.md`.
+- Read `PETSHOP-UI/docs/UI_PATTERNS.md`.
 - Reuse existing components.
 - Do not redesign existing UI.
 - Extend the design system only when necessary.

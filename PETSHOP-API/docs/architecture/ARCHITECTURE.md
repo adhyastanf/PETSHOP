@@ -62,7 +62,7 @@
 
 | Component | Responsibility |
 |-----------|---------------|
-| Next.js | UI rendering, routing, client state, i18n, API consumption |
+| Next.js | UI rendering, locale routing, client state, i18n, route-level auth checks, and a server-side proxy that holds auth tokens in httpOnly cookies and forwards API calls |
 | Spring Boot | Authentication, authorization, business logic, data access |
 | PostgreSQL | Persistent data, constraints, transactions |
 | Platform Services | Abstraction layer isolating business logic from external providers |
@@ -90,11 +90,11 @@ Logical modularity is mandatory even while deployment remains monolithic.
 ## High-Level Runtime
 ```text
 Browser
-  |
+  |  same-origin /api/*  (httpOnly auth cookies)
   v
-Next.js
+Next.js  (pages + route-handler proxy; adds Bearer token server-side)
   |
- HTTPS / REST JSON
+ HTTPS / REST JSON  (${BACKEND_URL}, /api/v1)
   v
 Spring Boot
   |

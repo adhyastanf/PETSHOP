@@ -1665,6 +1665,8 @@ See **Avatar System** section above. Reuse universally.
 
 See **Modal & Dialog Guidelines** section above. One implementation for all confirmation flows.
 
+**Implementation:** call `alertDialog.confirm | success | error | warning | info` from `@/lib/alert-dialog`. It drives the shared shadcn `alert-dialog` through `store/alert-modal-store` and is rendered once by `<AppAlertDialog />` in `app/[locale]/layout.tsx`. Form modals use `components/Modal` and `components/Dialog`. The former `components/feedback/ConfirmDialog` has been removed; use `alertDialog` everywhere. See `FRONTEND_ARCHITECTURE.md`.
+
 ---
 
 ## Bottom Sheet

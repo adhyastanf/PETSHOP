@@ -37,3 +37,15 @@ Database connection can be configured with:
 - `DATABASE_URL`
 - `DATABASE_USERNAME`
 - `DATABASE_PASSWORD`
+
+## Documentation
+
+API documents live in [`docs/`](docs/):
+
+| Document | Purpose |
+|----------|---------|
+| [BACKEND_ARCHITECTURE.md](docs/BACKEND_ARCHITECTURE.md) | Spring Boot conventions, modules, business configuration |
+| [API_CONTRACT.md](docs/API_CONTRACT.md) | API standards, error format, endpoint catalog |
+| [AUTHORIZATION_MATRIX.md](docs/AUTHORIZATION_MATRIX.md) | Actor capabilities and ownership rules |
+
+The web client's architecture is documented in the UI project (`PETSHOP-UI/docs/`).
