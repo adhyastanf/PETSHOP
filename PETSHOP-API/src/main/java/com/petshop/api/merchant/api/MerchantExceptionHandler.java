@@ -6,12 +6,19 @@ import com.petshop.api.merchant.application.exception.BranchNotFoundException;
 import com.petshop.api.merchant.application.exception.MerchantAlreadyExistsException;
 import com.petshop.api.merchant.application.exception.MerchantNotFoundException;
 import com.petshop.api.merchant.application.exception.StaffNotFoundException;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+/**
+ * Merchant-module error mapping. Ordered ahead of {@code GlobalExceptionHandler}
+ * so its catch-all never turns these domain errors into 500.
+ */
+@Order(Ordered.HIGHEST_PRECEDENCE)
 @RestControllerAdvice(basePackages = "com.petshop.api.merchant")
 public class MerchantExceptionHandler {
 

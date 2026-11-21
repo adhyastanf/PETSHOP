@@ -367,8 +367,12 @@ public class MerchantServiceImpl implements MerchantService {
         Merchant merchant = getAuthorizedMerchant(userId);
         MerchantBranch branch = getAuthorizedBranch(merchant, branchId);
 
-        // Delete existing hours and replace
+        // Delete existing hours and replace.
+        // Flush the deletes first: Hibernate orders INSERTs before DELETEs at flush time,
+        // which would otherwise violate uq_merchant_business_hours_branch_day whenever
+        // hours are saved a second time.
         businessHoursRepository.deleteByBranch_Id(branchId);
+        businessHoursRepository.flush();
 
         List<MerchantBusinessHour> newHours = request.hours().stream()
                 .map(dayHours -> MerchantBusinessHour.builder()

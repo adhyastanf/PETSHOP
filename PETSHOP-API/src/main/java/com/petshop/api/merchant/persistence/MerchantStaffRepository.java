@@ -20,4 +20,6 @@ public interface MerchantStaffRepository extends JpaRepository<MerchantStaff, UU
     boolean existsByMerchant_IdAndUser_IdAndDeletedAtIsNull(UUID merchantId, UUID userId);
 
     Optional<MerchantStaff> findFirstByUser_IdAndDeletedAtIsNull(UUID userId);
+
+    boolean existsByUser_IdAndRole_CodeAndDeletedAtIsNull(UUID userId, String roleCode);
 }

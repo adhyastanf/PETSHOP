@@ -4,6 +4,8 @@ import java.time.Instant;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -15,6 +17,15 @@ import org.slf4j.LoggerFactory;
 
 import com.petshop.api.utils.ApiResponse;
 
+/**
+ * Fallback exception handler.
+ *
+ * <p>Must run after the module-specific advices (auth, businessconfig, merchant).
+ * Spring picks the first advice that has any matching handler, so without an
+ * explicit order this class's {@code Exception.class} catch-all could win and turn
+ * domain errors (409/400/422) into 500.
+ */
+@Order(Ordered.LOWEST_PRECEDENCE)
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 

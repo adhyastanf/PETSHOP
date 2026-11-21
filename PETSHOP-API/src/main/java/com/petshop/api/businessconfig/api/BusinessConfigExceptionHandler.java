@@ -3,6 +3,8 @@ package com.petshop.api.businessconfig.api;
 import com.petshop.api.auth.api.dto.ErrorResponse;
 import com.petshop.api.businessconfig.application.exception.ConfigurationNotFoundException;
 import com.petshop.api.businessconfig.application.exception.InvalidConfigurationException;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -10,8 +12,10 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 /**
  * Maps business-configuration exceptions to the canonical {@link ErrorResponse}
- * contract. Scoped to the businessconfig module.
+ * contract. Scoped to the businessconfig module and ordered ahead of
+ * {@code GlobalExceptionHandler} so its catch-all cannot take precedence.
  */
+@Order(Ordered.HIGHEST_PRECEDENCE)
 @RestControllerAdvice(basePackages = "com.petshop.api.businessconfig")
 public class BusinessConfigExceptionHandler {
 

@@ -3,6 +3,7 @@ package com.petshop.api.merchant.application;
 import com.petshop.api.auth.domain.Role;
 import com.petshop.api.auth.domain.User;
 import com.petshop.api.auth.domain.UserRole;
+import com.petshop.api.auth.domain.UserRoleId;
 import com.petshop.api.auth.persistence.RoleRepository;
 import com.petshop.api.auth.persistence.UserRepository;
 import com.petshop.api.auth.persistence.UserRoleRepository;
@@ -155,7 +156,22 @@ public class StaffServiceImpl implements StaffService {
         // Soft-delete
         staff.setDeletedAt(Instant.now());
         staff.setStatus(STATUS_INACTIVE);
-        staffRepository.save(staff);
+        staffRepository.saveAndFlush(staff);
+
+        revokeStaffRoleIfUnused(staff.getUser(), staff.getRole());
+    }
+
+    /**
+     * Removes the merchant-scope role that was granted when the staff member was added,
+     * unless the user still holds an active staff record with the same role (for example
+     * at another merchant). Least privilege: a removed staff member must not keep a role
+     * that routes them into the merchant workspace.
+     */
+    private void revokeStaffRoleIfUnused(User user, Role role) {
+        if (staffRepository.existsByUser_IdAndRole_CodeAndDeletedAtIsNull(user.getId(), role.getCode())) {
+            return;
+        }
+        userRoleRepository.deleteById(new UserRoleId(user.getId(), role.getId()));
     }
 
     // ===== US-MER-009: Staff Branch Assignment =====
