@@ -1,8 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { Link, usePathname } from '@/lib/i18n/navigation';
+
 import { PawPrint, Menu, X, LogOut } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useLogout, useMe } from '@/hooks/use-auth';
@@ -59,7 +59,8 @@ export default function DashboardLayout({ children, navItems, title }: Dashboard
           {/* Navigation */}
           <nav className='flex-1 space-y-1 p-3'>
             {navItems.map((item) => {
-              const isActive = pathname.startsWith(item.href);
+              // Top-level entries (e.g. /admin) match exactly so they are not active on every sub-page.
+              const isActive = pathname === item.href || (item.href.split('/').length > 2 && pathname.startsWith(item.href));
               return (
                 <Link
                   key={item.href}

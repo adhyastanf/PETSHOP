@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { ApiErrorResponse } from '@/types/auth';
+import { withoutTokens } from '@/lib/auth-response';
 import { NextResponse } from 'next/server';
 
 export async function POST(request: Request): Promise<NextResponse> {
@@ -12,8 +13,9 @@ export async function POST(request: Request): Promise<NextResponse> {
       validateStatus: () => true,
     });
 
-    // Teruskan status dan data 1:1 (baik sukses maupun error dari business logic backend)
-    return NextResponse.json(response.data, { status: response.status });
+    // Pass status and body through, but never expose tokens to the browser:
+    // registration does not set auth cookies; the user signs in afterwards.
+    return NextResponse.json(withoutTokens(response.data), { status: response.status });
   } catch (error) {
     console.error('Proxy Error:', error);
 

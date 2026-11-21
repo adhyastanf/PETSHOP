@@ -1,6 +1,7 @@
 import { cookies } from 'next/headers';
 import axios from 'axios';
 import { ApiErrorResponse } from '@/types/auth';
+import { withoutTokens } from '@/lib/auth-response';
 import { NextResponse } from 'next/server';
 
 export async function POST(request: Request): Promise<NextResponse> {
@@ -37,8 +38,8 @@ export async function POST(request: Request): Promise<NextResponse> {
       maxAge: 60 * 60 * 24 * 7, // 7 hari
     });
 
-    // Tetap kembalikan response.data asli dari Spring Boot saat sukses (atau sesuaikan jika butuh pesan kustom)
-    return NextResponse.json(response.data, { status: response.status });
+    // Tokens are delivered only as httpOnly cookies above; never return them to client JavaScript.
+    return NextResponse.json(withoutTokens(response.data), { status: response.status });
   } catch (error) {
     console.error('Proxy Error:', error);
 

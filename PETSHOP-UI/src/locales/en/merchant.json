@@ -13,7 +13,8 @@
     "status": "Application Status",
     "myApplications": "My Applications",
     "noApplications": "No applications yet",
-    "submitted": "Application submitted successfully"
+    "submitted": "Application submitted successfully",
+    "businessDescription": "Description"
   },
   "profile": {
     "title": "Merchant Profile",
@@ -32,7 +33,9 @@
     "hours": "Operating Hours",
     "noHours": "No hours configured",
     "noBranches": "No branches yet",
-    "closed": "Closed"
+    "closed": "Closed",
+    "openTime": "Opening time",
+    "closeTime": "Closing time"
   },
   "staff": {
     "title": "Staff",
@@ -47,7 +50,14 @@
     "assignBranch": "Assign Branch",
     "branches": "Branch Assignments",
     "noBranches": "Not assigned to any branch",
-    "deleteConfirm": "Remove this staff member?"
+    "deleteConfirm": "Remove this staff member?",
+    "selectRole": "-- Select Role --",
+    "roles": {
+      "PETSHOP_ADMIN": "Petshop Admin",
+      "PETSHOP_STAFF": "Petshop Staff",
+      "GROOMER": "Groomer",
+      "VETERINARIAN": "Veterinarian"
+    }
   },
   "setup": {
     "title": "Setup Your First Branch",
@@ -70,7 +80,10 @@
     "decision": "Decision",
     "noVets": "No veterinarians pending verification.",
     "selectDecision": "-- Select --",
-    "submit": "Submit"
+    "submit": "Submit",
+    "decisionRequired": "Please select a decision",
+    "merchantDecisionSuccess": "Merchant status updated: {status}",
+    "vetDecisionSuccess": "Veterinarian verification updated: {status}"
   },
   "status": {
     "SUBMITTED": "Submitted",
@@ -78,7 +91,10 @@
     "APPROVED": "Approved",
     "REJECTED": "Rejected",
     "SUSPENDED": "Suspended",
-    "DRAFT": "Draft"
+    "DRAFT": "Draft",
+    "PENDING": "Pending",
+    "VERIFIED": "Verified",
+    "EXPIRED": "Expired"
   },
   "days": {
     "1": "Monday",

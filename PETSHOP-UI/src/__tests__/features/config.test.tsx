@@ -1,8 +1,10 @@
-import { render, screen, fireEvent, within } from '@testing-library/react';
+import { render, screen, fireEvent, within, waitFor } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import React from 'react';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from '@/locales';
+import { AppAlertDialog } from '@/components/Dialog';
+import { useAlertDialogStore } from '@/store/alert-modal-store';
 
 // ---- Mock the config query hooks used by the pages ----
 const mockSetPaymentActive = vi.fn();
@@ -49,6 +51,8 @@ function renderWithI18n(ui: React.ReactElement) {
   return render(
     <NextIntlClientProvider locale='en' messages={getMessages('en')}>
       {ui}
+      {/* Confirmation dialogs are rendered once by the locale layout in the app. */}
+      <AppAlertDialog />
     </NextIntlClientProvider>
   );
 }
@@ -66,13 +70,14 @@ function translate(locale: 'en' | 'id', key: string): string {
 
 describe('Business Configuration admin pages', () => {
   beforeEach(() => {
+    useAlertDialogStore.getState().close();
     mockSetPaymentActive.mockClear();
     mockSetCommissionActive.mockClear();
     mockCreateCommission.mockClear();
     mockUpdateConfig.mockClear();
   });
 
-  it('renders payment methods with XENDIT provider and COD, and deactivation requires confirmation', () => {
+  it('renders payment methods with XENDIT provider and COD, and deactivation requires confirmation', async () => {
     renderWithI18n(<AdminPaymentMethodsPage />);
 
     // Backend-served availability is displayed (no hardcoded flags)
@@ -83,25 +88,23 @@ describe('Business Configuration admin pages', () => {
     const deactivateButtons = screen.getAllByRole('button', { name: 'Deactivate' });
     fireEvent.click(deactivateButtons[0]);
     expect(mockSetPaymentActive).not.toHaveBeenCalled();
-    expect(screen.getByText('Disable this payment method?')).toBeInTheDocument();
+    const dialog = await screen.findByRole('alertdialog');
+    expect(within(dialog).getByText('Disable this payment method?')).toBeInTheDocument();
 
     // Confirming in the dialog performs the mutation (backend authoritative).
-    // The Cancel button only exists inside the dialog; use its container to
-    // reliably scope to the dialog's confirm button.
-    const dialogButtonRow = screen.getByRole('button', { name: 'Cancel' }).parentElement as HTMLElement;
-    const confirmButton = within(dialogButtonRow).getByRole('button', { name: 'Deactivate' });
-    fireEvent.click(confirmButton);
-    expect(mockSetPaymentActive).toHaveBeenCalledWith(
-      { id: 'pm-1', isActive: false },
-      expect.anything()
+    fireEvent.click(within(dialog).getByRole('button', { name: 'Deactivate' }));
+    await waitFor(() =>
+      expect(mockSetPaymentActive).toHaveBeenCalledWith({ id: 'pm-1', isActive: false }, expect.anything())
     );
   });
 
-  it('cancelling the deactivate confirmation does not mutate', () => {
+  it('cancelling the deactivate confirmation does not mutate', async () => {
     renderWithI18n(<AdminPaymentMethodsPage />);
 
     fireEvent.click(screen.getAllByRole('button', { name: 'Deactivate' })[0]);
-    fireEvent.click(screen.getByRole('button', { name: 'Cancel' }));
+    const dialog = await screen.findByRole('alertdialog');
+    fireEvent.click(within(dialog).getByRole('button', { name: 'Cancel' }));
+    await waitFor(() => expect(screen.queryByRole('alertdialog')).not.toBeInTheDocument());
     expect(mockSetPaymentActive).not.toHaveBeenCalled();
   });
 
@@ -117,20 +120,21 @@ describe('Business Configuration admin pages', () => {
     ).toBeInTheDocument();
   });
 
-  it('submits a new commission rule through the create form', () => {
+  it('submits a new commission rule through the create form', async () => {
     renderWithI18n(<AdminCommissionRulesPage />);
 
     fireEvent.click(screen.getByRole('button', { name: /Create rule/i }));
     fireEvent.change(screen.getByLabelText('Value'), { target: { value: '5' } });
     fireEvent.click(screen.getByRole('button', { name: /^Create$/i }));
 
-    expect(mockCreateCommission).toHaveBeenCalled();
+    // react-hook-form validates asynchronously before submitting.
+    await waitFor(() => expect(mockCreateCommission).toHaveBeenCalled());
     const payload = mockCreateCommission.mock.calls[0][0];
     expect(payload.commissionValue).toBe(5);
     expect(payload.transactionType).toBe('PRODUCT');
   });
 
-  it('renders system business settings and saves a value', () => {
+  it('renders system business settings and saves a value', async () => {
     renderWithI18n(<AdminSettingsPage />);
 
     expect(screen.getByText('Business Settings')).toBeInTheDocument();
@@ -143,14 +147,16 @@ describe('Business Configuration admin pages', () => {
 
     // Save now opens a confirmation dialog; it must not mutate until confirmed.
     fireEvent.click(screen.getByRole('button', { name: 'Save' }));
+    const dialog = await screen.findByRole('alertdialog');
     expect(mockUpdateConfig).not.toHaveBeenCalled();
-    expect(screen.getByText('Update this setting?')).toBeInTheDocument();
+    expect(within(dialog).getByText('Update this setting?')).toBeInTheDocument();
 
-    const dialogButtonRow = screen.getByRole('button', { name: 'Cancel' }).parentElement as HTMLElement;
-    fireEvent.click(within(dialogButtonRow).getByRole('button', { name: 'Save' }));
-    expect(mockUpdateConfig).toHaveBeenCalledWith(
-      { key: 'checkout_expiration_minutes', value: '30' },
-      expect.anything()
+    fireEvent.click(within(dialog).getByRole('button', { name: 'Save' }));
+    await waitFor(() =>
+      expect(mockUpdateConfig).toHaveBeenCalledWith(
+        { key: 'checkout_expiration_minutes', value: '30' },
+        expect.anything()
+      )
     );
   });
 

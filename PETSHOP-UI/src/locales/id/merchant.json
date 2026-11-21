@@ -13,7 +13,8 @@
     "status": "Status Pendaftaran",
     "myApplications": "Pendaftaran Saya",
     "noApplications": "Belum ada pendaftaran",
-    "submitted": "Pendaftaran berhasil dikirim"
+    "submitted": "Pendaftaran berhasil dikirim",
+    "businessDescription": "Deskripsi"
   },
   "profile": {
     "title": "Profil Merchant",
@@ -32,7 +33,9 @@
     "hours": "Jam Operasional",
     "noHours": "Jam belum dikonfigurasi",
     "noBranches": "Belum ada cabang",
-    "closed": "Tutup"
+    "closed": "Tutup",
+    "openTime": "Jam buka",
+    "closeTime": "Jam tutup"
   },
   "staff": {
     "title": "Staff",
@@ -47,7 +50,14 @@
     "assignBranch": "Tugaskan ke Cabang",
     "branches": "Penugasan Cabang",
     "noBranches": "Belum ditugaskan ke cabang",
-    "deleteConfirm": "Hapus staff ini?"
+    "deleteConfirm": "Hapus staff ini?",
+    "selectRole": "-- Pilih Role --",
+    "roles": {
+      "PETSHOP_ADMIN": "Admin Petshop",
+      "PETSHOP_STAFF": "Staff Petshop",
+      "GROOMER": "Groomer",
+      "VETERINARIAN": "Veterinarian"
+    }
   },
   "setup": {
     "title": "Buat Cabang Pertama",
@@ -70,7 +80,10 @@
     "decision": "Keputusan",
     "noVets": "Belum ada veterinarian untuk diverifikasi.",
     "selectDecision": "-- Pilih --",
-    "submit": "Kirim"
+    "submit": "Kirim",
+    "decisionRequired": "Silakan pilih keputusan",
+    "merchantDecisionSuccess": "Status merchant diperbarui: {status}",
+    "vetDecisionSuccess": "Verifikasi veterinarian diperbarui: {status}"
   },
   "status": {
     "SUBMITTED": "Diajukan",
@@ -78,7 +91,10 @@
     "APPROVED": "Disetujui",
     "REJECTED": "Ditolak",
     "SUSPENDED": "Ditangguhkan",
-    "DRAFT": "Draft"
+    "DRAFT": "Draft",
+    "PENDING": "Menunggu",
+    "VERIFIED": "Terverifikasi",
+    "EXPIRED": "Kedaluwarsa"
   },
   "days": {
     "1": "Senin",

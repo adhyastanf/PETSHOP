@@ -13,7 +13,20 @@
   "signIn": "Sign In",
   "signUp": "Sign Up",
   "signOut": "Sign Out",
+  "active": "Active",
+  "inactive": "Inactive",
   "networkError": "Network error. Please try again.",
   "unknownError": "Something went wrong. Please try again.",
-  "searchPlaceholder": "Search..."
+  "searchPlaceholder": "Search...",
+  "validation": {
+    "required": "This field is required",
+    "invalidNumber": "Enter a valid number",
+    "invalidEmail": "Enter a valid email address",
+    "notNegative": "Value cannot be negative"
+  },
+  "dashboard": {
+    "adminTitle": "Admin Dashboard",
+    "adminSubtitle": "Platform administration",
+    "merchantSubtitle": "Merchant Dashboard"
+  }
 }

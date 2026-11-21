@@ -13,7 +13,20 @@
   "signIn": "Masuk",
   "signUp": "Daftar",
   "signOut": "Keluar",
+  "active": "Aktif",
+  "inactive": "Nonaktif",
   "networkError": "Kesalahan jaringan. Silakan coba lagi.",
   "unknownError": "Terjadi kesalahan. Silakan coba lagi.",
-  "searchPlaceholder": "Cari..."
+  "searchPlaceholder": "Cari...",
+  "validation": {
+    "required": "Kolom ini wajib diisi",
+    "invalidNumber": "Masukkan angka yang valid",
+    "invalidEmail": "Masukkan alamat email yang valid",
+    "notNegative": "Nilai tidak boleh negatif"
+  },
+  "dashboard": {
+    "adminTitle": "Dasbor Admin",
+    "adminSubtitle": "Administrasi platform",
+    "merchantSubtitle": "Dasbor Merchant"
+  }
 }

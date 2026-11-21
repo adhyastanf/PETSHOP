@@ -2,6 +2,7 @@ import { cookies } from 'next/headers';
 import axios from 'axios';
 import { NextResponse } from 'next/server';
 import { ApiErrorResponse } from '@/types/auth'; // Sesuaikan path type Anda
+import { withoutTokens } from '@/lib/auth-response';
 
 export async function POST(request: Request): Promise<NextResponse> {
   try {
@@ -53,8 +54,8 @@ export async function POST(request: Request): Promise<NextResponse> {
       });
     }
 
-    // Kembalikan respons sukses ke client
-    return NextResponse.json(response.data, { status: 200 });
+    // Tokens live only in httpOnly cookies; never return them to client JavaScript.
+    return NextResponse.json(withoutTokens(response.data), { status: 200 });
   } catch (error) {
     console.error('Refresh Token Error:', error);
 

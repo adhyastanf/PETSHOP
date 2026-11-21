@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname, useRouter } from '@/lib/i18n/navigation';
 import { Building2, Home, Store, Users } from 'lucide-react';
 import DashboardLayout, { type NavItem } from '@/components/Layout/dashboard-layout';
 import { useTranslations } from 'next-intl';
@@ -45,7 +45,7 @@ function MitraContent({ children }: { children: React.ReactNode }) {
   }
 
   const items: NavItem[] = [
-    { href: '/mitra/home', label: t('common.home'), icon: Home },
+    { href: '/mitra', label: t('common.home'), icon: Home },
     { href: '/mitra/profile', label: t('merchant.profile.title'), icon: Store },
     { href: '/mitra/branches', label: t('merchant.branch.title'), icon: Building2 },
     { href: '/mitra/staff', label: t('merchant.staff.title'), icon: Users },

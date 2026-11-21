@@ -31,7 +31,9 @@ const routePermissions: RouteConfig[] = [
   },
 ];
 
-const protectedRoutes = ['/profile', '/settings', '/dashboard'];
+// Pages that need a signed-in user (any role). The backend still enforces access;
+// this only avoids rendering account pages for anonymous visitors.
+const protectedRoutes = ['/user', '/customer', '/profile', '/settings', '/dashboard'];
 const authRoutes = ['/login', '/register'];
 
 export function proxy(request: NextRequest) {
