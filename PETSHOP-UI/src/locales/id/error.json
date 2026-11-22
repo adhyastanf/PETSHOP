@@ -1,7 +1,8 @@
 {
   "forbidden": {
     "title": "Akses Ditolak",
-    "description": "Anda tidak memiliki izin untuk mengakses halaman ini."
+    "description": "Anda tidak memiliki izin untuk mengakses halaman ini.",
+    "homeAction": "Kembali ke beranda"
   },
   "notFound": {
     "title": "Halaman tidak ditemukan",

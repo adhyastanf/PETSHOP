@@ -2,15 +2,101 @@
   "home": {
     "welcome": "Selamat Datang di Oyen",
     "description": "Temukan produk dan layanan untuk hewan peliharaan Anda.",
-    "productsComingSoon": "Produk, layanan, dan petshop terdekat akan muncul di sini."
+    "productsComingSoon": "Produk, layanan, dan petshop terdekat akan muncul di sini.",
+    "catalogUnavailable": "Katalog produk belum tersedia.",
+    "catalogUnavailableTitle": "Detail produk belum tersedia",
+    "categoriesUnavailable": "Kategori produk akan muncul setelah katalog terhubung.",
+    "sectionUnavailable": "Daftar akan muncul di sini setelah data marketplace tersedia."
+  },
+  "homeLanding": {
+    "stats": {
+      "title": "Ringkasan marketplace",
+      "partners": "Petshop Mitra",
+      "customers": "Pelanggan Aktif",
+      "rating": "Rating rata-rata",
+      "onTimeOrders": "Pesanan Tepat Waktu"
+    },
+    "intro": {
+      "title": "Semua kebutuhan hewanmu, di satu tempat",
+      "description": "Dari belanja sampai perawatan, langsung dari petshop mitra terverifikasi."
+    },
+    "categories": {
+      "title": "Beli Produk",
+      "description": "Ribuan produk asli, kirim cepat"
+    },
+    "quickCategories": {
+      "products": { "title": "Belanja produk", "description": "Lihat produk untuk hewan peliharaan" },
+      "food": { "title": "Makanan dan camilan", "description": "Temukan makanan dan camilan harian" },
+      "grooming": { "title": "Grooming", "description": "Layanan perawatan untuk hewan kesayangan" },
+      "health": { "title": "Kesehatan", "description": "Jelajahi layanan dokter hewan dan kesehatan" },
+      "petshops": { "title": "Cari petshop", "description": "Temukan petshop di sekitar Anda" },
+      "services": { "title": "Layanan hewan", "description": "Temukan perawatan dan layanan untuk hewan Anda" }
+    },
+    "sections": {
+      "nearbyPetshops": "Petshop Terdekat",
+      "popularProducts": "Produk Populer"
+    },
+    "merchantCta": {
+      "title": "Punya petshop sendiri?",
+      "description": "Gabung jadi mitra dan buka kanal jualan baru.",
+      "action": "Daftar Jadi Mitra"
+    },
+    "viewAll": "Lihat Semua",
+    "sampleProduct": {
+      "title": "MITRA 1",
+      "description": "2"
+    },
+    "productCard": {
+      "sample": "Data contoh",
+      "featured": "Unggulan",
+      "action": "Lihat produk"
+    },
+    "tabs": {
+      "all": "Semua",
+      "food": "Makanan",
+      "grooming": "Grooming",
+      "vaccines": "Vaksin",
+      "accessories": "Aksesoris"
+    }
+  },
+  "product": {
+    "quantity": "Jumlah",
+    "unitPrice": "Harga per barang",
+    "stock": "Stok tersedia: {count}",
+    "addToCart": "Tambah ke keranjang",
+    "buyNow": "Beli sekarang"
+  },
+  "cart": {
+    "title": "Keranjang",
+    "empty": "Keranjang Anda kosong.",
+    "emptyTitle": "Wah, keranjang belanjamu masih kosong",
+    "emptyDescription": "Yuk, temukan kebutuhan favorit anabulmu dan mulai belanja.",
+    "emptyAction": "Mulai belanja",
+    "unavailable": "Keranjang belum tersedia karena layanan keranjang belum terhubung.",
+    "selectAll": "Pilih semua ({count})",
+    "noImage": "Tidak ada gambar",
+    "summary": "Ringkasan pesanan",
+    "total": "Total",
+    "checkout": "Checkout"
   },
   "profile": {
     "title": "Profil Saya",
-    "description": "Profil pengiriman"
+    "description": "Kelola informasi pribadi Anda.",
+    "emailUnavailable": "Email tidak tersedia",
+    "detailsHeading": "Informasi pribadi",
+    "editDescription": "Perbarui informasi kontak untuk akun dan pengiriman Anda.",
+    "readOnlyDescription": "Periksa informasi yang tersimpan di akun. Pilih Ubah untuk mengeditnya."
   },
+  "account": { "title": "Akun saya" },
   "address": {
     "title": "Alamat Saya",
-    "description": "Alamat pengiriman"
+    "description": "Kelola alamat untuk pengiriman Anda.",
+    "emptyTitle": "Belum ada alamat tersimpan",
+    "emptyDescription": "Simpan alamat pengiriman agar checkout berikutnya lebih cepat.",
+    "emptyAction": "Tambah alamat pertama",
+    "listHint": "Alamat utama akan dipilih otomatis saat checkout. Anda dapat mengubahnya kapan saja.",
+    "locationDetails": "Detail lokasi",
+    "deliveryDetails": "Detail penerima"
   },
   "orders": {
     "title": "Pesanan Saya",
@@ -29,6 +115,7 @@
   "nav": {
     "myProfile": "Profil Saya",
     "myPets": "Hewan Saya",
+    "address": "Alamat",
     "myOrders": "Pesanan Saya",
     "wishlist": "Wishlist",
     "settings": "Pengaturan"

@@ -1,0 +1,6 @@
+interface:
+  display_name: "Oyen DevOps and Release"
+  short_description: "Maintain Oyen CI and release readiness"
+  default_prompt: "Use $oyen-devops-release to assess or implement this Oyen CI or release change."
+policy:
+  allow_implicit_invocation: true

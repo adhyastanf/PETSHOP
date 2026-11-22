@@ -1,17 +1,23 @@
-import { Card, CardContent } from '@/components/ui/card';
-import { MapPin } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
+import { MapPin, Plus } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
-export default function EmptyAddress() {
+export default function EmptyAddress({ onAdd }: { onAdd: () => void }) {
+  const t = useTranslations();
+
   return (
-    <Card>
-      <CardContent className='flex flex-col items-center justify-center py-12 px-4 text-center'>
-        <div className='flex h-16 w-16 items-center justify-center rounded-full bg-muted mb-4'>
-          <MapPin className='h-8 w-8 text-muted-foreground' />
-        </div>
-
-        <h3 className='text-lg font-semibold tracking-tight mb-1'>Belum Ada Alamat Tersimpan</h3>
-        <p className='text-sm text-muted-foreground max-w-sm mb-6'>Tambahkan alamat pengiriman Anda untuk memudahkan proses checkout dan transaksi berikutnya.</p>
-      </CardContent>
-    </Card>
+    <Empty className='min-h-120 mb-0'>
+      <EmptyHeader>
+        <EmptyMedia variant='icon'><MapPin aria-hidden='true' /></EmptyMedia>
+        <EmptyTitle>{t('customer.address.emptyTitle')}</EmptyTitle>
+        <EmptyDescription>{t('customer.address.emptyDescription')}</EmptyDescription>
+      </EmptyHeader>
+      <EmptyContent>
+        <Button onClick={onAdd} className='mt-2'>
+          <Plus data-icon='inline-start' aria-hidden='true' />{t('customer.address.emptyAction')}
+        </Button>
+      </EmptyContent>
+    </Empty>
   );
 }

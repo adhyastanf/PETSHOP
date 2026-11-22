@@ -8,14 +8,14 @@ export default function ProfileContainers() {
   const t = useTranslations();
 
   return (
-    <div className='space-y-4'>
-      <div className='flex items-center gap-2 border-gray-100'>
-        <div className='p-3 bg-blue-50 text-blue-600 rounded'>
+    <div className='flex flex-col gap-6'>
+      <div className='flex items-center gap-3'>
+        <div className='flex size-11 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary'>
           <Edit3 className='size-5' />
         </div>
         <div>
-          <h2 className='text-xl font-semibold text-gray-900'>{t('customer.profile.title')}</h2>
-          <p className='text-xs text-gray-500'>Kelola informasi profil dan data pribadi Anda</p>
+          <h2 className='text-h3 text-foreground'>{t('customer.profile.title')}</h2>
+          <p className='text-small text-muted-foreground'>{t('customer.profile.description')}</p>
         </div>
       </div>
       <FormProfile />

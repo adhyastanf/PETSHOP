@@ -1,7 +1,8 @@
 {
   "forbidden": {
     "title": "Access Denied",
-    "description": "You do not have permission to access this page."
+    "description": "You do not have permission to access this page.",
+    "homeAction": "Back to home"
   },
   "notFound": {
     "title": "Page not found",

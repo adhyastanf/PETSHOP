@@ -1,0 +1,6 @@
+interface:
+  display_name: "Oyen Security Reviewer"
+  short_description: "Review Oyen access and data integrity risks"
+  default_prompt: "Use $oyen-security-reviewer to review this Oyen change for security and integrity issues."
+policy:
+  allow_implicit_invocation: true

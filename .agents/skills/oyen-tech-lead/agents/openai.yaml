@@ -1,0 +1,6 @@
+interface:
+  display_name: "Oyen Tech Lead"
+  short_description: "Guide architecture and cross-module implementation"
+  default_prompt: "Use $oyen-tech-lead to assess the technical impact of this Oyen change."
+policy:
+  allow_implicit_invocation: true

@@ -1,22 +1,16 @@
 'use client';
 
 import { ShoppingCart } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { useCartStore } from '@/store/cart-store';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 
 export default function IconButtonCartBell() {
-  const { data } = useCartStore((state) => state);
-
-  const total = data.reduce((sum, item) => sum + item.quantity, 0);
+  const t = useTranslations('common');
 
   return (
-    <Link href='/cart'>
-      <Button variant='outline' size='icon' className='relative'>
-        <ShoppingCart />
-        {total > 0 && <Badge className='absolute -top-2.5 -right-2.5 min-w-5 px-1 tabular-nums'>{total}</Badge>}
-      </Button>
-    </Link>
+    <Button render={<Link href='/cart' aria-label={t('cart')} />} nativeButton={false} variant='outline' size='icon' className='relative'>
+      <ShoppingCart aria-hidden='true' />
+    </Button>
   );
 }

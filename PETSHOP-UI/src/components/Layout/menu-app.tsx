@@ -22,7 +22,7 @@ export default async function NavbarComponent() {
           <IconButtonCartBell />
           <IconButtonNotificationBell />
           <LanguageSwitcher />
-          <Separator orientation='vertical' className='h-6' />
+          <Separator orientation='vertical' />
           <UserNav />
         </div>
       </div>

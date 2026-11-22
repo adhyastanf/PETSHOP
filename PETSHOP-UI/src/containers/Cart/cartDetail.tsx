@@ -4,12 +4,18 @@ import { useMemo } from 'react';
 import { useCartStore } from '@/store/cart-store';
 import { Card, CardContent } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
+import { Button } from '@/components/ui/button';
+import { Link } from '@/lib/i18n/navigation';
 import QuantityInput from '@/components/Input/InputQuantity';
 import { CartItemTypes } from '@/types/cart-types';
 import { formatCurrency } from '@/utils/format';
+import { ShoppingBag, ShoppingCart } from 'lucide-react';
 import Image from 'next/image';
+import { useTranslations } from 'next-intl';
 
 export default function CartMain() {
+  const t = useTranslations('customer.cart');
   const items = useCartStore((state) => state.data);
   const checkAllCart = useCartStore((state) => state.checkAllCart);
   const isAllChecked = items.every((item) => item.isChecked);
@@ -34,7 +40,21 @@ export default function CartMain() {
   }, [items]);
 
   if (!groupedCart.length) {
-    return <div className='text-center py-10 text-gray-500'>Keranjang kosong</div>;
+    return (
+      <Empty className='gap-5 rounded-xl border bg-card px-6 py-10'>
+        <EmptyHeader>
+          <EmptyMedia variant='icon'><ShoppingCart aria-hidden='true' /></EmptyMedia>
+          <EmptyTitle className='text-h3'>{t('emptyTitle')}</EmptyTitle>
+          <EmptyDescription>{t('emptyDescription')}</EmptyDescription>
+        </EmptyHeader>
+        <EmptyContent>
+          <Button render={<Link href='/' />} nativeButton={false} size='lg'>
+            <ShoppingBag data-icon='inline-start' aria-hidden='true' />
+            {t('emptyAction')}
+          </Button>
+        </EmptyContent>
+      </Empty>
+    );
   }
 
   return (
@@ -82,7 +102,7 @@ function CartList({ items }: { items: CartItemTypes[] }) {
 function CardCart({ item }: { item: CartItemTypes }) {
   const setChecked = useCartStore((state) => state.setChecked);
   const setQuantity = useCartStore((state) => state.setQuantity);
-  const quantity = item.quantity ?? 1;
+  const quantity = item.quantity ?? 0;
   const checked = item.isChecked;
 
   return (
@@ -91,7 +111,7 @@ function CardCart({ item }: { item: CartItemTypes }) {
         <Checkbox checked={checked} onCheckedChange={(value) => setChecked(item.id, value === true)} />
 
         <div className='size-20 rounded-lg bg-gray-100 shrink-0 flex items-center justify-center overflow-hidden border'>
-          {item.product.imageUrl ? <Image src={item.product.imageUrl} alt={item.product.name} className='object-cover size-full' /> : <span className='text-xs text-gray-400'>No Image</span>}
+          {item.product.imageUrl ? <Image src={item.product.imageUrl} alt={item.product.name} className='object-cover size-full' width={100} height={100} /> : <span className='text-xs text-gray-400'>No Image</span>}
         </div>
 
         <div className='flex-1 min-w-0 self-start'>

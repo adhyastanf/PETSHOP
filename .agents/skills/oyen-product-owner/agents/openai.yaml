@@ -1,0 +1,6 @@
+interface:
+  display_name: "Oyen Product Owner"
+  short_description: "Shape Oyen scope, stories, and acceptance criteria"
+  default_prompt: "Use $oyen-product-owner to clarify this Oyen request and define its acceptance criteria."
+policy:
+  allow_implicit_invocation: true

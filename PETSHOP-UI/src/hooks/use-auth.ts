@@ -7,6 +7,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
+import { useCallback, useEffect } from 'react';
 
 export const AUTH_QUERY_KEYS = {
   me: ['auth', 'me'] as const,
@@ -29,11 +30,11 @@ export function useLogin() {
         const roles = userData?.roles || [];
         const destination = getHomeRoute(roles);
 
-        toast.success('Login berhasil!');
+        toast.success(t('auth.login.success'));
         router.replace(destination);
         router.refresh();
-      } catch {
-        // Kosongkan atau biarkan kosong sesuai permintaan
+      } catch (error) {
+        toast.error(getErrorMessage(error as ApiError, t));
       }
     },
     onError: (error: ApiError) => {
@@ -76,9 +77,15 @@ export function useRegister() {
 }
 
 export function useMe() {
-  return useQuery({
+  const t = useTranslations();
+  const notifyError = useCallback((error: ApiError) => toast.error(getErrorMessage(error, t)), [t]);
+  const query = useQuery({
     queryKey: AUTH_QUERY_KEYS.me,
     queryFn: authService.me,
     staleTime: 5 * 60 * 1000,
   });
+  useEffect(() => {
+    if (query.error) notifyError(query.error as ApiError);
+  }, [notifyError, query.error]);
+  return query;
 }

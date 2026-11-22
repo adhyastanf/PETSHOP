@@ -2,15 +2,101 @@
   "home": {
     "welcome": "Welcome to Oyen",
     "description": "Find products and services for your pets.",
-    "productsComingSoon": "Products, services, and nearby pet shops will appear here."
+    "productsComingSoon": "Products, services, and nearby pet shops will appear here.",
+    "catalogUnavailable": "The product catalog is not available yet.",
+    "catalogUnavailableTitle": "Product details are unavailable",
+    "categoriesUnavailable": "Product categories will appear when the catalog is connected.",
+    "sectionUnavailable": "Listings will appear here when marketplace data is available."
+  },
+  "homeLanding": {
+    "stats": {
+      "title": "Marketplace overview",
+      "partners": "Partner pet shops",
+      "customers": "Active customers",
+      "rating": "Average rating",
+      "onTimeOrders": "On-time orders"
+    },
+    "intro": {
+      "title": "Everything your pet needs, in one place",
+      "description": "From shopping to care, directly from verified pet shop partners."
+    },
+    "categories": {
+      "title": "Shop products",
+      "description": "Thousands of genuine products, delivered fast"
+    },
+    "quickCategories": {
+      "products": { "title": "Shop products", "description": "Browse products for your pets" },
+      "food": { "title": "Food and treats", "description": "Find everyday meals and snacks" },
+      "grooming": { "title": "Grooming", "description": "Care services for a happy, healthy pet" },
+      "health": { "title": "Health care", "description": "Explore veterinary and wellness services" },
+      "petshops": { "title": "Find a pet shop", "description": "Discover pet shops around you" },
+      "services": { "title": "Pet services", "description": "Find care and services for your pet" }
+    },
+    "sections": {
+      "nearbyPetshops": "Nearby pet shops",
+      "popularProducts": "Popular products"
+    },
+    "merchantCta": {
+      "title": "Own a pet shop?",
+      "description": "Join as a partner and open a new sales channel.",
+      "action": "Become a partner"
+    },
+    "viewAll": "View all",
+    "sampleProduct": {
+      "title": "PARTNER 1",
+      "description": "2"
+    },
+    "productCard": {
+      "sample": "Sample data",
+      "featured": "Featured",
+      "action": "Check it out"
+    },
+    "tabs": {
+      "all": "All",
+      "food": "Food",
+      "grooming": "Grooming",
+      "vaccines": "Vaccines",
+      "accessories": "Accessories"
+    }
+  },
+  "product": {
+    "quantity": "Quantity",
+    "unitPrice": "Price per item",
+    "stock": "Available stock: {count}",
+    "addToCart": "Add to cart",
+    "buyNow": "Buy now"
+  },
+  "cart": {
+    "title": "Cart",
+    "empty": "Your cart is empty.",
+    "emptyTitle": "Your cart is waiting for something good",
+    "emptyDescription": "Explore everyday essentials and favorites for your pet.",
+    "emptyAction": "Start shopping",
+    "unavailable": "The cart is not available yet because cart services are not connected.",
+    "selectAll": "Select all ({count})",
+    "noImage": "No image",
+    "summary": "Order summary",
+    "total": "Total",
+    "checkout": "Checkout"
   },
   "profile": {
     "title": "My Profile",
-    "description": "Profile delivery"
+    "description": "Manage your personal information.",
+    "emailUnavailable": "Email not available",
+    "detailsHeading": "Personal information",
+    "editDescription": "Keep your contact details up to date for your account and deliveries.",
+    "readOnlyDescription": "Review the details saved to your account. Choose Edit to make changes."
   },
+  "account": { "title": "My account" },
   "address": {
     "title": "My Address",
-    "description": "Delivery addresses"
+    "description": "Manage addresses for your deliveries.",
+    "emptyTitle": "No saved addresses yet",
+    "emptyDescription": "Save a delivery address to make checkout quicker next time.",
+    "emptyAction": "Add your first address",
+    "listHint": "Your default address is selected automatically during checkout. You can change it at any time.",
+    "locationDetails": "Location details",
+    "deliveryDetails": "Recipient details"
   },
   "orders": {
     "title": "My Orders",
@@ -29,6 +115,7 @@
   "nav": {
     "myProfile": "My Profile",
     "myPets": "My Pets",
+    "address": "Address",
     "myOrders": "My Orders",
     "wishlist": "Wishlist",
     "settings": "Settings"

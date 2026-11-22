@@ -9,10 +9,10 @@ export default function CartSummary() {
   const data = useCartStore((state) => state.data);
 
   const totalProduct = data
-    .filter((item) => item.isChecked)
-    .reduce((a, b) => {
-      return a + b.product.price;
-    }, 0);
+  .filter((item) => item.isChecked)
+  .reduce((total, item) => {
+    return total + item.product.price * item.quantity;
+  }, 0);
 
   const isButtonDisabled = !totalProduct;
 

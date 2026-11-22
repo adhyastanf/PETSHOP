@@ -1,0 +1,6 @@
+interface:
+  display_name: "Migrate Radix to Base UI"
+  short_description: "Migrate Radix UI components to Base UI"
+  default_prompt: "Use $migrate-radix-to-base to migrate the requested Radix UI component to Base UI."
+policy:
+  allow_implicit_invocation: true

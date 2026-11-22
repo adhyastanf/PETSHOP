@@ -1,5 +1,6 @@
 .kiro
-.agents/
+.agents/*
+!.agents/skills/
 PETSHOP-API/.jqwik-database
 
 # IDE

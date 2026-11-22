@@ -7,43 +7,27 @@ Tagline: All Your Pet Needs, Closer to You.
 
 ## Color Palette
 
-| Token | Hex | Usage |
-|-------|-----|-------|
-| Primary | `#EA580C` | Buttons, links, active states, brand accent |
-| Primary Hover | `#C2410C` | Button hover, pressed states |
-| Background | `#FFF7ED` | Page background, app shell |
-| Surface | `#FFFFFF` | Cards, modals, inputs, elevated containers |
-| Border | `#FED7AA` | Card borders, dividers, input borders |
-| Success | `#22C55E` | Success messages, positive status |
-| Warning | `#F59E0B` | Warning banners, pending states |
-| Error | `#EF4444` | Error messages, destructive actions, validation |
-| Info | `#3B82F6` | Informational banners, tooltips |
-| Text | `#0F172A` | Primary text, headings |
-| Secondary | `#64748B` | Secondary text, labels, placeholders, muted content |
+| Token | Runtime value | Usage |
+|-------|---------------|-------|
+| Primary | `--primary` (`oklch(0.58 0.2 28)`) | Main actions, links, selected states, Oyen brand |
+| Primary hover | `--primary-hover` | Hover and pressed primary actions |
+| Background | `--background` (`oklch(1 0 0)`) | Page canvas |
+| Surface | `--card`, `--popover` | Cards and floating surfaces |
+| Border | `--border`, `--input` | Structural and control borders |
+| Text | `--foreground`, `--card-foreground` | Main text and headings |
+| Secondary text | `--muted-foreground` | Supporting text, labels, placeholders |
+| Success / warning / info | `--success`, `--warning`, `--info` | Status feedback and badges |
+| Error | `--destructive` | Destructive actions and validation |
 
-### CSS Variables
-
-```css
-:root {
-  --color-primary: #EA580C;
-  --color-primary-hover: #C2410C;
-  --color-background: #FFF7ED;
-  --color-surface: #FFFFFF;
-  --color-border: #FED7AA;
-  --color-success: #22C55E;
-  --color-warning: #F59E0B;
-  --color-error: #EF4444;
-  --color-info: #3B82F6;
-  --color-text: #0F172A;
-  --color-secondary: #64748B;
-}
-```
+`src/app/globals.css` is the only runtime token source. Keep this table aligned with it; do not maintain a second palette in documentation or page-level color values. Light and dark modes use the same semantic roles.
 
 ---
 
 ## Typography Scale
 
 Font family: **Geist Sans** (headings + body), **Geist Mono** (code/data)
+
+Runtime utilities: `font-sans`, `font-heading`, `font-mono`, `text-display`, `text-h1`, `text-h2`, `text-h3`, `text-h4`, `text-body`, `text-body-lg`, `text-small`, `text-caption`.
 
 | Token | Size | Weight | Line Height | Usage |
 |-------|------|--------|-------------|-------|
@@ -101,11 +85,12 @@ Base unit: **4px**. Use multiples of 4 for all spacing.
 
 | Token | Value | Usage |
 |-------|-------|-------|
-| radius-sm | 6px | Badges, tags, small chips |
-| radius-md | 8px | Inputs, buttons |
-| radius-lg | 12px | Cards, dropdowns |
-| radius-xl | 16px | Modals, large cards |
-| radius-full | 9999px | Avatars, pills, rounded buttons |
+| radius-sm | 6px | Small controls and compact badges |
+| radius-md | 8px | Inputs and buttons |
+| radius-lg | 12px | Cards and dropdowns |
+| radius-xl | 16px | Dialogs and large surfaces |
+| radius-2xl | 20px | Rare page-level containers |
+| radius-full | 9999px | Avatars and pills |
 
 ### Rules
 
@@ -116,21 +101,23 @@ Base unit: **4px**. Use multiples of 4 for all spacing.
 - Modals/sheets: `radius-xl`
 - Nested elements use smaller radius than parent
 
+These values are explicitly registered in `src/app/globals.css`; component styles must use the matching Tailwind radius utility.
+
 ---
 
 ## Shadow Elevation
 
 | Token | Value | Usage |
 |-------|-------|-------|
-| shadow-sm | `0 1px 2px rgba(0,0,0,0.05)` | Subtle lift (inputs, small cards) |
-| shadow-md | `0 4px 6px rgba(0,0,0,0.07)` | Cards, dropdowns |
-| shadow-lg | `0 10px 15px rgba(0,0,0,0.1)` | Modals, popovers |
-| shadow-xl | `0 20px 25px rgba(0,0,0,0.12)` | Floating panels |
+| shadow-card | `0 1px 2px rgb(15 23 42 / 0.04)` | Default cards |
+| shadow-card-hover | `0 4px 12px rgb(15 23 42 / 0.08)` | Interactive card hover |
+| shadow-md | Tailwind elevation | Menus and popovers |
+| shadow-lg / shadow-xl | Tailwind elevation | Dialogs and major floating surfaces |
 
 ### Rules
 
-- Cards at rest: `shadow-sm`
-- Cards on hover: `shadow-md`
+- Cards at rest: `shadow-card`
+- Interactive cards on hover: `shadow-card-hover`
 - Dropdowns/popovers: `shadow-lg`
 - Modals: `shadow-xl`
 - No shadows on flat elements inside cards

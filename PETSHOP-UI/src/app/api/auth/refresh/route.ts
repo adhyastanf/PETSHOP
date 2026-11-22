@@ -3,7 +3,7 @@ import axios from 'axios';
 import { NextResponse } from 'next/server';
 import { ApiErrorResponse } from '@/types/auth'; // Sesuaikan path type Anda
 
-export async function POST(request: Request): Promise<NextResponse> {
+export async function POST(): Promise<NextResponse> {
   try {
     const cookieStore = await cookies();
     const refreshToken = cookieStore.get('refreshToken')?.value;

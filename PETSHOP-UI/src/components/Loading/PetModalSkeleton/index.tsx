@@ -9,65 +9,65 @@ export default function PetsModalFormSkeleton() {
         <Skeleton className='h-4 w-56' />
       </CardHeader>
 
-      <CardContent className='space-y-4 px-0 pb-0'>
+      <CardContent className='flex flex-col gap-4 px-0 pb-0'>
         {/* Form Fields */}
         <div className='grid grid-cols-1 gap-4 md:grid-cols-2'>
           {/* Nama anabul */}
-          <div className='space-y-2'>
+          <div className='flex flex-col gap-2'>
             <Skeleton className='h-4 w-24' />
             <Skeleton className='h-9 w-full rounded-md' />
           </div>
 
           {/* Jenis anabul */}
-          <div className='space-y-2'>
+          <div className='flex flex-col gap-2'>
             <Skeleton className='h-4 w-24' />
             <Skeleton className='h-9 w-full rounded-md' />
           </div>
 
           {/* Ras */}
-          <div className='space-y-2'>
+          <div className='flex flex-col gap-2'>
             <Skeleton className='h-4 w-16' />
             <Skeleton className='h-9 w-full rounded-md' />
           </div>
 
           {/* Jenis kelamin */}
-          <div className='space-y-2'>
+          <div className='flex flex-col gap-2'>
             <Skeleton className='h-4 w-28' />
             <Skeleton className='h-9 w-full rounded-md' />
           </div>
 
           {/* Tanggal lahir */}
-          <div className='space-y-2'>
+          <div className='flex flex-col gap-2'>
             <Skeleton className='h-4 w-24' />
             <Skeleton className='h-9 w-full rounded-md' />
           </div>
 
           {/* Berat */}
-          <div className='space-y-2'>
+          <div className='flex flex-col gap-2'>
             <Skeleton className='h-4 w-16' />
             <Skeleton className='h-9 w-full rounded-md' />
           </div>
 
           {/* Warna */}
-          <div className='space-y-2'>
+          <div className='flex flex-col gap-2'>
             <Skeleton className='h-4 w-16' />
             <Skeleton className='h-9 w-full rounded-md' />
           </div>
 
           {/* Nomor microchip */}
-          <div className='space-y-2'>
+          <div className='flex flex-col gap-2'>
             <Skeleton className='h-4 w-32' />
             <Skeleton className='h-9 w-full rounded-md' />
           </div>
 
           {/* Alergi */}
-          <div className='col-span-1 space-y-2 md:col-span-2'>
+          <div className='flex flex-col col-span-1 gap-2 md:col-span-2'>
             <Skeleton className='h-4 w-16' />
             <Skeleton className='h-20 w-full rounded-md' />
           </div>
 
           {/* Catatan khusus */}
-          <div className='col-span-1 space-y-2 md:col-span-2'>
+          <div className='flex flex-col col-span-1 gap-2 md:col-span-2'>
             <Skeleton className='h-4 w-28' />
             <Skeleton className='h-20 w-full rounded-md' />
           </div>

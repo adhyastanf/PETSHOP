@@ -1,12 +1,13 @@
 'use client';
 
+import ApiErrorState from '@/components/Feedback/ApiErrorState';
 import { FormDatePicker } from '@/components/Input/FormDatePicker';
 import FormSelect from '@/components/Input/FormSelect';
 import PetsModalFormSkeleton from '@/components/Loading/PetModalSkeleton';
 import Modal from '@/components/Modal';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Field, FieldError, FieldLabel } from '@/components/ui/field';
+import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { useBreeds, useCreatePet, usePet, usePetTypes, useUpdatePet } from '@/hooks/use-customer';
@@ -36,8 +37,8 @@ export default function PetsModalForm({ open = false, onClose = () => {} }: Pets
     defaultValues: EMPTY_PET_FORM,
   });
 
-  const { data: petDetail, isLoading: isPetDetailLoading } = usePet(petsId);
-  const { data: petTypes, isLoading: isPetTypesLoading } = usePetTypes();
+  const { data: petDetail, isLoading: isPetDetailLoading, isError: isPetDetailError, refetch: retryPetDetail, isRefetching: isPetDetailRefetching } = usePet(petsId);
+  const { data: petTypes, isLoading: isPetTypesLoading, isError: isPetTypesError, refetch: retryPetTypes, isRefetching: isPetTypesRefetching } = usePetTypes();
   const { mutate: createPet, isPending: isCreatePetLoading } = useCreatePet();
   const { mutate: updatePet, isPending: isUpdatePetLoading } = useUpdatePet();
 
@@ -48,11 +49,15 @@ export default function PetsModalForm({ open = false, onClose = () => {} }: Pets
 
   const activedPetTypeId = activePetTypeId || '';
 
-  const { data: breedsTypes, isLoading: isBreedsLoading } = useBreeds(activedPetTypeId);
+  const { data: breedsTypes, isLoading: isBreedsLoading, isError: isBreedsError, refetch: retryBreeds, isRefetching: isBreedsRefetching } = useBreeds(activedPetTypeId);
 
-  const TITLE_TEXT = mode === 'edit' ? 'Edit Profil Anabul' : 'Tambah Profil Anabul';
-  const DESC_TEXT = mode === 'edit' ? 'Perbarui detail profil anabul Anda.' : 'Lengkapi profil anabul Anda.';
-  const SUBMIT_TEXT = mode === 'edit' ? 'Perbarui Profil' : 'Tambah Profil';
+  const TITLE_TEXT = mode === 'edit' ? t('pet.form.editTitle') : t('pet.form.createTitle');
+  const DESC_TEXT = mode === 'edit' ? t('pet.form.editDescription') : t('pet.form.createDescription');
+  const SUBMIT_TEXT = mode === 'edit' ? t('pet.form.updateAction') : t('pet.form.createAction');
+  const genderOptions = [
+    { label: t('pet.form.male'), value: 'MALE' },
+    { label: t('pet.form.female'), value: 'FEMALE' },
+  ];
 
   const MAP_PETTYPES_OPTIONS = toSelectOptions(petTypes, 'name', 'id');
   const MAP_BREEDS_OPTIONS = toSelectOptions(breedsTypes, 'name', 'id');
@@ -60,6 +65,7 @@ export default function PetsModalForm({ open = false, onClose = () => {} }: Pets
   const IS_BREEDS_EMPTY = MAP_BREEDS_OPTIONS.length === 0;
 
   function onPetCreate(data: PetFormSchema) {
+    if (isCreatePetLoading || isUpdatePetLoading) return;
     const payload: PetRequest = {
       name: data.name,
       petTypeId: data.petTypeId,
@@ -77,16 +83,16 @@ export default function PetsModalForm({ open = false, onClose = () => {} }: Pets
     };
 
     alertDialog.confirm({
-      title: 'Tambah Anabul',
-      description: 'Apakah Anda yakin ingin menambahkan anabul ini?',
+      title: t('pet.form.confirmCreateTitle'),
+      description: t('pet.form.confirmCreateDescription'),
       onConfirm: () => {
         createPet(payload, {
           onSuccess: () => {
             reset();
             onClose();
             alertDialog.success({
-              title: 'Anabul berhasil ditambahkan',
-              description: 'Profil anabul baru telah ditambahkan ke daftar Anda.',
+              title: t('pet.form.createdTitle'),
+              description: t('pet.form.createdDescription'),
             });
           },
         });
@@ -95,6 +101,7 @@ export default function PetsModalForm({ open = false, onClose = () => {} }: Pets
   }
 
   function onPetUpdate(data: PetFormSchema) {
+    if (isCreatePetLoading || isUpdatePetLoading) return;
     const payload: PetRequest = {
       name: data.name,
       petTypeId: data.petTypeId,
@@ -112,8 +119,8 @@ export default function PetsModalForm({ open = false, onClose = () => {} }: Pets
     };
 
     alertDialog.confirm({
-      title: 'Perbarui Anabul',
-      description: 'Apakah Anda yakin ingin memperbarui anabul ini?',
+      title: t('pet.form.confirmUpdateTitle'),
+      description: t('pet.form.confirmUpdateDescription'),
       onConfirm: () => {
         updatePet(
           { id: petsId, data: payload },
@@ -122,8 +129,8 @@ export default function PetsModalForm({ open = false, onClose = () => {} }: Pets
               reset();
               onClose();
               alertDialog.success({
-                title: 'Anabul berhasil diperbarui',
-                description: 'Profil anabul telah diperbarui.',
+                title: t('pet.form.updatedTitle'),
+                description: t('pet.form.updatedDescription'),
               });
             },
           },
@@ -168,181 +175,209 @@ export default function PetsModalForm({ open = false, onClose = () => {} }: Pets
     <Modal open={open} onClose={onClose} title={TITLE_TEXT} description={DESC_TEXT} maxWidth='sm:max-w-[700px]'>
       {isPetDetailLoading && <PetsModalFormSkeleton />}
 
-      {!isPetDetailLoading && (
-        <form onSubmit={mode === 'edit' ? handleSubmit(onPetUpdate) : handleSubmit(onPetCreate)} className='space-y-4'>
-          <div className='grid grid-cols-1 gap-4 md:grid-cols-2'>
-            <Controller
-              name='name'
-              control={control}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel required>{t('pet.form.name')}</FieldLabel>
-                  <Input {...field} placeholder='Nama anabul' aria-invalid={fieldState.invalid} />
-                  {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-                </Field>
-              )}
-            />
-            <Controller
-              name='petTypeId'
-              control={control}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel required>{t('pet.form.petType')}</FieldLabel>
-                  <FormSelect
-                    value={field.value}
-                    onValueChange={(value) => {
-                      handleChangePetType(value || '', field.onChange);
-                    }}
-                    items={MAP_PETTYPES_OPTIONS}
-                    placeholder='Pilih jenis anabul'
-                    invalid={fieldState.invalid}
-                    disabled={!true}
-                  />
-                  {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-                </Field>
-              )}
-            />
+      {mode === 'edit' && isPetDetailError ? <ApiErrorState onRetry={() => void retryPetDetail()} isRetrying={isPetDetailRefetching} /> : null}
+      {isPetTypesError ? <ApiErrorState onRetry={() => void retryPetTypes()} isRetrying={isPetTypesRefetching} /> : null}
+      {isBreedsError ? <ApiErrorState onRetry={() => void retryBreeds()} isRetrying={isBreedsRefetching} /> : null}
+      {!isPetDetailLoading && !isPetDetailError && !isPetTypesError && !isBreedsError && (
+        <form onSubmit={mode === 'edit' ? handleSubmit(onPetUpdate) : handleSubmit(onPetCreate)} className='flex flex-col gap-4'>
+          <FieldGroup>
+            <div className='grid grid-cols-1 gap-4 md:grid-cols-2'>
+              <Controller
+                name='name'
+                control={control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor={field.name} required>
+                      {t('pet.form.name')}
+                    </FieldLabel>
+                    <Input id={field.name} {...field} placeholder={t('pet.form.namePlaceholder')} aria-invalid={fieldState.invalid} />
+                    {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+                  </Field>
+                )}
+              />
+              <Controller
+                name='petTypeId'
+                control={control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor={field.name} required>
+                      {t('pet.form.petType')}
+                    </FieldLabel>
+                    <FormSelect
+                      id={field.name}
+                      value={field.value}
+                      onValueChange={(value) => {
+                        handleChangePetType(value || '', field.onChange);
+                      }}
+                      items={MAP_PETTYPES_OPTIONS}
+                      placeholder={t('pet.form.selectType')}
+                      invalid={fieldState.invalid}
+                    />
+                    {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+                  </Field>
+                )}
+              />
 
-            <Controller
-              name='breedId'
-              control={control}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel>{t('pet.form.breed')}</FieldLabel>
-                  <FormSelect
-                    value={field.value}
-                    onValueChange={field.onChange}
-                    items={MAP_BREEDS_OPTIONS || []}
-                    placeholder='Pilih jenis anabul'
-                    invalid={fieldState.invalid}
-                    disabled={isBreedsLoading || IS_BREEDS_EMPTY}
-                    isLoading={isBreedsLoading}
-                  />
-                  {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-                </Field>
-              )}
-            />
+              <Controller
+                name='breedId'
+                control={control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor={field.name}>{t('pet.form.breed')}</FieldLabel>
+                    <FormSelect
+                      id={field.name}
+                      value={field.value}
+                      onValueChange={field.onChange}
+                      items={MAP_BREEDS_OPTIONS || []}
+                      placeholder={t('pet.form.selectBreed')}
+                      invalid={fieldState.invalid}
+                      disabled={isBreedsLoading || IS_BREEDS_EMPTY}
+                      isLoading={isBreedsLoading}
+                    />
+                    {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+                  </Field>
+                )}
+              />
 
-            <Controller
-              name='gender'
-              control={control}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel required>{t('pet.form.gender')}</FieldLabel>
-                  <FormSelect value={field.value} onValueChange={field.onChange} items={GENDER_OPTIONS || []} placeholder='Pilih jenis anabul' invalid={fieldState.invalid} disabled={isPetTypesLoading} isLoading={isPetTypesLoading} />
-                  {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-                </Field>
-              )}
-            />
+              <Controller
+                name='gender'
+                control={control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor={field.name} required>
+                      {t('pet.form.gender')}
+                    </FieldLabel>
+                    <FormSelect
+                      id={field.name}
+                      value={field.value}
+                      onValueChange={field.onChange}
+                      items={genderOptions}
+                      placeholder={t('pet.form.selectGender')}
+                      invalid={fieldState.invalid}
+                      disabled={isPetTypesLoading}
+                      isLoading={isPetTypesLoading}
+                    />
+                    {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+                  </Field>
+                )}
+              />
 
-            <Controller
-              name='birthDate'
-              control={control}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel required>{t('pet.form.birthDate')}</FieldLabel>
-                  <FormDatePicker field={field} invalid={fieldState.invalid} />
-                  {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-                </Field>
-              )}
-            />
+              <Controller
+                name='birthDate'
+                control={control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor={field.name} required>
+                      {t('pet.form.birthDate')}
+                    </FieldLabel>
+                    <FormDatePicker id={field.name} field={field} invalid={fieldState.invalid} />
+                    {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+                  </Field>
+                )}
+              />
 
-            <Controller
-              name='weightKg'
-              control={control}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel required>{t('pet.form.weight')}</FieldLabel>
-                  <Input
-                    {...field}
-                    maxLength={3}
-                    placeholder='0.00'
-                    onChange={(e) => {
-                      field.onChange(onlyNumbers(e.target.value));
-                    }}
-                    aria-invalid={fieldState.invalid}
-                  />
-                  {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-                </Field>
-              )}
-            />
+              <Controller
+                name='weightKg'
+                control={control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor={field.name} required>
+                      {t('pet.form.weight')}
+                    </FieldLabel>
+                    <Input
+                      id={field.name}
+                      {...field}
+                      maxLength={3}
+                      placeholder={t('pet.form.weightPlaceholder')}
+                      onChange={(e) => {
+                        field.onChange(onlyNumbers(e.target.value));
+                      }}
+                      aria-invalid={fieldState.invalid}
+                    />
+                    {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+                  </Field>
+                )}
+              />
 
-            <Controller
-              name='color'
-              control={control}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel required>{t('pet.form.color')}</FieldLabel>
-                  <Input {...field} placeholder='Contoh: Hitam putih' aria-invalid={fieldState.invalid} />
-                  {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-                </Field>
-              )}
-            />
+              <Controller
+                name='color'
+                control={control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor={field.name} required>
+                      {t('pet.form.color')}
+                    </FieldLabel>
+                    <Input id={field.name} {...field} placeholder={t('pet.form.colorPlaceholder')} aria-invalid={fieldState.invalid} />
+                    {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+                  </Field>
+                )}
+              />
 
-            <Controller
-              name='microchipNumber'
-              control={control}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel>{t('pet.form.microchipNumber')}</FieldLabel>
-                  <Input {...field} placeholder='Nomor microchip' aria-invalid={fieldState.invalid} />
-                  {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-                </Field>
-              )}
-            />
+              <Controller
+                name='microchipNumber'
+                control={control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor={field.name}>{t('pet.form.microchipNumber')}</FieldLabel>
+                    <Input id={field.name} {...field} placeholder={t('pet.form.microchipPlaceholder')} aria-invalid={fieldState.invalid} />
+                    {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+                  </Field>
+                )}
+              />
 
-            <Controller
-              name='allergies'
-              control={control}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid} className='col-span-1 md:col-span-2'>
-                  <FieldLabel>{t('pet.form.allergies')}</FieldLabel>
-                  <Textarea {...field} placeholder='Contoh: Tidak cocok dengan ayam...' className='resize-none' aria-invalid={fieldState.invalid} />
-                  {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-                </Field>
-              )}
-            />
+              <Controller
+                name='allergies'
+                control={control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid} className='col-span-1 md:col-span-2'>
+                    <FieldLabel htmlFor={field.name}>{t('pet.form.allergies')}</FieldLabel>
+                    <Textarea id={field.name} {...field} placeholder={t('pet.form.allergiesPlaceholder')} className='resize-none' aria-invalid={fieldState.invalid} />
+                    {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+                  </Field>
+                )}
+              />
 
-            <Controller
-              name='specialNotes'
-              control={control}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid} className='col-span-1 md:col-span-2'>
-                  <FieldLabel>{t('pet.form.specialNotes')}</FieldLabel>
-                  <Textarea {...field} placeholder='Catatan khusus untuk anabul' className='resize-none' aria-invalid={fieldState.invalid} />
-                  {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-                </Field>
-              )}
-            />
+              <Controller
+                name='specialNotes'
+                control={control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid} className='col-span-1 md:col-span-2'>
+                    <FieldLabel htmlFor={field.name}>{t('pet.form.specialNotes')}</FieldLabel>
+                    <Textarea id={field.name} {...field} placeholder={t('pet.form.notesPlaceholder')} className='resize-none' aria-invalid={fieldState.invalid} />
+                    {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+                  </Field>
+                )}
+              />
 
-            <Controller
-              name='birthDateEstimated'
-              control={control}
-              render={({ field, fieldState }) => (
-                <Field orientation='horizontal' data-invalid={fieldState.invalid} className='flex items-center gap-2'>
-                  <Checkbox id='birth-date-estimated' checked={field.value} onCheckedChange={field.onChange} aria-invalid={fieldState.invalid} />
-                  <FieldLabel htmlFor='birth-date-estimated' className='cursor-pointer font-normal'>
-                    {t('pet.form.birthDateEstimated')}
-                  </FieldLabel>
-                  {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-                </Field>
-              )}
-            />
+              <Controller
+                name='birthDateEstimated'
+                control={control}
+                render={({ field, fieldState }) => (
+                  <Field orientation='horizontal' data-invalid={fieldState.invalid} className='flex items-center gap-2'>
+                    <Checkbox id='birth-date-estimated' checked={field.value} onCheckedChange={field.onChange} aria-invalid={fieldState.invalid} />
+                    <FieldLabel htmlFor='birth-date-estimated' className='cursor-pointer font-normal'>
+                      {t('pet.form.birthDateEstimated')}
+                    </FieldLabel>
+                    {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+                  </Field>
+                )}
+              />
 
-            <Controller
-              name='sterilized'
-              control={control}
-              render={({ field, fieldState }) => (
-                <Field orientation='horizontal' data-invalid={fieldState.invalid} className='flex items-center gap-2'>
-                  <Checkbox id='sterilized' checked={field.value} onCheckedChange={field.onChange} aria-invalid={fieldState.invalid} />
-                  <FieldLabel htmlFor='sterilized' className='cursor-pointer font-normal'>
-                    {t('pet.form.sterilized')}
-                  </FieldLabel>
-                  {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-                </Field>
-              )}
-            />
-          </div>
+              <Controller
+                name='sterilized'
+                control={control}
+                render={({ field, fieldState }) => (
+                  <Field orientation='horizontal' data-invalid={fieldState.invalid} className='flex items-center gap-2'>
+                    <Checkbox id='sterilized' checked={field.value} onCheckedChange={field.onChange} aria-invalid={fieldState.invalid} />
+                    <FieldLabel htmlFor='sterilized' className='cursor-pointer font-normal'>
+                      {t('pet.form.sterilized')}
+                    </FieldLabel>
+                    {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+                  </Field>
+                )}
+              />
+            </div>
+          </FieldGroup>
 
           <Button type='submit' className='mt-2 w-full rounded-xl py-5' loading={isCreatePetLoading || isUpdatePetLoading} disabled={isCreatePetLoading || isUpdatePetLoading}>
             <Save className='size-4' />
@@ -353,11 +388,6 @@ export default function PetsModalForm({ open = false, onClose = () => {} }: Pets
     </Modal>
   );
 }
-
-const GENDER_OPTIONS = [
-  { label: 'Jantan', value: 'MALE' },
-  { label: 'Betina', value: 'FEMALE' },
-];
 
 const EMPTY_PET_FORM = {
   name: '',

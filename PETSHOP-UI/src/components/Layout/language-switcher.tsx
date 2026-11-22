@@ -6,11 +6,13 @@ import { SUPPORTED_LOCALES, LOCALE_LABELS, type Locale } from '@/locales';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { usePathname, useRouter } from '@/lib/i18n/navigation';
+import { useTranslations } from 'next-intl';
 
 export default function LanguageSwitcher() {
   const locale = useLocale() as Locale;
   const pathname = usePathname();
   const router = useRouter();
+  const t = useTranslations('common');
 
   function handleLocaleChange(nextLocale: Locale) {
     if (nextLocale === locale) return;
@@ -24,8 +26,8 @@ export default function LanguageSwitcher() {
     <DropdownMenu>
       <DropdownMenuTrigger
         render={
-          <Button variant='ghost' className='inline-flex cursor-pointer items-center gap-1.5 rounded-md px-2 py-1.5 text-sm text-muted-foreground hover:text-foreground' aria-label='Change language'>
-            <Globe className='size-4' />
+        <Button variant='ghost' className='inline-flex cursor-pointer items-center gap-1.5 rounded-md px-2 py-1.5 text-sm text-muted-foreground hover:text-foreground' aria-label={t('changeLanguage')}>
+            <Globe className='size-4' aria-hidden='true' />
             <span className='hidden sm:inline'>{LOCALE_LABELS[locale]}</span>
           </Button>
         }
@@ -37,7 +39,7 @@ export default function LanguageSwitcher() {
             <DropdownMenuItem key={loc} onClick={() => handleLocaleChange(loc)} className={locale === loc ? 'font-medium text-primary' : ''}>
               {LOCALE_LABELS[loc]}
               {locale === loc && (
-                <span className='ml-auto' aria-label='Current language'>
+                <span className='ml-auto' aria-label={t('currentLanguage')}>
                   ✓
                 </span>
               )}

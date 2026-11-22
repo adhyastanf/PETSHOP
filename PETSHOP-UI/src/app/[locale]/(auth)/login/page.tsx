@@ -5,11 +5,12 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput } from '@/components/ui/input-group';
+import { Spinner } from '@/components/ui/spinner';
 import { useLogin } from '@/hooks/use-auth';
 import { loginSchema, LoginSchema } from '@/lib/schema/auth-schema';
 import { LoginRequest } from '@/types/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { EyeIcon, EyeOffIcon, Loader2 } from 'lucide-react';
+import { EyeIcon, EyeOffIcon } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { useState } from 'react';
@@ -19,7 +20,7 @@ export default function LoginPage() {
   const t = useTranslations();
   const [showPassword, setShowPassword] = useState(false);
 
-  const { handleSubmit, control, reset } = useForm<LoginSchema>({
+  const { handleSubmit, control } = useForm<LoginSchema>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
       email: '',
@@ -30,6 +31,7 @@ export default function LoginPage() {
   const { mutate, isPending } = useLogin();
 
   function onSubmit(values: LoginRequest) {
+    if (isPending) return;
     mutate(values);
   }
 
@@ -40,14 +42,14 @@ export default function LoginPage() {
         <CardDescription>{t('auth.login.description')}</CardDescription>
       </CardHeader>
       <CardContent>
-        <form className='space-y-4' onSubmit={handleSubmit(onSubmit)} id='form-login'>
+        <form className='flex flex-col gap-4' onSubmit={handleSubmit(onSubmit)} id='form-login'>
           <FieldGroup>
             <Controller
               name='email'
               control={control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor='form-input-email'>Email</FieldLabel>
+                  <FieldLabel htmlFor='form-input-email'>{t('auth.login.email')}</FieldLabel>
                   <Input {...field} aria-invalid={fieldState.invalid} placeholder={t('auth.login.emailPlaceholder')} id='form-input-email' />
                   {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                 </Field>
@@ -58,7 +60,7 @@ export default function LoginPage() {
               control={control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor='form-input-password'>Password</FieldLabel>
+                  <FieldLabel htmlFor='form-input-password'>{t('auth.login.password')}</FieldLabel>
                   <InputGroup>
                     <InputGroupInput
                       {...field}
@@ -70,6 +72,8 @@ export default function LoginPage() {
                     />
                     <InputGroupAddon align='inline-end'>
                       <InputGroupButton
+                      type='button'
+                      aria-label={t(showPassword ? 'auth.login.hidePassword' : 'auth.login.showPassword')}
                         onClick={() => {
                           setShowPassword(!showPassword);
                         }}
@@ -88,7 +92,7 @@ export default function LoginPage() {
       <CardFooter>
         <Field orientation='vertical'>
           <Button type='submit' form='form-login' className='w-full' size='lg' disabled={isPending}>
-            {isPending && <Loader2 className="animate-spin" />}
+            {isPending && <Spinner data-icon='inline-start' aria-hidden='true' />}
             {t('auth.login.submit')}
           </Button>
           <p className='mt-4 text-center text-sm text-muted-foreground'>

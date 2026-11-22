@@ -3,26 +3,25 @@ import { Skeleton } from '@/components/ui/skeleton';
 
 export default function PetCardSkeleton() {
   return (
-    <Card className='flex h-auto w-full flex-col border-0'>
-      <CardHeader>
-        <Skeleton className='h-36 w-full rounded-xl sm:h-40' />
+    <Card className='h-full'>
+      <CardHeader className='pb-0'>
+        <Skeleton className='h-36 w-full rounded-md sm:h-40' />
       </CardHeader>
-
-      <CardContent className='flex flex-1 flex-col items-start space-y-1.5'>
-        <div className='flex items-center gap-1'>
-          <Skeleton className='h-6 w-32' />
-          <Skeleton className='size-5 rounded-full' />
+      <CardContent className='flex flex-col gap-4'>
+        <div className='flex flex-col gap-2'>
+          <Skeleton className='h-5 w-32' />
+          <Skeleton className='h-4 w-24' />
         </div>
-
-        <Skeleton className='h-4 w-24' />
-
-        <div className='flex flex-wrap items-center gap-1'>
-          <Skeleton className='h-5 w-16 rounded-full' />
-          <Skeleton className='h-5 w-20 rounded-full' />
-          <Skeleton className='h-5 w-14 rounded-full' />
+        <div className='grid grid-cols-2 gap-3 rounded-md bg-muted/50 p-3'>
+          <div className='flex flex-col gap-2'>
+            <Skeleton className='h-3 w-12' />
+            <Skeleton className='h-4 w-16' />
+          </div>
+          <div className='flex flex-col gap-2'>
+            <Skeleton className='h-3 w-12' />
+            <Skeleton className='h-4 w-16' />
+          </div>
         </div>
-        <Skeleton className='h-5 w-32 rounded-full' />
-        <Skeleton className='mt-2 h-8 w-full rounded-md' />
       </CardContent>
     </Card>
   );

@@ -2,9 +2,10 @@
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Field, FieldError, FieldLabel } from '@/components/ui/field';
+import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput } from '@/components/ui/input-group';
+import { Spinner } from '@/components/ui/spinner';
 import { useRegister } from '@/hooks/use-auth';
 import { RegisterSchema, registerSchema } from '@/lib/schema/auth-schema';
 import { RegisterRequest } from '@/types/auth';
@@ -35,6 +36,7 @@ export default function RegisterPage() {
   });
 
   async function onSubmit(values: RegisterRequest) {
+    if (isPending) return;
     const payload = {
       fullName: values.fullName,
       email: values.email,
@@ -52,7 +54,8 @@ export default function RegisterPage() {
         <CardDescription>{t('auth.register.description')}</CardDescription>
       </CardHeader>
       <CardContent>
-        <form onSubmit={handleSubmit(onSubmit)} className='space-y-4' noValidate>
+        <form onSubmit={handleSubmit(onSubmit)} className='flex flex-col gap-4' noValidate>
+          <FieldGroup>
           {/* Full Name */}
           <Controller
             name='fullName'
@@ -111,6 +114,7 @@ export default function RegisterPage() {
                   <InputGroupAddon align='inline-end'>
                     <InputGroupButton
                       type='button'
+                      aria-label={t(showPassword ? 'auth.login.hidePassword' : 'auth.login.showPassword')}
                       onClick={() => {
                         setShowPassword(!showPassword);
                       }}
@@ -143,6 +147,7 @@ export default function RegisterPage() {
                   <InputGroupAddon align='inline-end'>
                     <InputGroupButton
                       type='button'
+                      aria-label={t(showConfirm ? 'auth.login.hidePassword' : 'auth.login.showPassword')}
                       onClick={() => {
                         setShowConfirm(!showConfirm);
                       }}
@@ -155,8 +160,10 @@ export default function RegisterPage() {
               </Field>
             )}
           />
+          </FieldGroup>
 
-          <Button type='submit' className='w-full' size='lg' loading={isPending}>
+          <Button type='submit' className='w-full' size='lg' disabled={isPending}>
+            {isPending && <Spinner data-icon='inline-start' aria-hidden='true' />}
             {t('auth.register.submit')}
           </Button>
         </form>

@@ -56,15 +56,11 @@ export default function UserNav() {
   if (!user) {
     return (
       <div className='flex gap-2'>
-        <Link href='/login'>
-          <Button variant='outline' size='sm'>
-            {t('common.signIn')}
-          </Button>
-        </Link>
+        <Button render={<Link href='/login' />} nativeButton={false} variant='outline' size='sm'>
+          {t('common.signIn')}
+        </Button>
 
-        <Link href='/register'>
-          <Button size='sm'>Daftar</Button>
-        </Link>
+        <Button render={<Link href='/register' />} nativeButton={false} size='sm'>{t('common.signUp')}</Button>
       </div>
     );
   }

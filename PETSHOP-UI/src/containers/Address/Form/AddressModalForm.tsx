@@ -3,7 +3,7 @@
 import Modal from '@/components/Modal';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Field, FieldError, FieldLabel } from '@/components/ui/field';
+import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { useAddress, useCreateAddress, useUpdateAddress } from '@/hooks/use-customer';
@@ -21,10 +21,9 @@ import { Controller, useForm } from 'react-hook-form';
 type AddressFormModalProps = {
   open: boolean;
   onClose: () => void;
-  onSubmit?: (values: AddressRequest) => void;
 };
 
-export default function AddressModalForm({ open = false, onClose = () => {}, onSubmit = () => {} }: AddressFormModalProps) {
+export default function AddressModalForm({ open = false, onClose = () => {} }: AddressFormModalProps) {
   const { mode, addressId } = useAddressStore((state) => state);
   const { mutate: createAddress, isPending: loadingSubmitAddress } = useCreateAddress();
   const { mutate: updateAddress, isPending: loadingUpdateAddress } = useUpdateAddress();
@@ -47,6 +46,7 @@ export default function AddressModalForm({ open = false, onClose = () => {}, onS
   });
 
   function onAddressSubmit(data: AddressFormSchema) {
+    if (isLoadingAddress) return;
     const payload: AddressRequest = {
       ...data,
       label: data.label ?? null,
@@ -63,16 +63,14 @@ export default function AddressModalForm({ open = false, onClose = () => {}, onS
       notes: data.notes ?? null,
     };
 
-    onSubmit(payload);
-
     if (mode === 'create') {
       createAddress(payload, {
         onSuccess: () => {
           reset();
           onClose();
           alertDialog.success({
-            title: 'Alamat berhasil ditambahkan',
-            description: 'Alamat baru telah ditambahkan ke daftar alamat Anda.',
+            title: t('address.success.createdTitle'),
+            description: t('address.success.createdDescription'),
           });
         },
       });
@@ -84,8 +82,8 @@ export default function AddressModalForm({ open = false, onClose = () => {}, onS
             reset();
             onClose();
             alertDialog.success({
-              title: 'Alamat berhasil diperbarui',
-              description: 'Alamat baru telah diperbarui ke daftar alamat Anda.',
+              title: t('address.success.updatedTitle'),
+              description: t('address.success.updatedDescription'),
             });
           },
         },
@@ -123,149 +121,190 @@ export default function AddressModalForm({ open = false, onClose = () => {}, onS
 
   return (
     <Modal open={open} onClose={onClose} title={TITLE_TEXT} description={DESC_TEXT} maxWidth='sm:max-w-[700px]'>
-      <form onSubmit={handleAddressSubmit(onAddressSubmit)} className='space-y-4'>
-        <Controller
-          name='label'
-          control={addressControl}
-          render={({ field, fieldState }) => (
-            <Field data-invalid={fieldState.invalid}>
-              <FieldLabel>{t('address.form.label')}</FieldLabel>
-              <Input {...field} placeholder='Contoh: Rumah / Kantor' aria-invalid={fieldState.invalid} />
-              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-            </Field>
-          )}
-        />
-        <Controller
-          name='recipientName'
-          control={addressControl}
-          render={({ field, fieldState }) => (
-            <Field data-invalid={fieldState.invalid}>
-              <FieldLabel>{t('address.form.recipient')}</FieldLabel>
-              <Input {...field} placeholder='Nama penerima' aria-invalid={fieldState.invalid} />
-              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-            </Field>
-          )}
-        />
-        <Controller
-          name='recipientPhone'
-          control={addressControl}
-          render={({ field, fieldState }) => (
-            <Field data-invalid={fieldState.invalid}>
-              <FieldLabel>{t('address.form.phone')}</FieldLabel>
-              <Input
-                {...field}
-                placeholder='08xxxxxxxxxx'
-                onChange={(e) => {
-                  field.onChange(onlyNumbers(e.target.value));
-                }}
-                aria-invalid={fieldState.invalid}
-              />
-              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-            </Field>
-          )}
-        />
-        <Controller
-          name='postalCode'
-          control={addressControl}
-          render={({ field, fieldState }) => (
-            <Field data-invalid={fieldState.invalid}>
-              <FieldLabel>{t('address.form.postalCode')}</FieldLabel>
-              <Input
-                {...field}
-                placeholder='17530'
-                onChange={(e) => {
-                  field.onChange(onlyNumbers(e.target.value));
-                }}
-                aria-invalid={fieldState.invalid}
-              />
-              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-            </Field>
-          )}
-        />
-        <Controller
-          name='provinceName'
-          control={addressControl}
-          render={({ field, fieldState }) => (
-            <Field data-invalid={fieldState.invalid}>
-              <FieldLabel>{t('address.form.province')}</FieldLabel>
-              <Input {...field} placeholder='Jawa Barat' aria-invalid={fieldState.invalid} />
-              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-            </Field>
-          )}
-        />
-        <Controller
-          name='cityName'
-          control={addressControl}
-          render={({ field, fieldState }) => (
-            <Field data-invalid={fieldState.invalid}>
-              <FieldLabel>{t('address.form.city')}</FieldLabel>
-              <Input {...field} placeholder='Kabupaten Bekasi' aria-invalid={fieldState.invalid} />
-              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-            </Field>
-          )}
-        />
-        <Controller
-          name='districtName'
-          control={addressControl}
-          render={({ field, fieldState }) => (
-            <Field data-invalid={fieldState.invalid}>
-              <FieldLabel>{t('address.form.district')}</FieldLabel>
-              <Input {...field} placeholder='Cikarang Selatan' aria-invalid={fieldState.invalid} />
-              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-            </Field>
-          )}
-        />
-        <Controller
-          name='subdistrictName'
-          control={addressControl}
-          render={({ field, fieldState }) => (
-            <Field data-invalid={fieldState.invalid}>
-              <FieldLabel>{t('address.form.subdistrict')}</FieldLabel>
-              <Input {...field} placeholder='Taman Sari' aria-invalid={fieldState.invalid} />
-              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-            </Field>
-          )}
-        />
-        <Controller
-          name='addressLine'
-          control={addressControl}
-          render={({ field, fieldState }) => (
-            <Field data-invalid={fieldState.invalid}>
-              <FieldLabel>{t('address.form.addressLine')}</FieldLabel>
-              <Textarea {...field} placeholder='Jl. Melati 10 no. 68...' className='resize-none' aria-invalid={fieldState.invalid} />
-              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-            </Field>
-          )}
-        />
-        <Controller
-          name='notes'
-          control={addressControl}
-          render={({ field, fieldState }) => (
-            <Field data-invalid={fieldState.invalid}>
-              <FieldLabel>{t('address.form.notes')}</FieldLabel>
-              <Textarea {...field} placeholder='Catatan untuk kurir (opsional)' className='resize-none' aria-invalid={fieldState.invalid} />
-              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-            </Field>
-          )}
-        />
-        <Controller
-          name='isDefault'
-          control={addressControl}
-          render={({ field, fieldState }) => (
-            <Field orientation='horizontal' data-invalid={fieldState.invalid} className='flex items-center gap-2 pt-2'>
-              <Checkbox id='form-address-checkbox' checked={field.value} onCheckedChange={field.onChange} aria-invalid={fieldState.invalid} />
-              <div>
-                <FieldLabel htmlFor='form-address-checkbox' className='cursor-pointer font-normal text-slate-700'>
-                  {t('address.form.isDefault')}
-                </FieldLabel>
-              </div>
-              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-            </Field>
-          )}
-        />
+      <form onSubmit={handleAddressSubmit(onAddressSubmit)} className='flex flex-col gap-4'>
+        <FieldGroup className='grid grid-cols-1 gap-4 sm:grid-cols-2'>
+          {/* Label Alamat */}
+          <div className='sm:col-span-2'>
+            <Controller
+              name='label'
+              control={addressControl}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel>{t('address.form.label')}</FieldLabel>
+                  <Input {...field} placeholder='Contoh: Rumah / Kantor' aria-invalid={fieldState.invalid} />
+                  {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+                </Field>
+              )}
+            />
+          </div>
 
-        <Button type='submit' className='w-full rounded-xl mt-2 py-5' loading={isLoadingAddress} disabled={isLoadingAddress}>
-          <Save className='size-4' />
+          {/* Nama Penerima */}
+          <Controller
+            name='recipientName'
+            control={addressControl}
+            render={({ field, fieldState }) => (
+              <Field data-invalid={fieldState.invalid}>
+                <FieldLabel htmlFor='recipientName' required>
+                  {t('address.form.recipient')}
+                </FieldLabel>
+                <Input id='recipientName' {...field} placeholder='Nama penerima' aria-invalid={fieldState.invalid} />
+                {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+              </Field>
+            )}
+          />
+
+          {/* Nomor Telepon */}
+          <Controller
+            name='recipientPhone'
+            control={addressControl}
+            render={({ field, fieldState }) => (
+              <Field data-invalid={fieldState.invalid}>
+                <FieldLabel htmlFor='recipientPhone' required>
+                  {t('address.form.phone')}
+                </FieldLabel>
+                <Input
+                  id='recipientPhone'
+                  {...field}
+                  placeholder='08xxxxxxxxxx'
+                  onChange={(e) => {
+                    field.onChange(onlyNumbers(e.target.value));
+                  }}
+                  aria-invalid={fieldState.invalid}
+                />
+                {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+              </Field>
+            )}
+          />
+
+          {/* Provinsi */}
+          <Controller
+            name='provinceName'
+            control={addressControl}
+            render={({ field, fieldState }) => (
+              <Field data-invalid={fieldState.invalid}>
+                <FieldLabel>{t('address.form.province')}</FieldLabel>
+                <Input {...field} placeholder='Jawa Barat' aria-invalid={fieldState.invalid} />
+                {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+              </Field>
+            )}
+          />
+
+          {/* Kota */}
+          <Controller
+            name='cityName'
+            control={addressControl}
+            render={({ field, fieldState }) => (
+              <Field data-invalid={fieldState.invalid}>
+                <FieldLabel>{t('address.form.city')}</FieldLabel>
+                <Input {...field} placeholder='Kabupaten Bekasi' aria-invalid={fieldState.invalid} />
+                {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+              </Field>
+            )}
+          />
+
+          {/* Kecamatan */}
+          <Controller
+            name='districtName'
+            control={addressControl}
+            render={({ field, fieldState }) => (
+              <Field data-invalid={fieldState.invalid}>
+                <FieldLabel>{t('address.form.district')}</FieldLabel>
+                <Input {...field} placeholder='Cikarang Selatan' aria-invalid={fieldState.invalid} />
+                {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+              </Field>
+            )}
+          />
+
+          {/* Kelurahan */}
+          <Controller
+            name='subdistrictName'
+            control={addressControl}
+            render={({ field, fieldState }) => (
+              <Field data-invalid={fieldState.invalid}>
+                <FieldLabel>{t('address.form.subdistrict')}</FieldLabel>
+                <Input {...field} placeholder='Taman Sari' aria-invalid={fieldState.invalid} />
+                {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+              </Field>
+            )}
+          />
+
+          {/* Kode Pos */}
+          <Controller
+            name='postalCode'
+            control={addressControl}
+            render={({ field, fieldState }) => (
+              <Field data-invalid={fieldState.invalid}>
+                <FieldLabel htmlFor='postalCode' required>
+                  {t('address.form.postalCode')}
+                </FieldLabel>
+                <Input
+                  id='postalCode'
+                  {...field}
+                  placeholder='17530'
+                  onChange={(e) => {
+                    field.onChange(onlyNumbers(e.target.value));
+                  }}
+                  aria-invalid={fieldState.invalid}
+                />
+                {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+              </Field>
+            )}
+          />
+
+          {/* Alamat Lengkap */}
+          <div className='sm:col-span-2'>
+            <Controller
+              name='addressLine'
+              control={addressControl}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor='addressLine' required>
+                    {t('address.form.addressLine')}
+                  </FieldLabel>
+                  <Textarea id='addressLine' {...field} placeholder='Jl. Melati 10 no. 68...' className='resize-none' aria-invalid={fieldState.invalid} />
+                  {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+                </Field>
+              )}
+            />
+          </div>
+
+          {/* Catatan Kurir */}
+          <div className='sm:col-span-2'>
+            <Controller
+              name='notes'
+              control={addressControl}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel>{t('address.form.notes')}</FieldLabel>
+                  <Textarea {...field} placeholder='Catatan untuk kurir (opsional)' className='resize-none' aria-invalid={fieldState.invalid} />
+                  {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+                </Field>
+              )}
+            />
+          </div>
+
+          {/* Default Address */}
+          <div className='sm:col-span-2'>
+            <Controller
+              name='isDefault'
+              control={addressControl}
+              render={({ field, fieldState }) => (
+                <Field orientation='horizontal' data-invalid={fieldState.invalid} className='flex items-center gap-2 pt-2'>
+                  <Checkbox id='form-address-checkbox' checked={field.value} onCheckedChange={field.onChange} aria-invalid={fieldState.invalid} />
+                  <div>
+                    <FieldLabel htmlFor='form-address-checkbox' className='cursor-pointer font-normal text-foreground'>
+                      {t('address.form.isDefault')}
+                    </FieldLabel>
+                  </div>
+                  {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+                </Field>
+              )}
+            />
+          </div>
+        </FieldGroup>
+
+        <Button type='submit' className='mt-2 w-full rounded-xl py-5' loading={isLoadingAddress} disabled={isLoadingAddress}>
+          {!isLoadingAddress && <Save data-icon='inline-start' aria-hidden='true' />}
           {SUBMIT_TEXT}
         </Button>
       </form>

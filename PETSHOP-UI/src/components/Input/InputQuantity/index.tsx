@@ -4,8 +4,10 @@ import { Button } from '@/components/ui/button';
 import { InputGroup, InputGroupAddon, InputGroupInput } from '@/components/ui/input-group';
 import { Minus, Plus } from 'lucide-react';
 import { ChangeEvent, ComponentProps } from 'react';
+import { useTranslations } from 'next-intl';
 
 export default function QuantityInput({ value = 1, onValueChange = () => {}, min = 0, max = Number.MAX_SAFE_INTEGER, disabled = false, ...props }: QuantityInputProps) {
+  const t = useTranslations('common');
   const disabledMinus = disabled || value <= min;
   const disabledPlus = disabled || value >= max;
 
@@ -26,15 +28,15 @@ export default function QuantityInput({ value = 1, onValueChange = () => {}, min
   return (
     <InputGroup className='py-5'>
       <InputGroupAddon align='inline-start'>
-        <Button variant='ghost' size='icon' disabled={disabledMinus} onClick={handleDecrement}>
-          <Minus />
+        <Button type='button' variant='ghost' size='icon' aria-label={t('decreaseQuantity')} disabled={disabledMinus} onClick={handleDecrement}>
+          <Minus aria-hidden='true' />
         </Button>
       </InputGroupAddon>
 
       <InputGroupInput value={value} className='text-center' onChange={handleChangeInput} {...props} />
       <InputGroupAddon align='inline-end'>
-        <Button variant='ghost' size='icon' disabled={disabledPlus} onClick={handleIncrement}>
-          <Plus />
+        <Button type='button' variant='ghost' size='icon' aria-label={t('increaseQuantity')} disabled={disabledPlus} onClick={handleIncrement}>
+          <Plus aria-hidden='true' />
         </Button>
       </InputGroupAddon>
     </InputGroup>

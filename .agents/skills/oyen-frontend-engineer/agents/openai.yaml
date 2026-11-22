@@ -1,0 +1,6 @@
+interface:
+  display_name: "Oyen Frontend Engineer"
+  short_description: "Build localized Oyen UI and API flows"
+  default_prompt: "Use $oyen-frontend-engineer to implement this Oyen frontend change."
+policy:
+  allow_implicit_invocation: true

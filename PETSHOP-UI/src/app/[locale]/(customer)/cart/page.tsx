@@ -1,11 +1,15 @@
-import CartMain from '@/containers/Cart/cartDetail';
-import CartSummary from '@/containers/Cart/cartSummary';
+import CartMain from '@/containers/Cart/CartDetail';
+import CartSummary from '@/containers/Cart/CartSummary';
+// import CartSummary from '@/containers/Cart/CartSummary';
+import { getTranslations } from 'next-intl/server';
 
-export default function CartPage() {
+export default async function CartPage() {
+  const t = await getTranslations('customer');
+
   return (
-    <main className='py-10 space-y-4'>
-      <h2 className='font-bold text-4xl mb-6'>Cart</h2>
-      <div className='grid grid-cols-[3fr_1fr] gap-4'>
+    <main className='flex flex-col gap-6 py-8 sm:py-10'>
+      <h1 className='text-h1'>{t('cart.title')}</h1>
+      <div className='grid min-w-0 gap-4 lg:grid-cols-[minmax(0,3fr)_minmax(18rem,1fr)]'>
         <CartMain />
         <CartSummary />
       </div>

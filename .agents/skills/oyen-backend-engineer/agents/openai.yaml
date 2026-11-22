@@ -1,0 +1,6 @@
+interface:
+  display_name: "Oyen Backend Engineer"
+  short_description: "Build Spring Boot APIs and domain behavior"
+  default_prompt: "Use $oyen-backend-engineer to implement this Oyen backend change."
+policy:
+  allow_implicit_invocation: true
